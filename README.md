@@ -1,2 +1,2 @@
 # documaker
-Going to try getting Library files in Github.
+Various scripts and helper things for documaker.
