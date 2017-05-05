@@ -1,0 +1,4 @@
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+  <system systemId="http://192.168.1.72:7001/DWSV0AL1/CompositionService?WSDL"
+          uri="../oracle/dws/CompositionService.wsdl"/>
+</catalog>

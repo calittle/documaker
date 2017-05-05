@@ -1,0 +1,195 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<jdevws:WebServiceProxy xmlns:jdevws="http://xmlns.oracle.com/jdeveloper/10130/webserviceproxy">
+   <list n="CHILD_NODES">
+      <url path="CompositionService.xml"/>
+      <url path="CompositionService.wsdl"/>
+      <url path="CompositionService_xsd_1.xsd"/>
+      <url path="CompositionService_xsd_2.xsd"/>
+      <url path="types/DoCallIDSResponse.java"/>
+      <url path="CompositionFault.java"/>
+      <url path="types/DoComposeRequestBase.java"/>
+      <url path="types/Property.java"/>
+      <url path="types/DoCallIDSOneWayRequest.java"/>
+      <url path="types/ROW.java"/>
+      <url path="types/ResponseProperties.java"/>
+      <url path="types/DSIMSG.java"/>
+      <url path="types/DoComposeResponseBase.java"/>
+      <url path="types/MSGVARS.java"/>
+      <url path="types/AttachmentReturnType.java"/>
+      <url path="types/ROWSET.java"/>
+      <url path="types/Error.java"/>
+      <url path="types/Diagnosis.java"/>
+      <url path="types/ResponseAttachment.java"/>
+      <url path="types/Properties.java"/>
+      <url path="CompositionService.java"/>
+      <url path="types/HTTP.java"/>
+      <url path="types/VAR.java"/>
+      <url path="types/Content.java"/>
+      <url path="CompositionServicePortType.java"/>
+      <url path="types/MQ.java"/>
+      <url path="types/package-info.java"/>
+      <url path="types/Errors.java"/>
+      <url path="types/MSMQ.java"/>
+      <url path="types/Results.java"/>
+      <url path="types/CompositionFault.java"/>
+      <url path="types/AttachmentBase.java"/>
+      <url path="types/MQSSLCipherspec.java"/>
+      <url path="types/MarshallerClass.java"/>
+      <url path="CompositionServicePortClient.java"/>
+      <url path="types/DoCallIDSRequest.java"/>
+      <url path="types/Attachment.java"/>
+      <url path="types/DoComposeRequestOneWayBase.java"/>
+      <url path="types/JMS.java"/>
+      <url path="types/ObjectFactory.java"/>
+   </list>
+   <hash n="DATA_MODEL">
+      <value n="ATTACHMENT_ENCODING" v="MTOM"/>
+      <list n="LOCAL_FILES"/>
+      <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.WebServiceProxy"/>
+      <hash n="PROPERTY_GROUPS">
+         <hash n="WSDL_TO_JAVA_PROPERTIES">
+            <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.WSDLToJavaProperties"/>
+            <value n="WSDL2JAVA_DEFAULT_PACKAGE" v="oracle.dws"/>
+            <value n="WSDL2JAVA_ROOT_VALUE_PACKAGE" v="oracle.dws.types"/>
+            <value n="WSDL2JAVA_UNWRAP_PARAMETERS" v="false"/>
+         </hash>
+      </hash>
+      <value n="PROXY_ASYNC_METHODS" v="FOR_NONE"/>
+      <list n="PROXY_CLIENTS">
+         <url path="CompositionServicePortClient.java"/>
+      </list>
+      <value n="PROXY_MAPPING_URL"/>
+      <url n="PROXY_ORIGINAL_WSDL_URL" protocol="http" host="192.168.1.72" port="7001" path="/DWSV0AL1/CompositionService" query="WSDL"/>
+      <hash n="PROXY_PORTS">
+         <hash n="CompositionServicePort">
+            <value n="ACCESSES_DOC_WRAPPPED" v="false"/>
+            <value n="ACCESSES_RPC_ENCODED" v="false"/>
+            <value n="CLASS_NAME" v="oracle.dws.CompositionServicePortType"/>
+            <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyPort"/>
+            <value n="NAME" v="CompositionServicePort"/>
+            <hash n="OPERATIONS">
+               <hash n="doCallIDS">
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+               <hash n="doCallIDSOneWay">
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.ProxyOperation"/>
+                  <hash n="PROPERTY_GROUPS"/>
+               </hash>
+            </hash>
+            <hash n="PROPERTY_GROUPS">
+               <hash n="WS_CLIENT_POLICY">
+                  <value n="addressing"/>
+                  <list n="management"/>
+                  <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.policy.PolicyClientModel"/>
+                  <value n="mtom"/>
+                  <hash n="POLICY_OVERRIDE_PROPERTIES"/>
+                  <list n="security"/>
+                  <value n="wsrm"/>
+               </hash>
+            </hash>
+            <url n="PROXY_ORIGINAL_PORT_ENDPOINT" protocol="http" host="192.168.1.72" port="7001" path="/DWSV0AL1/CompositionService"/>
+         </hash>
+      </hash>
+      <value n="PROXY_SERVICE_NAME" v="CompositionService"/>
+      <value n="PROXY_SERVICE_NAMESPACE" v="oracle/documaker/schema/ws/composition"/>
+      <url n="PROXY_TARGET_PROJECT" path="../../../wipedit.jpr"/>
+      <list n="PROXY_WSDL_IMPORT_LIST">
+         <url path="CompositionService_xsd_1.xsd"/>
+         <url path="CompositionService_xsd_2.xsd"/>
+      </list>
+      <url n="PROXY_WSDL_URL" path="CompositionService.wsdl"/>
+      <hash n="REFERENCED_WEBSERVICE">
+         <list n="BD_">
+            <hash>
+               <value n="BD_DEFAULT_DOCUMENT_WRAPPED" v="false"/>
+               <value n="BOUND_PORT_TYPE" v="{oracle/documaker/schema/ws/composition}CompositionServicePortType"/>
+               <value n="DEFAULT_NAME" v="false"/>
+               <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPBinding"/>
+               <value n="NAME" v="{oracle/documaker/schema/ws/composition}CompositionServiceBinding"/>
+               <list n="OP_BINDINGS">
+                  <hash>
+                     <value n="BD_SOAP_ACTION" v="doCallIDS"/>
+                     <value n="BD_SOAP_INPUT_USE" v="1"/>
+                     <value n="BD_SOAP_OUTPUT_USE" v="1"/>
+                     <value n="BD_SOAP_STYLE" v="1"/>
+                     <value n="BOUND_OPERATION" v="oracle.dws.types.DoCallIDSResponse.doCallIDS.oracle.dws.types.DoCallIDSRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="BD_SOAP_ACTION" v="doCallIDSOneWay"/>
+                     <value n="BD_SOAP_INPUT_USE" v="1"/>
+                     <value n="BD_SOAP_STYLE" v="1"/>
+                     <value n="BOUND_OPERATION" v="void.doCallIDSOneWay.oracle.dws.types.DoCallIDSOneWayRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPOperationBinding"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+               </list>
+               <hash n="PROPERTY_GROUPS"/>
+            </hash>
+         </list>
+         <list n="BINDING_FILES"/>
+         <value n="GUID" v="0358bcc1-0159-1000-8002-c0a8019cc8b4"/>
+         <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.proxy.WebServiceProxy$ProxyJavaWebService"/>
+         <list n="PO_">
+            <hash>
+               <value n="DEFAULT_NAME" v="false"/>
+               <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.SOAPPort"/>
+               <value n="NAME" v="CompositionServicePort"/>
+               <value n="PORT_BINDING_NAME" v="{oracle/documaker/schema/ws/composition}CompositionServiceBinding"/>
+               <list n="PORT_OPS">
+                  <hash>
+                     <value n="EXPOSED_BD_OPERATION" v="oracle.dws.types.DoCallIDSResponse.doCallIDS.oracle.dws.types.DoCallIDSRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+                  <hash>
+                     <value n="EXPOSED_BD_OPERATION" v="void.doCallIDSOneWay.oracle.dws.types.DoCallIDSOneWayRequest"/>
+                     <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.PortOperation"/>
+                     <hash n="PROPERTY_GROUPS"/>
+                  </hash>
+               </list>
+               <hash n="PROPERTY_GROUPS"/>
+               <url n="URL" protocol="http" host="192.168.1.72" port="7001" path="/DWSV0AL1/CompositionService"/>
+            </hash>
+         </list>
+         <hash n="PROPERTY_GROUPS">
+            <hash n="WSDL_TO_JAVA_PROPERTIES">
+               <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.WSDLToJavaProperties"/>
+               <value n="WSDL2JAVA_DEFAULT_PACKAGE" v="oracle.dws"/>
+               <value n="WSDL2JAVA_ROOT_VALUE_PACKAGE" v="oracle.dws.types"/>
+               <value n="WSDL2JAVA_UNWRAP_PARAMETERS" v="false"/>
+            </hash>
+         </hash>
+         <list n="PT_">
+            <hash>
+               <value n="AUTO_SERVICE_INTERFACE"/>
+               <value n="DEFAULT_NAME" v="false"/>
+               <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaPortType"/>
+               <value n="NAME" v="{oracle/documaker/schema/ws/composition}CompositionServicePortType"/>
+               <hash n="PROPERTY_GROUPS"/>
+               <value n="PT_CLASS" v="oracle.dws.CompositionServicePortTypeImpl"/>
+               <value n="PT_SERVICE_INTERFACE" v="oracle.dws.CompositionServicePortType"/>
+            </hash>
+            <hash>
+               <value n="AUTO_SERVICE_INTERFACE"/>
+               <value n="DEFAULT_NAME" v="false"/>
+               <value n="MODEL_CLASS" v="oracle.jdeveloper.webservices.model.java.JavaPortType"/>
+               <value n="NAME" v="{oracle/documaker/schema/ws/composition}CompositionServiceSoap12PortType"/>
+               <hash n="PROPERTY_GROUPS"/>
+               <value n="PT_CLASS" v="oracle.dws.CompositionServiceSoap12PortTypeImpl"/>
+               <value n="PT_SERVICE_INTERFACE" v="oracle.dws.CompositionServiceSoap12PortType"/>
+            </hash>
+         </list>
+         <url n="TARGET_PROJECT" path="../../../wipedit.jpr"/>
+         <value n="WS_CREATE_ONEWAY_OPERATIONS" v="true"/>
+         <value n="WS_ORIG_GEN_DIRECTION" v="TOP_DOWN"/>
+         <value n="WS_TARGET_NAMESPACE" v="oracle/documaker/schema/ws/composition"/>
+         <value n="WS_URI" v="CompositionService"/>
+         <url n="WS_WSDL_FILE" protocol="http" host="192.168.1.72" port="7001" path="/DWSV0AL1/CompositionService" query="WSDL"/>
+      </hash>
+      <value n="SERVICE_ASYNC" v="false"/>
+      <value n="USE_WSDL_LOCATION" v="true"/>
+   </hash>
+</jdevws:WebServiceProxy>

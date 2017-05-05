@@ -1,0 +1,529 @@
+<html lang='en'>
+    <head>
+        <title>WIPapp</title>
+        <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+        <meta http-equiv='X-UA-Compatible' content='IE=edge'/>
+        <meta name='viewport' content='width=device-width, initial-scale=1'/>
+        <link href='bootstrap-3.3.7-dist/css/bootstrap.min.css'
+              rel='stylesheet'/>
+        <script src='js/jquery-3.1.1.js'></script>
+        <script src='bootstrap-3.3.7-dist/js/bootstrap.min.js'></script>
+        <style>
+	        .code {font-family:monospace;}
+	        :target {border: 1px dashed #fb0000;background-color: rgba(227, 255, 20, 0.35);}
+	        a[href*="//"]:not([href*=""]):after { 
+    font-family: 'Glyphicons Halflings';
+	content:"\e066";
+    font-size: 13px;
+    color: #ccc;
+    padding-left: 2px;
+}	        </style>
+    </head>
+    <body>
+        <!--header>
+            <nav class='navbar navbar-default'>
+                <div class='navbar-header container'>
+                    <button type='button' class='navbar-toggle'
+                            data-toggle='collapse'
+                            data-target='#navbarCollapse'>
+                        <span class='sr-only'>Toggle navigation</span>
+                        <span class='icon-bar'></span>
+                        <span class='icon-bar'></span>
+                        <span class='icon-bar'></span>
+                    </button>
+                     
+                    <a class="navbar-brand" href="#">WIPapp</a>
+                    <div class='collapse navbar-collapse' id='navbarCollapse'>
+                        <ul class='nav navbar-nav'>
+                            <li><a href="#implementation"><span class="glyphicon glyphicon-road"></span> Implementation</a></li>
+                            <li><a href="#usage"><span class="glyphicon glyphicon-user"></span> Usage</a></li>
+							<li class="dropdown">
+					          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-wrench"></span> Settings <span class="caret"></span></a>
+					          <ul class="dropdown-menu">
+					            <li><a href="#webappsettings"><span class="glyphicon glyphicon-list-alt"></span> Application</a></li>
+					            <li><a href="#webappsecurity"><span class="glyphicon glyphicon-lock"></span> Security</a></li>
+					            <li><a href="#weblogicsettings"><span class="glyphicon glyphicon-cog"></span> WebLogic</a></li>
+					            <!--li role="separator" class="divider"></li-->
+					          </ul>
+					        </li>	                            
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header-->
+        <div class='container'>
+            <div class='jumbotron'>
+                <h1>WIPapp</h1>
+                <p>A lightweight, customizable implementation of Documaker Web Services and WIPedit Plugin to provide Work-In-Process functionality.</p>
+            </div>
+            
+            <div class="row">
+	            <h2>About this Document</h2>
+	            <p>This document, like WIPapp, uses HTML, CSS, and Javascript provided by the Bootstrap framework. This document is best-viewed in a browser. Save a <span class="glyphicon glyphicon-tree-conifer"></span> and don't print this.</p>
+	            <h4>Syntax Conventions</h4>
+	            <ul>
+		            <li>Acronyms and other important names will first be referenced with a <span class="label label-info">LABEL</span>.</li>
+		            <li>Important information or caveats will be prefaced with a <span class='label label-default'>NOTE</span>, which may also provide a link to additional information.</li>
+		            <li>Important warnings will be denoted with a <span class='label label-warning'>NOTE</span>.</li>
+		            <li>Links to external content will have an indicator icon <span style="color: #ccc;"class="glyphicon glyphicon-share"></span>, denoting content outside the control of this publication.</li>
+		            <li>Configuration files or setting names will appear in a special font like <span class="code">this</span>.</li>
+		         </ul>
+		         
+	            <h2>Background</h2>
+	            <p>Oracle Documaker Enterprise Edition <span class="label label-info">ODEE</span> includes Documaker Interactive <span class="label label-info">DI</span>, a robust, full-featured web application that provides user interactivity for document creation, completion, and approval as well as document preview, auditing, dashboard functionality. DI integrates on the back-end with Documaker Web Services <span class="label label-info">DWS</span> and uses <span class="label label-info">WIPedit</span> browser plugin (ActiveX or NPAPI) to facilitate WYSIWYG document editing. DI uses Oracle ADF for its user interface, which has some specific client requirements for browser support.</p>
+
+	            <p>In some cases, an implementation may have requirements that conflict with DI or its components' requirements, or there may be customizations that can be difficult to achieve in DI. In these cases, it may be advantageous to use a customizable web application with a smaller footprint. <span class="label label-info">WIPapp</span> provides full customizability, in a compact footprint, uses the same back-end services (DWS) and client component (WIPedit plugin) for document editing. WIPapp can be deployed on any JSP 2.5-compliant servlet container. <span id="servletnote" class='label label-default'>NOTE</span> Some of the functionality in the basic WIPapp relies on WebLogic classes. If you deploy WIPapp to a servlet container other than WebLogic, you will need to rewrite these functions.</p>
+	            
+				    <h2 class="media-heading">Architecture</h2>
+				    <p>WIPapp is a single-page JSP application, deployed to a servlet container, e.g. WebLogic. WIPapp includes several servlets which facilitate interaction between the application and the back-end services to perform functions such as retrieve document/resources from Documaker, save document, generate proof PDF, and update document status values, e.g. lock/unlock a WIP transaction. Back-end communication is all performed over HTTP. WIPapp uses client-side Javascript to assist in rendering the UI, providing client-side control, and to communication with the WIPedit plugin, embedded as an <span class="code">&lt;OBJECT&gt;</span> within the WIPapp. The WIPedit plugin communicates with the back-end to dynamically retrieve document resources and to save the document, using HTTP. The following diagram illustrates the general architecture in which WIPapp is deployed, including the servlet container, database, ODEE, and client-side.</p>
+				
+				<div class="row">
+					<div class="col-xs-6 col-md-3">
+						<a href="plugin-arch.svg" class="thumbnail">
+							<img class="media-object" src="plugin-arch.svg">
+							</a>
+					</div>
+				</div>
+				
+				
+	            <h2>Support</h2>
+	            <p>First, this application is treated as an <em>implementation</em> of core product, which means the application code is <em>not</em> covered by Oracle Support contracts. The back-end DWS functions with which the application interacts as well as the WIPedit plugin are covered by Oracle Support contracts. If an issue is encountered while deploying or using WIPapp, you as a customer can report the issue to Oracle Support for assistance, however if the problem is determined to be in the application and not core product, you will be referred to Oracle Consulting for assistance.</p>
+            
+				<h2>Requirements</h2>
+				<p>WIPapp has the following server/back-end requirements:</p>
+                    <ul>
+                        <li>Oracle <a href="http://docs.oracle.com/cd/E57338_01/documaker_enterprise_ag.pdf">Documaker Web Services 12.x</a> (Schema version V0) - tested against 12.4</li>
+                        <li>Oracle <a href="http://docs.oracle.com/cd/E57338_01/docupresentment_book.pdf">Documaker Docupresentment 12.x</a> (uses iDMK_* request types, included with ODEE) - tested against 12.4</li>
+                        <li>Oracle <a href="http://www.oracle.com/technetwork/middleware/weblogic/documentation/index.html">WebLogic 11g Release 1</a> (should work with 11g/12c releases); or any other JSP 2.5-compliant servlet container <a href="#servletnote">*</a> - tested against 10.3.6</li>                         
+                        <li><a href="http://www.oracle.com/technetwork/java/javaee/downloads/java-ee-sdk-6u3-jdk-6u29-downloads-523388.html">JDK 1.6</a> or newer - tested with 1.6, but should be forward compatible.</li>                                                  
+                        <li>For authorization, a security realm that includes one or more groups to map to document editor and document reviewer roles within the application.</li>
+                    </ul>
+				<p>WIPapp users must adhere to the following client requirements:</p>
+                    <ul>
+                        <li>Browser compatible with WIPedit plugin (currently Internet Explorer and Firefox)</li>
+                        <li>A workstation with the <A href="http://docs.oracle.com/cd/E57338_01/odWIPEdit12m%20R1%20(12.4.0)%20Readme.html">WIPedit</A>a plugin installed (the plugin installer is delivered with ODEE installers)</li>
+                        <li>A workstation which allows use of ActiveX or NPAPI plugins within the browser</li>
+                        <li>A PDF reader application (with browser integration), if that functionality is desired.</li>
+                    </ul>
+                
+                <h2>Authentication (SSO)</h2>      
+                <p>WIPapp supports Servlet 2.5 specification for authentication. The servlet container is used to provide authentication based on WIPapp and container configuration settings. The servlet container (e.g. WebLogic) is configured to provide authentication against a user repository store. WIPapp is configured to support one or more types of authentication based on implementation requirements. WIPapp ships with <span class="code">BASIC</span> plaintext challenge/response configuration, but supports any container-specific configuration using the <span class="code">&lt;<a href="#auth-method">auth-method</a>&gt;</span> parameter, e.g. <span class="code">DIGEST</span> or <span class="code">CLIENT-CERT</span>. Single Sign-On is supported in this configuration using the <span class="code">CLIENT-CERT</span> configuration. For more information, refer to the WebLogic <a href="https://docs.oracle.com/cd/E21764_01/web.1111/e13707/saml.htm#SECMG252">documentation</a> for configuring SSO.</p>
+                <p>In practice, when a user accesses the application, the Servlet Container first determines if the user is attempting to access secured content. Secured content is defined by an <span class="code"><a href="#secured-content">&lt;url-pattern&gt;</a></span>. If the user attempts to access secured content, the Servlet Container will challenge the browser for credentials according to the configuration in <span class="code">&lt;<a href="#auth-method">auth-method</a>&gt;</span> as described above.</p>
+	            
+	            <h2>Secure Transport (SSL)</h2>
+	            <p>SSL provides secure communications between the client and the application. SSL is a configuration that must be performed outside of the application and requires domain-specific knowledge, certificate acquisition, and container configuration. The only configuration needed for WIPapp is the level of encryption required, which is then applied by the container. Otherwise, WIPapp does not play a role in the configuration of SSL. Application settings to enable SSL rely on the configuration of the container so that the container can route communications between the client to secure channels. The container also handles client certificate validation and establishment of trust. The application is configured to operate on secure channels using the <a href="#ssl"><span class="code">&lt;transport-guarantee&gt;</span></a> configuration.</p>
+	            
+				<h2>Delivery</h2>
+	            <p>WIPapp is delivered as a Web Application Archive <span class="label label-info">WAR</span> file. The WAR file follows a specific structure as outlined in the Servlet-2.5 specification. Prior to deploying the WAR file to target application servers, it must be configured to the environment. This can be done using various software packages, e.g. 7-zip, which allow direct editing of WAR file contents, or the WAR file can be exploded, edited, then reassembled. Direct editing is the recommended approach to avoid any WAR rebuild errors.</p>
+	            
+	            <h2>Roles</h2>
+	            <p>There are two defined roles for WIPapp application: document preparers and document reviewers. These roles are mapped to one or more groups (a.k.a. principals) in the user repository.</p>	            
+	            
+            </div>
+            <div id="webappsettings" class="row">
+                    <h2>Application Settings Reference</h2>
+                    <p>WIPapp settings are maintained within two files: <span class="code">web.xml</span> and <span class="code">weblogic.xml</span>. Both of these files are located in the <span class="code">WEB-INF</span> directory which is just off of the root of the application. For maximum flexibility, most of WIPapp's settings have been externalized into the <span class="code">web.xml</span> as <span class="code">&lt;context-param&gt;</span> elements, which contain a <span class="code">&lt;param-name&gt;</span> and a <span class="code">&lt;param-value&gt;</span>.<span class='label label-warning'>NOTE</span> Use caution when editing these files as improper configuration could prevent the application from functioning at all. Be careful using <em>diff</em> tools that do not understand the context of name/value pairs contained within separate nodes. 
+                    </p>
+            </div>
+                <table class="table">
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Default Value</th>
+                        <th>Description</th>
+                    </tr>
+                     
+                    <tr>
+                        <td class="code">hostUrlPrefix</td>
+                        <td class="code">http://192.168.1.72:7001</td>
+                        <td>The Server/hostname and port where WIPapp will be deployed. If the application sits behind a proxy server or load-balancing server, use the URL for those services and ensure the proxy is configured to forward requests to the target servlet container in which the application is deployed. </td>
+                    </tr>
+                     
+                    <tr>
+                        <td class="code">pegaEndpoint</td>
+                        <td class="code">no default</td>
+                        <td>[RESERVED FOR FUTURE USE]</td>
+                    </tr>
+                     
+                    <tr>
+                        <td class="code">idsConfig</td>
+                        <td class="code">CORRESPONDENCE</td>
+                        <td>The name of the IDS configuration used for all requests and MRL components. This setting can be verified in a few places:<br/>
+                             In <span class="code">[ODEE_HOME]/documaker/docupresentment/dap.ini</span>, search inside for:<br/>
+                             <span class="code">[Configurations ] Config= Correspondence</span><br/>
+                             In <span class="code">[ODEE_HOME/documaker/mstrres/[MRL_DIR]/fsisys.ini</span>, search for:<br/>
+                             <span class="code">[ CONFIG:Correspondence ]</span>, in this case "Correspondence" is the configuration name.
+                        </td>
+                    </tr>
+                     
+                    <tr>
+                        <td class="code">logLevel</td>
+                        <td class="code">ERROR</td>
+                        <td>Values can be <span class="code">[DEBUG,ERROR,WARN]</span>. Controls logging
+                            level output to managed server .out file. Use <span class="code">DEBUG</span>
+                            for trace level output.</td>
+                    </tr>
+                     
+                    <tr>
+                        <td class="code">docPrepGroupId</td>
+                        <td class="code">1021</td>
+                        <td>When a user edits a transaction, the transaction is updated with the group ID and user ID of the user. WIPapp is currently coded to allow for a single group of editors, which is - specific the <span class="code">Entity ID</span> of this group (<span class="code">DOC_PREP</span>). This value may change across environments, so verify within the <span class="code">DMKR_ENTITIES</span> table for the group (after the user has successfully logged into a Documaker application). Use an SQL query like the following: <span class="code">select ID From DMKR_ADMIN.DMKR_ENTITIES where ENTITYTYPE=1 AND NAME='DOC_PREP'</span>.</td>
+                    </tr>
+                     
+                    <tr>
+                        <td class="code">docVetGroupId</td>
+                        <td class="code">1022</td>
+                        <td>Similar to <span class="code">docPrepGroupId</span> above, this is the identifier for the reviewer group.</td>
+                    </tr>
+                     
+                    <tr>
+                        <td class="code">docVetGroupName</td>
+                        <td class="code">DOC_VET</td>
+                        <td>Define the principal (group name) which corresponds to the group representing Document Reviewers. This should match the configuration in the <span class="code">weblogic.xml</span></td>
+                    </tr>
+                     
+                    <tr>
+                        <td class="code">docPrepGroupName</td>
+                        <td class="code">DOC_PREP</td>
+                        <td>Define the principal (group name) which corresponds to the group representing Document Preparers. This should match the configuration in the <span class="code">weblogic.xml</span></td>
+                    </tr>
+                </table>
+<hr/>
+                    <h3>Security Parameters</h3>
+                <table id="webappsecurity" class="table">
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Default Value</th>
+                        <th>Description</th>
+                    </tr>
+                     <tr>
+                        <td class="code" id="secured-content">&lt;web-resource-name&gt;Secured Content&lt;/web-resource-name&gt;&lt;url-pattern&gt;</td>
+                        <td class="code">*</td>
+                        <td>Determines which resources within the application are secured. A value of <span class="code">*</span> means that all resources are secured, which is the default shipping configuration for WIPapp.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="ssl" class="code">&lt;user-data-constraint&gt;&lt;transport-guarantee&gt;</td>
+                        <td class="code">NONE</td>
+                        <td>
+                            Controls usage of SSL. Valid values are <span class="code">NONE,
+                            INTEGRAL, CONFIDENTIAL</span>. 
+                            <br/><span class="code">None</span> = no security, messages are not encrypted
+                                 or secured.<br/><span class="code">INTEGRAL</span> = message contents are
+                                                 hashed to prevent tampering,
+                                                 but are reading. 
+                            <br/><span class="code">CONFIDENTIAL</span> = messages are encrypted and
+                                 hashed to prevent tampering and reading.<br/>
+                             
+                            <br/>Use <span class="code"><b>CONFIDENTIAL</b></span> to secure the application.
+                        </td>
+                    </tr>
+                     
+                    <tr>
+                        <td id="auth-method">&lt;login-config&gt;&lt;auth-method&gt;</td>
+                        <td class="code">BASIC</td>
+                        <td>
+                            Determines how users are authenticated by the servlet container.<br/>
+                            <span class="code">BASIC</span> - challenge/response in plaintext.<br/>
+                            <span class="code">DIGEST</span> - challenge/response encrypted.<br/>
+                            <span  class="code">CLIENT-CERT</span> - SSO/certificate usage.<br/><br/>
+                             Use 
+							 <span class="code"><b>CLIENT-CERT</b></span> for SSO.
+                        </td>
+                    </tr>
+                     
+                    <tr>
+                        <td class="code">&lt;login-config&gt;&lt;realm-name&gt;</td>
+                        <td class="code">myrealm</td>
+                        <td>The name of the WebLogic security realm for the
+                            domain.</td>
+                    </tr>
+                </table>
+            <hr/>
+                    <h3>WebLogic Settings</h3>
+                    <p>These settings are located within the <span class="code">weblogic.xml</span> file.
+                <table id="weblogicsettings" class="table">
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Default Value</th>
+                        <th>Description</th>
+                    </tr>
+                     <tr>
+                        <td class="code">&lt;context-root&gt;</td>
+                        <td class="code">wipedit</td>
+                        <td>This name identifies the portion of the URL that locates the application at the highest level. Servlets within the application referenced by this context, e.g. <span class="code">wipedit/getresource</span>. It is recommended to level this value as-is!</td>
+                    </tr>
+                    <tr>
+                        <td class="code">&lt;role-name&gt;DocumentPreparer&lt;/role-name&gt;
+                            &lt;principal-name&gt;DOC_PREP&lt;/principal-name&gt;</td>
+                        <td class="code">DOC_PREP</td>
+                        <td>
+                            This maps the role 
+                            <i>DocumentPreparer</i>
+                             to the WebLogic group 
+                            <i>DOC_PREP</i>. If you use a different WebLogic
+                                           group name, you can change it here.
+                                           Do 
+                            <b>not</b>
+                             change the role-name!
+                        </td>
+                    </tr>
+                     
+                    <tr>
+                        <td class="code">&lt;role-name&gt;DocumentReviewer&lt;/role-name&gt;
+                            &lt;principal-name&gt;DOC_VET&lt;/principal-name&gt;</td>
+                        <td class="code">DOC_VET</td>
+                        <td>
+                            This maps the role 
+                            <i>DocumentReviewer</i>
+                             to the WebLogic group 
+                            <i>DOC_VET</i>. If you use a different WebLogic
+                                          group name, you can change it here. Do 
+                            <b>not</b>
+                             change the role-name!
+                        </td>
+                    </tr>
+                     </table>
+                     <p><span class="label label-danger">WARNING</span> There are other configuration parameters within the <span class="code">web.xml</span> and <span class="code">weblogic.xml</span>. Anything not explicitly listed in this documentation should not be tampered with, or you risk breaking your implementation. If you decide to change these values, proceed with caution.</p>
+<hr/>
+            <h3 class="implementation">Implementation</h3>
+                    <p>
+                        Adjust settings as necessary in the 
+                        <span class="label label-success">WAR</span>
+                         file. Depending on the tools you have available, you
+                        may be able to directly edit the settings in the various
+                        files, skipping the file unzipping/zipping steps.
+                    </p>
+                    <ol>
+                        <li>
+                            Unzip the WAR file into a temporary directory
+                            <span class="label label-info">[temp_dir]</span>
+                            .
+                        </li>
+                         
+                        <li>
+                            Enter the
+                            <span class="label label-info">[temp_dir]</span>
+                            and navigate to
+                            <span class="label label-default">/WEB-INF/web.xml</span>
+                            file.
+                        </li>
+                         
+                        <li>
+                            Update
+                            <a href="#webappsettings">application settings</a>
+                            according to your environment. Save the file
+                            changes. Take care
+                            <span class="label label-danger">not</span>
+                            to update settings that are not listed in this file.
+                            They are not meant for you to change.
+                        </li>
+                         
+                        <li>
+                            Navigate to
+                            <span class="label label-default">/WEB-INF/weblogic.xml</span>
+                            file.
+                        </li>
+                         
+                        <li>
+                            Update
+                            <a href="#weblogicsettings">WebLogic</a>
+                            application settings according to your environment.
+                            Save the file changes.
+                        </li><li>
+                            Update Integration endpoint to Documaker Web
+                            Services.
+                            <ul>
+                                <li>
+                                    Navigate to
+                                    <span class="label label-default">WEB-INF/classes/oracle/dws</span>
+                                </li>
+                                 
+                                <li>
+                                    Open
+                                    <span class="label label-default">CompositionService.wsdl</span>
+                                    for editing with a text editor.
+                                </li>
+                                 
+                                <li>
+                                    Near the bottom of the file, locate the entry
+                                    <pre>&lt;soap:address location="http://192.168.1.72:7001/DWSV0AL1/CompositionServiceSoap12"/&gt;</pre>
+                                </li>
+                                 
+                                <li>Update the file with the proper server,
+                                    port, and endpoint for your implementation.
+                                    Ideally you should only change the
+                                    server/port values within the URL. You may
+                                    need to change the web service application
+                                    if you are integrating with a specific
+                                    assembly line. <em>You must use V0</em>. If you have
+                                    any doubts, you can refer to your WebLogic
+                                    console for valid values.</li>
+                                 
+                                <li>Save the file.</li>
+                            </ul>
+                        </li><li>
+                            Select all the contents of the files
+                            <i>inside</i>
+                            the
+                            <span class="label label-info">[temp_dir]</span>
+                            and zip into a file
+                        </li>
+                         
+                        <li>
+                            Rename the file with a
+                            <span class="label label-success">WAR</span>
+                            extension, e.g. &quot;wipedit.war&quot;
+                        </li>
+                         
+                        <li>Proceed to deployment .</li>
+                    </ol>
+                    <p>
+                        To deploy, copy the updated 
+                        <span class="label label-success">WAR</span>
+                         file to your WebLogic application server. Place the
+                        file in the same place each time, that way if you have
+                        to update it later, you can follow the same procedure.
+                        We recommend placing this file in the 
+                        <span class="label label-default">ODEE_HOME/documaker/j2ee/weblogic/oracle11g/</span>
+                         directory.
+                    </p>
+                    <ol>
+                        <li>
+                            Open WebLogic console for the
+                            <span class="label label-warning">idocumaker_domain</span>
+                            domain and login.
+                        </li>
+                         
+                        <li>
+                            In the
+                            <span class="label label-info">Domain Structure</span>
+                            click
+                            <span class="label label-info">Deployments</span>
+                        </li>
+                         
+                        <li>
+                            Click the
+                            <span class="label label-info">Install</span>
+                            button.
+                        </li>
+                         
+                        <li>
+                            Navigate to the directory where you deposited the
+                            <span class="label label-success">WAR</span>
+                            file.
+                        </li>
+                         
+                        <li>
+                            Click the radio button to select
+                            <span class="label label-success">wipedit.war</span>
+                            and then click
+                            <span class="label label-info">Next</span>
+                            .
+                        </li>
+                         
+                        <li>
+                            Select &quot;Install this deployment as an
+                            application&quot; and then click
+                            <span class="label label-info">Next</span>
+                            .
+                        </li>
+                         
+                        <li>
+                            Select the target for the application (recommended
+                            server is &quot;dmkr_server&quot;) then click
+                            <span class="label label-info">Next</span>
+                            .
+                        </li>
+                         
+                        <li>
+                            Use the default settings for &quot;DD Only&quot; and
+                            &quot;Use the defaults defined by the deplyoyment's
+                            targets, then click
+                            <span class="label label-info">Finish</span>
+                            .
+                        </li>
+                    </ol>
+                
+                        <h3 id="usage">Usage</h3>
+                        <p>To integrate this application with your existing
+                           applications, you need only to utilize the following
+                           URL when you want to invoke the application:</p>
+                        <pre>http(s)://<i>[ server:port ]</i>[ appName ]/?uniqueid=<i>[ uniqueId ]</i>&docId=<i>[ taskId ]</i></pre>
+                        <p>Where:</p>
+                        <ul>
+                            <li>
+                                <i>[ server:port ]</i>
+                                is the hostname and port where the WebLogic
+                                application WebLogic can be reached. If you are
+                                using an HTTP frontend that has the WebLogic
+                                plugin, you can configure the plugin to forward
+                                requests as necessary. Such configuration is
+                                beyond the detail of this document.
+                            </li>
+                        
+                            <li>
+                                <i>[ appName ]</i>
+                                is the context root of the web application. Check your
+                                deployment in WebLogic console. By default this is <em>wipedit</em>
+                            </li>
+                             
+                            <li>
+                                <i>[ uniqueId ]</i>
+                                is the unique identifier of the transaction you
+                                wish to edit.
+                            </li>
+                             
+                            <li>
+                                <i>[ taskId ]</i>
+                                is the task ID (aka docId) of the transaction
+                                you wish to edit.
+                                <i>Note: this value is not actually used, but is
+                                   required.</i>
+                            </li>
+                        </ul>
+                        <p>
+                            <i>Note: HTTPS can be used if SSL is configured.
+                               Such configuration is supported by WebLogic and
+                               this application, but configuration thereof is
+                               outside the scope of this document.</i>
+                        </p>
+                        <h2>User Functions within WIPapp</h2>
+                        <p>End User transactional functions:</p>
+						<ul>
+	                        <li><span class="glyphicon glyphicon-print" aria-hidden="true"></span> Proof - saves the document and generates a PDF of the document in the current state.</li>
+                            <li><span class='glyphicon glyphicon-save-file' aria-hidden='true'></span> Save - commit changes back to the database. Note: this function is only enabled for users with the Document Preparer role.</li>
+                            <li><span class='glyphicon glyphicon-check' aria-hidden='true'></span> Check - Advances the user to the next required entry field that is missing data.</li>
+                            <li><span class='glyphicon glyphicon-cloud-upload' aria-hidden='true'></span> Submit- this first performs a required field check, saves the document, and then ends the session by unlocking the transaction.</li>
+                        
+                        </ul>
+
+                        
+						<p>End User navigational functions:</p>
+						<ul>
+								<li><span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span> Zoom In</li>
+                                <li><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Zoom Normal</li>
+                                <li><span class="glyphicon glyphicon-zoom-out" aria-hidden="true"></span> Zoom Out</li>
+                                <li><span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span> Previous Form - navigate to the previous form backward from current position</li>
+                                <li><span class="glyphicon glyphicon-backward" aria-hidden="true"></span> Previous Page - navigate to the previous page backward from current position</li>                                                                
+                                <li><span class="glyphicon glyphicon-forward" aria-hidden="true"></span> Next Page - navigate to the next page ahead from current position</li>
+                                <li><span class="glyphicon glyphicon-fast-forward" aria-hidden="true"></span> Next Form - navigate to the net form ahead from the current position</li>                                
+                                <li><span class="glyphicon glyphicon-expand" aria-hidden="true"></span> Toggle the formset navigational tree</li>                         
+						</ul>       
+                  
+        </div>
+        <nav id='pagefooter' class='navbar navbar-default navbar-inverse'>
+            <div class='container'>
+                <div class='col-xs-12 text-center navbar-text'>
+                    <p id="statusbar" class='text'>Copyright &copy; 2016-2017 Oracle
+                                                   Corporation - created by Andy
+                                                   Little
+                                                   (andy.little@oracle.com)</p>
+                </div>
+            </div>
+        </nav>
+    </body>
+</html>
+
+
+
+

@@ -1,0 +1,202 @@
+<?xml version = '1.0' encoding = 'ISO-8859-1'?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5" xmlns="http://java.sun.com/xml/ns/javaee">
+  <display-name>WIPAPP</display-name>
+  <description>Customized WIPedit plugin implementation that allows for simple save/submit/close functionality with two user profiles (preparer and reviewer). Modify your deployment descriptors to map principals to roles.</description>
+  <distributable/>
+  <context-param>
+    <param-name>wipEditVersion</param-name>
+    <param-value>0.3</param-value>
+  </context-param>
+  <context-param>
+    <param-name>saveServlet</param-name>
+    <param-value>wipedit/savewip</param-value>
+  </context-param>
+  <context-param>
+    <param-name>getResourceServlet</param-name>
+    <param-value>wipedit/getresource</param-value>
+  </context-param>
+  <context-param>
+    <param-name>idsConfig</param-name>
+    <param-value>CORRESPONDENCE</param-value>
+  </context-param>
+  <context-param>
+    <param-name>idsProofPrintType</param-name>
+    <param-value>PDF</param-value>
+  </context-param>
+  <context-param>
+    <param-name>idsgetWipPrintType</param-name>
+    <param-value>DPW</param-value>
+  </context-param>
+  <context-param>
+    <param-name>hostUrlPrefix</param-name>
+    <param-value>@{hostUrlPrefix}@</param-value>
+  </context-param>
+  <context-param>
+    <param-name>idsRequestProof</param-name>
+    <param-value>iDM_PrintWIPFormset</param-value>
+  </context-param>
+  <context-param>
+    <param-name>idsRequestSave</param-name>
+    <param-value>iDM_PluginSave</param-value>
+  </context-param>
+  <context-param>
+    <param-name>idsRequestGetWip</param-name>
+    <param-value>iDM_PluginInit</param-value>
+  </context-param>
+  <context-param>
+    <param-name>idsRequestUpdateWip</param-name>
+    <param-value>iDM_UpdateWIP</param-value>
+  </context-param>
+  <context-param>
+    <param-name>idsRequestGetResource</param-name>
+    <param-value>iDM_PluginGetResource</param-value>
+  </context-param>
+  <context-param>
+    <param-name>idsRequestUID</param-name>
+    <param-value>FORMAKER</param-value>
+  </context-param>
+  <context-param>
+    <param-name>idsRequestPWD</param-name>
+    <param-value>FORMAKER</param-value>
+  </context-param>
+  <context-param>
+    <param-name>pegaEndpoint</param-name>
+    <param-value>@{pegaEndpoint}@</param-value>
+  </context-param>
+  <context-param>
+    <description>Valid Values: DEBUG, ERROR</description>
+    <param-name>logLevel</param-name>
+    <param-value>@{logLevel}@</param-value>
+  </context-param>
+  <context-param>
+    <param-name>refreshServlet</param-name>
+    <param-value>DocumakerCorrespondence/refresh/debug</param-value>
+  </context-param>
+  <context-param>
+    <param-name>docPrepGroupId</param-name>
+    <param-value>@{prepGroupId}@</param-value>
+  </context-param>
+  <context-param>
+    <param-name>docVetGroupId</param-name>
+    <param-value>@{vetGroupId}@</param-value>
+  </context-param>
+  <context-param>
+    <param-name>docPrepGroupName</param-name>
+    <param-value>@{prepGroupName}@</param-value>
+  </context-param>
+  <context-param>
+    <param-name>docVetGroupName</param-name>
+    <param-value>@{vetGroupName}@</param-value>
+  </context-param>
+  <context-param>
+    <description>User within the security realm that can be used for secure access by Plugin.</description>
+    <param-name>httpUser</param-name>
+    <param-value>documaker</param-value>
+  </context-param>
+  <context-param>
+    <param-name>httpUserPass</param-name>
+    <param-value>Oracle12</param-value>
+  </context-param>
+  <servlet>
+    <servlet-name>getresource</servlet-name>
+    <servlet-class>wipedit.getresource</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>printwip</servlet-name>
+    <servlet-class>wipedit.printwip</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>getwip</servlet-name>
+    <servlet-class>wipedit.getwip</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>savewip</servlet-name>
+    <servlet-class>wipedit.savewip</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>unlockwip</servlet-name>
+    <servlet-class>wipedit.unlockwip</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>submitwip</servlet-name>
+    <servlet-class>wipedit.submitwip</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>getresource</servlet-name>
+    <url-pattern>/getresource</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>getwip</servlet-name>
+    <url-pattern>/wipedit</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>savewip</servlet-name>
+    <url-pattern>/savewip</url-pattern>
+  </servlet-mapping>
+<servlet-mapping>
+    <servlet-name>printwip</servlet-name>
+    <url-pattern>/printwip</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>unlockwip</servlet-name>
+    <url-pattern>/unlockwip</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>submitwip</servlet-name>
+    <url-pattern>/submitwip</url-pattern>
+  </servlet-mapping>
+  <welcome-file-list>
+    <welcome-file>/index.jsp</welcome-file>
+        <welcome-file>/index.html</welcome-file>
+  </welcome-file-list>
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>Secured Content</web-resource-name>
+      <url-pattern>*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>authenticated-users</role-name>
+      <role-name>DocumentReviewer</role-name>
+      <role-name>DocumentPreparer</role-name>
+    </auth-constraint>
+    
+<!--
+TO SECURE THE APPLICATION WITH SSL:
+Change the value of <transport-guarantee> to [NONE | INTEGRAL | CONFIDENTIAL] where:
+        NONE = no security
+    INTEGRAL = prevent changing message, contents readable.
+CONFIDENTIAL = prevent changing/reading message.
+-->
+    <user-data-constraint>
+      <transport-guarantee>@{sslTransport}@</transport-guarantee>
+    </user-data-constraint>
+  </security-constraint>
+<!-- 
+TO CONFIGURE LOG-ON SECURITY
+Changethe value of <auth-method> to [BASIC | DIGEST | CLIENT-CERT] where:
+        BASIC = plaintext challenge/response
+       DIGEST = encrypted challenge/response
+  CLIENT-CERT = client browser is prompted for security certificate. The certificate 
+                must be trusted by the server's trust store, or WebLogic must be 
+                configured for perimeter security.
+<realm-name> should be myrealm for default installation
+-->
+  <login-config>
+    <auth-method>@{authMethod}@</auth-method>
+    <realm-name>@{realmName}@</realm-name>
+  </login-config>
+  <security-role>
+    <description>Document Preparation Users</description>
+    <role-name>DocumentPreparer</role-name>
+  </security-role>
+  <security-role>
+    <description>Document Review Users</description>
+    <role-name>DocumentReviewer</role-name>
+  </security-role>
+  <security-role>
+    <description>Authenticated Users</description>
+    <role-name>authenticated-users</role-name>
+  </security-role>
+</web-app>

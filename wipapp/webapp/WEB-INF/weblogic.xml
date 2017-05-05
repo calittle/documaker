@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'ISO-8859-1'?>
+<weblogic-web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.bea.com/ns/weblogic/weblogic-web-app http://www.bea.com/ns/weblogic/weblogic-web-app/1.0/weblogic-web-app.xsd" xmlns="http://www.bea.com/ns/weblogic/weblogic-web-app">
+  <description>Customized WIPedit plugin implementation that allows for simple save/submit/close functionality with two user profiles (preparer and reviewer). Modify your deployment descriptors to map principals to roles.</description>
+  <security-role-assignment>
+    <role-name>DocumentPreparer</role-name>
+    <principal-name>@{prepGroupName}@</principal-name>
+  </security-role-assignment>
+  <security-role-assignment>
+    <role-name>DocumentReviewer</role-name>
+    <principal-name>@{vetGroupName}@</principal-name>
+  </security-role-assignment>
+  <security-role-assignment>
+    <role-name>authenticated-users</role-name>
+    <principal-name>users</principal-name>
+  </security-role-assignment>
+  <context-root>wipedit</context-root>
+</weblogic-web-app>

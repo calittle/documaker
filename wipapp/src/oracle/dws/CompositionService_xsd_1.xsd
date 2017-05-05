@@ -1,0 +1,283 @@
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="oracle/documaker/schema/ws/composition"
+     xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:cmn="oracle/documaker/schema/common"
+     targetNamespace="oracle/documaker/schema/ws/composition" elementFormDefault="qualified">
+    <import schemaLocation="CompositionService_xsd_2.xsd" namespace="oracle/documaker/schema/common"/>
+    <complexType name="doComposeRequestBase" abstract="true">
+        <sequence>
+            <element name="timeoutMillis" type="int" default="30000" maxOccurs="1" minOccurs="0"/>
+            <element ref="cmn:UserId" minOccurs="0" maxOccurs="1"/>
+            <element ref="cmn:Password" minOccurs="0" maxOccurs="1"/>
+            <element ref="tns:Properties" minOccurs="0" maxOccurs="1"/>
+        </sequence>
+        <attribute name="schemaVersion" use="required" type="cmn:schemaVersion"/>
+    </complexType>
+    <complexType name="doComposeRequestOneWayBase" abstract="true">
+        <sequence>
+            <element ref="tns:Properties" minOccurs="0" maxOccurs="1"/>
+        </sequence>
+        <attribute name="schemaVersion" use="required" type="cmn:schemaVersion"/>
+    </complexType>
+    <complexType name="doComposeResponseBase" abstract="true">
+        <sequence>
+            <element ref="tns:Results" minOccurs="1" maxOccurs="1"/>
+            <element ref="cmn:ServiceTimeMillis" minOccurs="1" maxOccurs="1"/>
+        </sequence>
+    </complexType>
+    <element name="DoCallIDSRequest">
+        <complexType>
+            <complexContent>
+                <extension base="tns:doComposeRequestBase">
+                    <sequence>
+                        <element ref="tns:DSIMSG" minOccurs="1" maxOccurs="1"/>
+                        <element name="ResponseProperties" type="tns:ResponseProperties" minOccurs="0"
+                             maxOccurs="1"/>
+                    </sequence>
+                </extension>
+            </complexContent>
+        </complexType>
+    </element>
+    <element name="DoCallIDSResponse">
+        <complexType>
+            <complexContent>
+                <extension base="tns:doComposeResponseBase">
+                    <sequence>
+                        <element ref="tns:DSIMSG" minOccurs="1" maxOccurs="1"/>
+                    </sequence>
+                </extension>
+            </complexContent>
+        </complexType>
+    </element>
+    <element name="DoCallIDSOneWayRequest">
+        <complexType>
+            <complexContent>
+                <extension base="tns:doComposeRequestOneWayBase">
+                    <sequence>
+                        <element ref="tns:DSIMSG" minOccurs="1" maxOccurs="1"/>
+                    </sequence>
+                </extension>
+            </complexContent>
+        </complexType>
+    </element>
+    <element name="CompositionFault" type="tns:CompositionFault"/>
+    <complexType name="CompositionFault">
+        <sequence>
+            <element name="faultInfo" type="string"/>
+            <element name="message" type="string"/>
+        </sequence>
+    </complexType>
+    <element name="DSIMSG">
+        <complexType>
+            <sequence>
+                <element ref="tns:MSGVARS"/>
+                <element ref="cmn:Attachment" minOccurs="0" maxOccurs="unbounded"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="MSGVARS">
+        <complexType>
+            <sequence>
+                <element ref="tns:VAR" minOccurs="0" maxOccurs="unbounded"/>
+                <element ref="tns:ROWSET" minOccurs="0" maxOccurs="unbounded"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="VAR">
+        <complexType>
+            <simpleContent>
+                <extension base="string">
+                    <attribute name="NAME" use="required" type="string"/>
+                </extension>
+            </simpleContent>
+        </complexType>
+    </element>
+    <element name="ROWSET">
+        <complexType>
+            <sequence>
+                <element ref="tns:ROW" maxOccurs="unbounded"/>
+            </sequence>
+            <attribute name="NAME" use="required" type="string"/>
+        </complexType>
+    </element>
+    <element name="ROW">
+        <complexType>
+            <sequence>
+                <element ref="tns:VAR" maxOccurs="unbounded"/>
+            </sequence>
+            <attribute name="NUM" use="required" type="int"/>
+        </complexType>
+    </element>
+    <simpleType name="MQSSLCipherspec">
+        <restriction base="string">
+            <enumeration value="DES_SHA_EXPORT"/>
+            <enumeration value="DES_SHA_EXPORT1024"/>
+            <enumeration value="NULL_MD5"/>
+            <enumeration value="NULL_SHA"/>
+            <enumeration value="RC2_MD5_EXPORT"/>
+            <enumeration value="RC4_56_SHA_EXPORT1024"/>
+            <enumeration value="RC4_MD5_US"/>
+            <enumeration value="RC4_MD5_EXPORT"/>
+            <enumeration value="RC4_SHA_US"/>
+            <enumeration value="TRIPLE_DES_SHA_US"/>
+        </restriction>
+    </simpleType>
+    <simpleType name="MQSeriesTracing">
+        <restriction base="int">
+            <enumeration value="1"/>
+            <enumeration value="2"/>
+            <enumeration value="3"/>
+            <enumeration value="4"/>
+        </restriction>
+    </simpleType>
+    <simpleType name="MarshallerClass">
+        <restriction base="string">
+            <enumeration value="com.docucorp.messaging.data.marshaller.SerializationDSIMessageMarshaller"/>
+            <enumeration value="com.docucorp.messaging.data.marshaller.SOAPMIMEDSIMessageMarshaller"/>
+        </restriction>
+    </simpleType>
+    <element name="HTTP">
+        <complexType>
+            <sequence>
+                <element name="queuefactory.class" type="string" fixed="com.docucorp.messaging.http.DSIHTTPMessageQueueFactory"
+                     minOccurs="1" maxOccurs="1"/>
+                <element name="marshaller.class" type="string" fixed="com.docucorp.messaging.data.marshaller.SOAPMIMEDSIMessageMarshaller"
+                     minOccurs="1" maxOccurs="1"/>
+                <element name="http.url" type="string" default="http://localhost:49152" minOccurs="1"
+                     maxOccurs="1"/>
+                <element name="http.reuse.ports" type="string" default="true" minOccurs="0" maxOccurs="1"/>
+                <element name="http.putmessage.tries" type="string" default="3" minOccurs="0" maxOccurs="1"/>
+                <element name="http.Property" type="cmn:Property" minOccurs="0" maxOccurs="unbounded"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="JMS">
+        <complexType>
+            <sequence>
+                <element name="queuefactory.class" type="string" fixed="com.docucorp.messaging.jms.DSIJMSJNDIMessageQueueFactory"
+                     minOccurs="1" maxOccurs="1"/>
+                <element name="marshaller.class" type="tns:MarshallerClass" minOccurs="1" maxOccurs="1"/>
+                <element name="jms.initial.context.factory" type="string" default="weblogic.jndi.WLInitialContextFactory"
+                     minOccurs="1" maxOccurs="1"/>
+                <element name="jms.provider.URL" type="string" default="t3://localhost:7001" minOccurs="1"
+                     maxOccurs="1"/>
+                <element name="jms.security.principal" type="string" default="" minOccurs="0" maxOccurs="1"/>
+                <element name="jms.security.credentials" type="string" default="" minOccurs="0" maxOccurs="1"/>
+                <element name="jms.qcf.name" type="string" default="qcf" minOccurs="1" maxOccurs="1"/>
+                <element name="jms.inputqueue.connectstring" type="string" default="resultq" minOccurs="1"
+                     maxOccurs="1"/>
+                <element name="jms.outputqueue.connectstring" type="string" default="requestq" minOccurs="1"
+                     maxOccurs="1"/>
+                <element name="jms.env.Property" type="cmn:Property" minOccurs="0" maxOccurs="unbounded"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="MSMQ">
+        <complexType>
+            <sequence>
+                <element name="queuefactory.class" type="string" fixed="com.docucorp.messaging.msmq.DSIMSMQMessageQueueFactory"
+                     minOccurs="1" maxOccurs="1"/>
+                <element name="marshaller.class" type="tns:MarshallerClass" minOccurs="1" maxOccurs="1"/>
+                <element name="msmq.server.name" type="string" default="localhost" minOccurs="0" maxOccurs="1"/>
+                <element name="msmq.inputqueue.name" type="string" default="DIRECT=OS:localhost\PRIVATE$\RESULTQ"
+                     minOccurs="1" maxOccurs="1"/>
+                <element name="msmq.outputqueue.name" type="string" default="DIRECT=OS:localhost\PRIVATE$\REQUESTQ"
+                     minOccurs="1" maxOccurs="1"/>
+                <element name="msmq.timeout" type="string" default="30000" minOccurs="0" maxOccurs="1"/>
+                <element name="msmq.expiry" type="string" default="1800000" minOccurs="0" maxOccurs="1"/>
+                <element name="msmq.Property" type="cmn:Property" minOccurs="0" maxOccurs="unbounded"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="MQ">
+        <complexType>
+            <sequence>
+                <element name="queuefactory.class" type="string" fixed="com.docucorp.messaging.mqseries.DSIMQMessageQueueFactory"
+                     minOccurs="1" maxOccurs="1"/>
+                <element name="marshaller.class" type="tns:MarshallerClass" minOccurs="1" maxOccurs="1"/>
+                <element name="mq.queue.manager" type="string" default="queue_manager" minOccurs="1"
+                     maxOccurs="1"/>
+                <element name="mq.tcpip.host" type="string" default="127.0.0.1" minOccurs="0" maxOccurs="1"/>
+                <element name="mq.tcpip.port" type="string" default="1414" minOccurs="0" maxOccurs="1"/>
+                <element name="mq.inputqueue.name" type="string" default="RESULTQ" minOccurs="1" maxOccurs="1"/>
+                <element name="mq.outputqueue.name" type="string" default="REQUESTQ" minOccurs="1"
+                     maxOccurs="1"/>
+                <element name="mq.queue.channel" type="string" default="SYSTEM.DEF.SVRCONN" minOccurs="0"
+                     maxOccurs="1"/>
+                <element name="mq.outputqueue.expiry" type="string" default="" minOccurs="0" maxOccurs="1"/>
+                <element name="mqseries.exception.logging" type="string" default="N" minOccurs="0"
+                     maxOccurs="1"/>
+                <element name="mqseries.tracing" type="tns:MQSeriesTracing" default="1" minOccurs="0"
+                     maxOccurs="1"/>
+                <element name="mqseries.tracing.log" type="string" default="mqseries.log" minOccurs="0"
+                     maxOccurs="1"/>
+                <element name="mq.ccdt.url" type="string" default="file:///c:/mq/ccdt/AMQCLCHL.TAB"
+                     minOccurs="0" maxOccurs="1"/>
+                <element name="mq.ssl.cipherspec" type="tns:MQSSLCipherspec" minOccurs="0" maxOccurs="1"/>
+                <element name="mq.ssl.peername" type="string" minOccurs="0" maxOccurs="1"/>
+                <element name="mq.ssl.socketFactory.class" type="string" default="com.docucorp.messaging.mqseries.DSIMQSSLSocketFactory"
+                     minOccurs="0" maxOccurs="1"/>
+                <element name="mq.ssl.protocol" type="string" default="SSLv3" minOccurs="0" maxOccurs="1"/>
+                <element name="mq.ssl.keystore" type="string" minOccurs="0" maxOccurs="1"/>
+                <element name="mq.ssl.keystore.type" type="string" default="JKS" minOccurs="0" maxOccurs="1"/>
+                <element name="mq.ssl.keystore.manager.type" type="string" default="SunX509" minOccurs="0"
+                     maxOccurs="1"/>
+                <element name="mq.ssl.keystore.pwd" type="string" minOccurs="0" maxOccurs="1"/>
+                <element name="mq.ssl.truststore" type="string" minOccurs="0" maxOccurs="1"/>
+                <element name="mq.ssl.truststore.type" type="string" default="JKS" minOccurs="0" maxOccurs="1"/>
+                <element name="mq.ssl.truststore.manager.type" type="string" default="SunX509" minOccurs="0"
+                     maxOccurs="1"/>
+                <element name="mq.ssl.truststore.pwd" type="string" minOccurs="0" maxOccurs="1"/>
+                <element name="mq.ssl.debug" type="string" default="true" minOccurs="0" maxOccurs="1"/>
+                <element name="mq.Property" type="cmn:Property" minOccurs="0" maxOccurs="unbounded"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="Properties">
+        <complexType>
+            <choice maxOccurs="1">
+                <element ref="tns:HTTP"/>
+                <element ref="tns:MQ"/>
+                <element ref="tns:MSMQ"/>
+                <element ref="tns:JMS"/>
+            </choice>
+        </complexType>
+    </element>
+    <element name="Diagnosis">
+        <complexType>
+            <sequence>
+                <element name="Cause" type="string" minOccurs="1" maxOccurs="1"/>
+                <element name="Remedy" type="string" minOccurs="1" maxOccurs="1"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="Error">
+        <complexType>
+            <sequence>
+                <element name="Code" type="string" minOccurs="1" maxOccurs="1"/>
+                <element name="Severity" type="string" minOccurs="1" maxOccurs="1"/>
+                <element name="Category" type="string" minOccurs="1" maxOccurs="1"/>
+                <element name="Description" type="string" minOccurs="1" maxOccurs="1"/>
+                <element ref="tns:Diagnosis" minOccurs="1" maxOccurs="unbounded"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="Errors">
+        <complexType>
+            <sequence>
+                <element ref="tns:Error" minOccurs="1" maxOccurs="unbounded"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="Results">
+        <complexType>
+            <sequence>
+                <element ref="cmn:Result" minOccurs="1" maxOccurs="1"/>
+                <element ref="tns:Errors" minOccurs="0" maxOccurs="1"/>
+            </sequence>
+        </complexType>
+    </element>
+    <complexType name="ResponseProperties">
+        <sequence>
+            <element name="ResponseAttachment" type="cmn:ResponseAttachment" minOccurs="0" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+</schema>

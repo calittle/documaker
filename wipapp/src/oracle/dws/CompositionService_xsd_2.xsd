@@ -1,0 +1,101 @@
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:cmn="oracle/documaker/schema/common" xmlns:xmime="http://www.w3.org/2005/05/xmlmime"
+     targetNamespace="oracle/documaker/schema/common" elementFormDefault="qualified">
+    <element name="UserId">
+        <simpleType>
+            <restriction base="string">
+                <minLength value="1"/>
+            </restriction>
+        </simpleType>
+    </element>
+    <element name="Password">
+        <simpleType>
+            <restriction base="string">
+                <minLength value="1"/>
+            </restriction>
+        </simpleType>
+    </element>
+    <element name="UniqueId">
+        <simpleType>
+            <restriction base="string">
+                <minLength value="36"/>
+                <maxLength value="36"/>
+            </restriction>
+        </simpleType>
+    </element>
+    <element name="Priority">
+        <simpleType>
+            <restriction base="int">
+                <enumeration value="0"/>
+                <enumeration value="1"/>
+                <enumeration value="2"/>
+                <enumeration value="3"/>
+                <enumeration value="4"/>
+            </restriction>
+        </simpleType>
+    </element>
+    <element name="Result">
+        <simpleType>
+            <restriction base="int">
+                <enumeration value="0"/>
+                <enumeration value="1"/>
+            </restriction>
+        </simpleType>
+    </element>
+    <simpleType name="schemaVersion">
+        <restriction base="string">
+            <enumeration value="1.0"/>
+        </restriction>
+    </simpleType>
+    <element name="ServiceTimeMillis">
+        <simpleType>
+            <restriction base="long"/>
+        </simpleType>
+    </element>
+    <complexType name="Content">
+        <choice maxOccurs="1">
+            <element name="URI" type="string" default="file:///temp/test.pdf"/>
+            <element name="Binary" type="base64Binary" xmime:expectedContentTypes="application/octet-stream"/>
+        </choice>
+    </complexType>
+    <complexType name="AttachmentBase" abstract="true">
+        <sequence>
+            <element name="Name" type="string" minOccurs="0" maxOccurs="1"/>
+            <element name="Content" type="cmn:Content"/>
+        </sequence>
+    </complexType>
+    <element name="Attachment">
+        <complexType>
+            <complexContent>
+                <extension base="cmn:AttachmentBase">
+                    <sequence>
+                        <element name="FileName" type="cmn:FileName" minOccurs="0" maxOccurs="1"/>
+                    </sequence>
+                </extension>
+            </complexContent>
+        </complexType>
+    </element>
+    <simpleType name="FileName">
+        <restriction base="string">
+            <minLength value="1"/>
+        </restriction>
+    </simpleType>
+    <complexType name="Property">
+        <sequence>
+            <element name="Name" type="string" minOccurs="1" maxOccurs="1"/>
+            <element name="Value" type="string" minOccurs="1" maxOccurs="1"/>
+        </sequence>
+    </complexType>
+    <simpleType name="AttachmentReturnType">
+        <restriction base="string">
+            <enumeration value="URI"/>
+            <enumeration value="Binary"/>
+        </restriction>
+    </simpleType>
+    <complexType name="ResponseAttachment">
+        <sequence>
+            <element name="Name" type="string" minOccurs="1" maxOccurs="1"/>
+            <element name="ReturnType" type="cmn:AttachmentReturnType" minOccurs="1" maxOccurs="1"/>
+            <element name="URI" type="string" default="file:///temp/outputfile" minOccurs="0" maxOccurs="1"/>
+        </sequence>
+    </complexType>
+</schema>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions
+    
+     targetNamespace="oracle/documaker/schema/ws/composition"
+     xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+     xmlns:wsoma="http://schemas.xmlsoap.org/ws/2004/09/policy/optimizedmimeserialization"
+     xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+     xmlns:wsrm="http://docs.oasis-open.org/ws-rx/wsrmp/200702"
+     xmlns:tns="oracle/documaker/schema/ws/composition"
+     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+     xmlns:xmime="http://www.w3.org/2005/05/xmlmime"
+     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+     xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata"
+     xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+     xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+    >
+    <wsp:Policy wsu:Id="RM_BindingPolicy">
+        <wsp:All>
+            <wsp:ExactlyOne>
+                <wsp:All>
+                    <wsrm:RMAssertion/>
+                    <wsaw:UsingAddressing/>
+                </wsp:All>
+            </wsp:ExactlyOne>
+        </wsp:All>
+    </wsp:Policy>
+    <wsp:Policy wsu:Id="MTOM_BindingPolicy">
+        <wsoma:OptimizedMimeSerialization wsp:Optional="true"/>
+    </wsp:Policy>
+    <wsdl:types>
+        <xsd:schema>
+            <xsd:import schemaLocation="CompositionService_xsd_1.xsd" namespace="oracle/documaker/schema/ws/composition"/>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="DoCallIDSRequest">
+        <wsdl:part name="DoCallIDSRequest" element="tns:DoCallIDSRequest"/>
+    </wsdl:message>
+    <wsdl:message name="DoCallIDSResponse">
+        <wsdl:part name="DoCallIDSResponse" element="tns:DoCallIDSResponse"/>
+    </wsdl:message>
+    <wsdl:message name="CompositionFault">
+        <wsdl:part name="CompositionFault" element="tns:CompositionFault"/>
+    </wsdl:message>
+    <wsdl:message name="DoCallIDSOneWayRequest">
+        <wsdl:part name="DoCallIDSOneWayRequest" element="tns:DoCallIDSOneWayRequest"/>
+    </wsdl:message>
+    <wsdl:portType name="CompositionServicePortType">
+        <wsdl:operation name="doCallIDS">
+            <wsdl:input message="tns:DoCallIDSRequest" wsaw:Action="doCallIDS"/>
+            <wsdl:output message="tns:DoCallIDSResponse"/>
+            <wsdl:fault name="CompositionFault" message="tns:CompositionFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="doCallIDSOneWay">
+            <wsdl:input message="tns:DoCallIDSOneWayRequest" wsaw:Action="doCallIDSOneWay"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:portType name="CompositionServiceSoap12PortType">
+        <wsdl:operation name="doCallIDS">
+            <wsdl:input message="tns:DoCallIDSRequest" wsaw:Action="doCallIDS"/>
+            <wsdl:output message="tns:DoCallIDSResponse"/>
+            <wsdl:fault name="CompositionFault" message="tns:CompositionFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="doCallIDSOneWay">
+            <wsdl:input message="tns:DoCallIDSOneWayRequest" wsaw:Action="doCallIDSOneWay"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="CompositionServiceBinding" type="tns:CompositionServicePortType">
+        <wsaw:UsingAddressing wsdl:required="false"/>
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="doCallIDS">
+            <soap:operation style="document" soapAction="doCallIDS"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CompositionFault">
+                <soap:fault name="CompositionFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="doCallIDSOneWay">
+            <soap:operation style="document" soapAction="doCallIDSOneWay"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="CompositionServiceSoap12Binding" type="tns:CompositionServiceSoap12PortType">
+        <wsaw:UsingAddressing wsdl:required="false"/>
+        <soap12:binding style="document" transport="http://www.w3.org/2003/05/soap/bindings/HTTP/"/>
+        <wsdl:operation name="doCallIDS">
+            <soap12:operation style="document" soapAction="doCallIDS" soapActionRequired="false"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="CompositionFault">
+                <soap12:fault name="CompositionFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="doCallIDSOneWay">
+            <soap12:operation style="document" soapAction="doCallIDSOneWay" soapActionRequired="false"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="CompositionService">
+    <!-- MUST USE DWSV0! -->
+        <wsdl:port name="CompositionServicePort" binding="tns:CompositionServiceBinding">
+            <soap:address location="@{dwsEP}@/CompositionService"/>
+        </wsdl:port>
+    </wsdl:service>
+    <wsdl:service name="CompositionServiceSoap12">
+        <wsdl:port name="CompositionServiceSoap12Port" binding="tns:CompositionServiceSoap12Binding">
+            <soap12:address location="@{dwsEP}@/CompositionServiceSoap12"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
