@@ -18,3 +18,11 @@ The container will be set up with a default MRL that can be executed to generate
 * Base MRL is installed to `/u01/oracle/rel125/mstrres/dms1`
 * Basic execution script is installed to `/u01/oracle/rel125/mstrres/dms1/run.sh`
 * See `/u01/oracle/runDocumaker.sh` for automatic execution of `run.sh` on Container start.
+
+# Helpful Hints
+1. `docker run -ti [IMAGE_ID | IMAGE_NAME]` - Use this command to start a container from an image. For exmaple, once you've built an image, you can fire up the image using this command. The container will automatically execute the `/u01/oracle/runDocumaker.sh` script on startup.
+2. `docker run -ti -u root [IMAGE_ID | IMAGE_NAME]` - Similar to the above, use this to start up a container and open TTY as root.
+3. What if I need my custom MRL or other components in my container? 
+  Clone the [repository](https://github.com/calittle/documaker) using `git clone https://github.com/calittle/documaker.git` then modify the appropriate `Dockerfile` to `COPY` the binary files you need. Then, you can execute the RUN commands to install. Alternately, you can modify the `install_se.sh` script if you want to use `bash` scripting instead of `Docker` scripting.
+  Another alternative is to use `yum` to install the necessary components, if they are available in a repository. You can do this using the `Dockerfile` which already uses `yum` to install various components.
+4. What if I already made changes to my Container and I want to push them back into the image I made? Easy, just use docker commands to commit changes: e.g. `docker commit [CONTAINER_ID] [IMAGE_NAME]`.   
