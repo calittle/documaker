@@ -15,6 +15,6 @@ For community support, discussions and feedback about the provided Dockerfiles v
 
 # Container execution
 The container will be set up with a default MRL that can be executed to generate output. You can modify the build to deploy your own MRL as necessary. 
-* Base MRL is installed to /u01/oracle/rel125/mstrres/dms1
-* Basic execution script is installed to /u01/oracle/rel125/mstrres/dms1/run.sh
-* See /u01/oracle/runDocumaker.sh for automatic execution of run.sh on Container start.
+* Base MRL is installed to `/u01/oracle/rel125/mstrres/dms1`
+* Basic execution script is installed to `/u01/oracle/rel125/mstrres/dms1/run.sh`
+* See `/u01/oracle/runDocumaker.sh` for automatic execution of `run.sh` on Container start.
