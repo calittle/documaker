@@ -21,8 +21,8 @@ sleepTime=5000;
 connect(username,password, wlsUrl)
 includeServer = ['jms_server'];
 includeJms = ['AL1Server'];
-includeDestinations = ['IdentifierReq','PresenterReq','AssemblerReq','DistributorReq','ArchiverReq']
-#ReceiverReq,ReceiverRes,PubNotifierReq,BatcherReq,SchedulerReq,PublisherReq
+# remove any destinations here you don't want to be included in your output.
+includeDestinations = ['IdentifierReq','PresenterReq','AssemblerReq','DistributorReq','ArchiverReq','ReceiverReq','ReceiverRes','PubNotifierReq','BatcherReq','SchedulerReq','PublisherReq']
 
 def getTime():
  return strftime("%Y-%m-%d %H:%M:%S", gmtime())
