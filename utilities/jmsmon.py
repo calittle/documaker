@@ -11,46 +11,46 @@
 # DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
 #
 
-
-import thread
 import time
 from time import gmtime, strftime
-  
+
 username='weblogic'
-password='Oracle12'
-wlsUrl='t3://localhost:11001'
- 
+password='Welcome1'
+wlsUrl='t3://127.0.0.1:7001'
+sleepTime=5000;
 connect(username,password, wlsUrl)
- 
+includeServer = ['jms_server'];
+includeJms = ['AL1Server'];
+includeDestinations = ['IdentifierReq','PresenterReq','AssemblerReq','DistributorReq','ArchiverReq']
+#ReceiverReq,ReceiverRes,PubNotifierReq,BatcherReq,SchedulerReq,PublisherReq
+
 def getTime():
  return strftime("%Y-%m-%d %H:%M:%S", gmtime())
- 
+
 def monitorJms():
  servers = domainRuntimeService.getServerRuntimes();
  if (len(servers) > 0):
      for server in servers:
-       jmsRuntime = server.getJMSRuntime();
-       jmsServers = jmsRuntime.getJMSServers();
-       for jmsServer in jmsServers:
-           destinations = jmsServer.getDestinations();
-  
-           for destination in destinations:
-               try:
-                    print  getTime() , '|' , server.getName() , '|' , jmsServer.getName() , '|' ,
-                            destination.getName() , '|' ,destination.getMessagesCurrentCount(), '|' ,
-                            destination.getMessagesPendingCount() , '|', 
-                            destination.getMessagesHighCount() , '|' ,
-                            destination.getMessagesReceivedCount() , '|' ,
-                            destination.getMessagesMovedCurrentCount() , '|' , 
-                            destination.getConsumersCurrentCount() , '|' ,
-                            destination.getConsumersHighCount() , '|' ,
-                            destination.getConsumersTotalCount()
-                except:
-                    print 'ERROR_DATA';
- 
- 
-print 'Time | ServerName | JMSServerName | DestName | MessagesCurrentCount | MessagesPendingCount | MessagesHighCount | MessagesReceivedCount | MessagesMovedCurrentCount | ConsumersCurrentCount | ConsumersHighCount | ConsumersTotalCount';
+       serverName = server.getName()
+       if serverName in includeServer:
+                jmsRuntime = server.getJMSRuntime();
+                jmsServers = jmsRuntime.getJMSServers();
+                for jmsServer in jmsServers:
+                        jmsName = jmsServer.getName();
+                        if jmsName in includeJms:
+                                destinations = jmsServer.getDestinations();
+                                for destination in destinations:
+                                        destName = destination.getName();
+                                        destName = destName[destName.find('@')+1:];
+                                        if destName in includeDestinations:
+                                                try:
+                                                        print "%s,%s,%s,%s,%s,%s,%s" %(getTime(),serverName,jmsName,destName,destination.getMessagesCurrentCount(),destination.getMessagesHighCount(),destination.getConsumersCurrentCount());
+                                                except:
+                                                        print 'ERROR_DATA';
+
+print 'Time,ServerName,JMSServer,Destination,Msgs Cur,Msgs High,ConsumersCur';
+#print '        Time        | ServerName | JMSServer | DestName                 | Mesg Cur,High         | ConsumersCurrentCount ';
 while 1:
      monitorJms();
      print '';
-     java.lang.Thread.sleep(15000);
+     java.lang.Thread.sleep(sleepTime);
