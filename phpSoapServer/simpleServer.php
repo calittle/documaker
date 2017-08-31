@@ -1,5 +1,9 @@
 <?php
- 
+#
+# THIS DOES NOT ACTUALLY CALL THE DOCUMAKER WEB SERVICE!
+# What is *does* do is simulate it by returning a static response. 
+# The client is what's important here.
+#
 
 function doPublishFromImport($xmlInput){
 	
