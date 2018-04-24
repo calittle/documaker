@@ -46,6 +46,9 @@ if($parm1 != ''& $parm2 != '' & $parm3 != ''){
 	
     # here we make the call.
     $dwsResult = $dwsClient->__soapCall("doPublishFromImport",array(createXml($parm1,$parm2,$parm3)));
+    #
+    # Replace "__NAME OF RESPOSNE ELEMENT__" with the name of the XML element that contains your PDF.
+    # Why yes, this is inelegant, but we do what we must.
     $start = strpos($dwsResult,"<__NAME OF RESPONSE ELEMENT__>");
     $length = strpos($dwsResult,"</__NAME OF RESPONSE ELEMENT__>") - $start;    
     $encdata = substr($dwsResult,$start,$length);
