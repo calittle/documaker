@@ -41,24 +41,24 @@ print "</form>";
  
 if($parm1 != ''& $parm2 != '' & $parm3 != ''){
     # here we make the call to the DWS web service. You can also use
-    # the dummy response generator in simpleServer.php"
+    # the dummy response generator in simpleServerPdf.php"
     $dwsClient = new SoapClient(null, array('location' => "https://server:port/DWSAL1/PublishingService,'uri'=>"urn://documaker/dws"));
 	
     # here we make the call.
-  	$dwsResult = $dwsClient->__soapCall("doPublishFromImport",array(createXml($parm1,$parm2,$parm3)));
+    $dwsResult = $dwsClient->__soapCall("doPublishFromImport",array(createXml($parm1,$parm2,$parm3)));
+    $start = strpos($dwsResult,"<__NAME OF RESPONSE ELEMENT__>");
+    $length = strpos($dwsResult,"</__NAME OF RESPONSE ELEMENT__>") - $start;    
+    $encdata = substr($dwsResult,$start,$length);
 
-    print "<h2>Response</h2><textarea cols=50 rows=10>$dwsResult</textarea><br/>";
-    print "Parse the XML response for the document Identifiers to create Documaker Interactive URL.<br/>";
-    
-    $start = strpos($dwsResult,"<ns6:Unique_Id>");
-    $length = strpos($dwsResult,"</ns6:Unique_Id>") - $start;
-    
-    $uniqueId = substr($dwsResult,$start,$length);
+$pdfContent = base64_decode($encdata)
 
-    $start =strpos($dwsResult,"<ns6:KeyId>");
-    $length = strpos($dwsResult,"</ns6:KeyId>") - $start;
-    $docId = substr($dwsResult,$start,$length);
-           
-    print "<a href='#'>https://servername:port/DocumakerCorrespondence/faces/load?taskflow=edit&uniqueId=$uniqueId&docId=$docId</a>";
+    header('Content-type: application/pdf');
+    header("Cache-Control: no-cache");
+    header("Pragma: no-cache");
+    header("Content-Disposition: inline;filename='[_put_some_name_here_from_result]'");
+    header("Content-length: ".strlen($pdfContent));					    
+
+    die($pdfContent);
+
 }
 ?>
