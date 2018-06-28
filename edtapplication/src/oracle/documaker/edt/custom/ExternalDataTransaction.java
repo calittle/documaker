@@ -1,96 +1,50 @@
-package oracle.documaker.edt;
+package oracle.documaker.edt.custom;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
+import java.nio.charset.Charset;
+
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import javax.annotation.Resource;
+import javax.jws.WebService;
+import javax.xml.ws.WebServiceContext;
+import javax.xml.ws.handler.MessageContext;
+import java.util.Map;
+
+import java.util.stream.Stream;
+
+import javax.jws.WebMethod;
+
+import javax.servlet.ServletContext;
+
+import javax.xml.ws.BindingType;
+import javax.xml.ws.soap.MTOM;
+import javax.xml.ws.soap.SOAPBinding;
+
+import oracle.documaker.edt.ExternalDataTransactionBase;
+import oracle.documaker.edt.VFResponse;
 
 /**
- * This class is mainly utility methods that will can be changed by Oracle 
- * as the business case changes. Methods here can be used as-is or overridden in the 
- * ExternalDataTransaction class.
+ * This class implements the Web Service for the customer. Custom code should
+ * be implemented in this class, including overrides of the ExternalDataTransactionBase class.
  */
-public class ExternalDataTransactionBase {
-
-  protected static final String sampleTransaction = 
-  "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
-  "<DOCUMENT xmlns=\"http://xmlns.oracle.com/documaker/ids/jaxb/formset\">" +
-  "    <DOCSET NAME=\"\">" +
-  "        <LIBRARY CONFIG=\"CORRESPONDENCE\" NAME=\"CORRESPONDENCE\">CORRESPONDENCE</LIBRARY>" +
-  "        <ARCEFFECTIVEDATE>20110520</ARCEFFECTIVEDATE>" +
-  "        <WIPKEYS>" +
-  "            <KEY1>Central</KEY1>" +
-  "            <KEY2>Account_Status</KEY2>" +
-  "            <KEYID>rrc0520a</KEYID>" +
-  "            <TRANCODE>TRANCODE</TRANCODE>" +
-  "            <STATUSCODE>W</STATUSCODE>" +
-  "            <DESC>rrc0520a</DESC>" +
-  "        </WIPKEYS>" +
-  "        <RECIPIENT COPYCOUNT=\"1\" NAME=\"Recipient\">" +
-  "            <ADDRESSEE>" +
-  "                <TYPE>0</TYPE>" +
-  "                <ROLE>INSURED</ROLE>" +
-  "                <NAME>Richard abcde</NAME>" +
-  "                <ADDRESS1>1234 abcde street</ADDRESS1>" +
-  "                <ADDRESS2>Suite abcde</ADDRESS2>" +
-  "                <CITY>abcde City</CITY>" +
-  "                <STATE>GA</STATE>" +
-  "                <POSTALCODE>33333</POSTALCODE>" +
-  "                <COUNTRY>US</COUNTRY>" +
-  "                <PHONE>555-555-5555</PHONE>" +
-  "                <FAX>777-777-7777</FAX>" +
-  "                <EMAIL>r.a@gmail.com</EMAIL>" +
-  "                <DISTRIBUTION>" +
-  "                    <PREFERRED>2</PREFERRED>" +
-  "                </DISTRIBUTION>" +
-  "                <ENCLOSURES>1</ENCLOSURES>" +
-  "                <LANGUAGE>en_US</LANGUAGE>" +
-  "            </ADDRESSEE>" +
-  "            <ADDRESSEE>" +
-  "                <TYPE>0</TYPE>" +
-  "                <ROLE>INSURED</ROLE>" +
-  "                <NAME>Richard abcde</NAME>" +
-  "                <ADDRESS1>1234 abcde street</ADDRESS1>" +
-  "                <ADDRESS2>Suite abcde</ADDRESS2>" +
-  "                <CITY>abcde City</CITY>" +
-  "                <STATE>GA</STATE>" +
-  "                <POSTALCODE>33333</POSTALCODE>" +
-  "                <COUNTRY>US</COUNTRY>" +
-  "                <PHONE>555-555-5555</PHONE>" +
-  "                <FAX>777-777-7777</FAX>" +
-  "                <EMAIL>r.a@gmail.com</EMAIL>" +
-  "                <DISTRIBUTION>" +
-  "                    <PREFERRED>2</PREFERRED>" +
-  "                    <SELECTED>2</SELECTED>" +
-  "                </DISTRIBUTION>" +
-  "                <ENCLOSURES>1</ENCLOSURES>" +
-  "                <LANGUAGE>en_US</LANGUAGE>" +
-  "            </ADDRESSEE>" +
-  "        </RECIPIENT>"+
-  "        <GROUP NAME=\"\" NAME1=\"Central\" NAME2=\"Account_Status\">" +
-  "            <FORM ID=\"100300\" NAME=\"AM-GBL\" OPTIONS=\"R\">" +
-  "                <DESCRIPTION>Privacy Notice - Gramm Leach Bliley</DESCRIPTION>" +
-  "                <CATEGORY/>" +
-  "                <RECIPIENT COPYCOUNT=\"1\" NAME=\"Recipient\"/>" +
-  "            </FORM>" +
-  "        </GROUP>" +
-  "    </DOCSET>" +
-  "</DOCUMENT>";
-  
-  /* Used for simple XML testing. */
-    private XMLInputFactory _if;
-
-
-    public ExternalDataTransactionBase() {
+@WebService(targetNamespace = "http://tempuri.org/", portName = "ExternalDataTransactionSoap12HttpPort")
+@BindingType(SOAPBinding.SOAP12HTTP_BINDING)
+@MTOM
+public class ExternalDataTransaction extends ExternalDataTransactionBase {
+    
+    public ExternalDataTransaction() {
         super();
-
-        _if = XMLInputFactory.newInstance();
     }
 
+    @Resource
+    WebServiceContext wsCtx;
+        
     /**
      * This method returns a transaction-gathering form that will be displayed
      * in Documaker Interactive. The calls to getBeforeForm and getAfterForm provide
@@ -100,6 +54,7 @@ public class ExternalDataTransactionBase {
      * form.
      * @return A HTML form to be displayed in Documaker Interactive.
      */
+    @Override
     public byte[] getKeys() {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -108,7 +63,8 @@ public class ExternalDataTransactionBase {
             baos.write(getForm());
             baos.write(getAfterForm());
 
-            return baos.toByteArray();
+            byte[] returnValue =  baos.toByteArray();
+            return returnValue;
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -118,17 +74,35 @@ public class ExternalDataTransactionBase {
 
     /**
      * Method to build a XML transaction from supplied key data from Documaker Interactive.
-     * This method should be overridden by the customer
+     * This method can be customized by the customer, but is usually customized by
+     * overriding the getForm method.
      * @param buf Key data gathered from Documaker Interactive in XML format.
      * @return The customer-generated transaction in XML format.
      */
+    @Override
+    @SuppressWarnings("oracle.jdeveloper.java.nested-assignment")
     public byte[] getData(byte[] buf) {
-        byte[] returnValue = new byte[0];
         try {
-            returnValue = sampleTransaction.getBytes("ISO8859-1");
-            return returnValue;
-        } catch (Exception ex) {
-            ex.printStackTrace();
+
+                MessageContext msgCtx = wsCtx.getMessageContext();
+                ServletContext srvCtx = ((javax.servlet.ServletContext) msgCtx.get(MessageContext.SERVLET_CONTEXT));
+                
+                InputStream something = srvCtx.getResourceAsStream("getData.xml");            
+                ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+                int nRead;
+                byte[] data = new byte[16384];
+                
+                while ((nRead = something.read(data,0,data.length)) != -1){
+                    buffer.write(data, 0, nRead);
+                }
+                
+                buffer.flush();
+                return buffer.toByteArray();
+                
+                //return localpath.getBytes("ISO8859-1");
+            
+        } catch (Exception e) {
             return new byte[0];
         }
     }
@@ -140,57 +114,16 @@ public class ExternalDataTransactionBase {
      * @param buf buffer to be verified, usually a file from user's local file system
      * @return structure with return code and explanatory message.
      */
+    @Override
     public VFResponse validateFile(byte[] buf) {
-        VFResponse response = new VFResponse();
-        if (isXML(buf)) {
-            response.setResponseCode(VFResponse.RC_OK);
-            response.setResponseMessage("OK");
-        } else {
-            response.setResponseCode(VFResponse.RC_ERR);
-            response.setResponseMessage("File is not well-formed XML");
+
+        /* Do some preliminary checking of the buffer. */
+        VFResponse returnValue = super.validateFile(buf);
+
+        if (returnValue.getResponseCode() == VFResponse.RC_OK) {
+            /* TODO: Add custom testing, put result in returnValue. */
         }
-
-
-        try {
-            String xmlText = new String(buf, "ISO8859-1");
-            System.out.println(xmlText);
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            response.setResponseCode(VFResponse.RC_ERR);
-            response.setResponseMessage(ex.getMessage());
-        }
-        return response;
-    }
-
-    /**
-     * Generate the boilerplate that Documaker Interactive requires before the
-     * customer's form data.
-     * This method usually isn't overridden by the customer.
-     * @return Boilerplate required before the form.
-     */
-    protected byte[] getBeforeForm() {
-        try {
-            String text = "<body>";
-            return text.getBytes("ISO8859-1");
-        } catch (UnsupportedEncodingException uee) {
-            return new byte[0];
-        }
-    }
-
-    /**
-     * Generate the boilerplate that Documaker Interactive requires after the
-     * customer's form data.
-     * This method usually isn't overridden by the customer.
-     * @return Boilerplate required after the form.
-     */
-    protected byte[] getAfterForm() {
-        try {
-            String text = "</body>";
-            return text.getBytes("ISO8859-1");
-        } catch (UnsupportedEncodingException uee) {
-            return new byte[0];
-        }
+        return returnValue;
     }
 
     /**
@@ -198,61 +131,33 @@ public class ExternalDataTransactionBase {
      * This method is usually overridden by the customer.
      * @return HTML form provided by customer.
      */
+    @Override
+    @SuppressWarnings("oracle.jdeveloper.java.nested-assignment")
     protected byte[] getForm() {
+        /* TODO: Add custom form here. */
+        
         try {
-            String text = "Please input the SRF number and click submit to obtain CCP data and generate the document. <form><input name='SRF' value='730339090'/><input name='Submit' value='Submit'/></form>";
-            return text.getBytes("ISO8859-1");
-        } catch (UnsupportedEncodingException uee) {
-            return new byte[0];
-        }
 
-    }
+                MessageContext msgCtx = wsCtx.getMessageContext();
+                ServletContext srvCtx = ((javax.servlet.ServletContext) msgCtx.get(MessageContext.SERVLET_CONTEXT));
+                
+                InputStream something = srvCtx.getResourceAsStream("getKeys.html");            
+                ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
-    /**
-     * Is the byte buffer well-formed XML?
-     *
-     * @parameter buf XML candidate buffer
-     * @return    is it XML?
-     */
-    protected boolean isXML(byte[] buf) {
-        boolean returnValue = false;
-        XMLStreamReader reader = null;
-
-        try {
-            reader = _if.createXMLStreamReader(new ByteArrayInputStream(buf));
-
-            /*
-             * Simple test for XML, run it through a stax parser. If we hit a DOCUMENT
-             * or ELEMENT before we hit regular text, we assume it's XML.
-             */
-            forloop:
-            for (int event = reader.next(); event != XMLStreamConstants.END_ELEMENT; event = reader.next()) {
-                switch (event) {
-                case XMLStreamConstants.START_DOCUMENT:
-                case XMLStreamConstants.START_ELEMENT:
-                    returnValue = true;
-                    break forloop;
-                case XMLStreamConstants.CHARACTERS:
-                    returnValue = false;
-                    break forloop;
-                default:
-                    break;
+                int nRead;
+                byte[] data = new byte[16384];
+                
+                while ((nRead = something.read(data,0,data.length)) != -1){
+                    buffer.write(data, 0, nRead);
                 }
-
-            }
-            return returnValue;
+                
+                buffer.flush();
+                return buffer.toByteArray();
+                
+                //return localpath.getBytes("ISO8859-1");
+            
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (XMLStreamException e) {
-                }
-            }
-            reader = null;
+            return new byte[0];
         }
     }
 }
-
