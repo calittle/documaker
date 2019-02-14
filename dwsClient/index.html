@@ -26,24 +26,26 @@
         	<!-- add form elements here. MUST SET ID! -->
 			First Name: <input type="text" value="Roofus" id="firstname" name="firstname"/><br/>
         	Last Name: <input type="text" value="Smith" id="lastname" name="lastname"/><br/>
-            <input type="button" value="Create Document" onclick="soap();" />
+            <input id="Button" name="Button" type="button" value="Create Document" onclick="soap();" />
         </div>
     </form>
     <script type="text/javascript">    	        
     	
     	// set debug = true to log things to browser console.
     	var debug = false;
-    	// set to the endpoint for your DWS Publishing Service.
+    	
+	    // set to the endpoint for your DWS Publishing Service.
     	var dwsUrl = 'http://192.168.1.74:7001/DWSAL1/PublishingService';
-    	// set to the endpoint for Documaker Interactive. Do not change anything after "faces"    	
+    	
+	    // set to the endpoint for Documaker Interactive. Do not change anything after "faces"    	
     	var diUrl = 'http://192.168.1.74:7001/DocumakerCorrespondence/faces/load?taskflow=edit&uniqueId=$uniqueId&docId=$docId';
  
     	// set to Attachments or Identifiers. 
     	//	Attachments - For on-demand/straight-through publishing. Get a PDF in response. (Note: this hasn't been implemented yet.)
     	//	Identifiers - For interactive document editing.
-    	var returnType = 'Identifiers';
-
-    	// This variable takes the user input from the HTML form and builds the extract xml.
+    	var returnType = 'Identifiers';	
+    	
+	// This variable takes the user input from the HTML form and builds the extract xml.
     	// Since this is generating the XML that Documaker will eventually read, two things are important:
     	// 1) The schema of the XML generated must match the schema that your MRL expects;
     	// 2) You need to include your variable data (e.g. user input) in the proper place here!
@@ -264,9 +266,11 @@
 			'       </Addressee>' +
 			'    </AddresseeData>' +
 			'</DocumentRequest>';
-		// DO NOT CHANGE ANYTHING BEYOND HERE.        	        	    	
+		// DO NOT CHANGE ANYTHING BEYOND HERE.        	        	
+	var subBtn = document.getElementById("Button");
         function soap() {
-            var xmlhttp = new XMLHttpRequest();           
+            subBtn.disabled = true;
+	    var xmlhttp = new XMLHttpRequest();           
             xmlhttp.open('POST', dwsUrl, true);
 			var sr = '<?xml version="1.0" encoding="utf-8"?>' +
 					 '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:pub="oracle/documaker/schema/ws/publishing" xmlns:com="oracle/documaker/schema/ws/publishing/common" xmlns:v1="oracle/documaker/schema/ws/publishing/doPublishFromImport/v1" xmlns:com1="oracle/documaker/schema/common" xmlns:req="oracle/documaker/schema/ws/publishing/doPublishFromImport/v1/request"><soapenv:Header/><soapenv:Body><pub:DoPublishFromImportRequest><pub:DoPublishFromImportRequestV1><com:timeoutMillis>9000000</com:timeoutMillis><v1:JobRequest><req:Payload><req:Transaction><req:Data><com1:Content><com1:Binary>' +
@@ -283,10 +287,15 @@
                     	s = xmlhttp.responseText.indexOf('<ns11:KeyId>')+12;
                     	t = xmlhttp.responseText.indexOf('</ns11:KeyId>');
                     	var docId = xmlhttp.responseText.substring(s,t);
-                    	diUrl = diUrl.replace('$uniqueId',uniqueId).replace('$docId',docId)                    	
+                    	s = xmlhttp.responseText.indexOf('<ns11:TrnStatus>')+16;
+                        t = xmlhttp.responseText.indexOf('</ns11:TrnStatus>');
+			var trnStatus = xmlhttp.responseText.substring(s,t);
+			diUrl = diUrl.replace('$uniqueId',uniqueId).replace('$docId',docId)                    	
                     	window.location=diUrl;
+			//alert('Your document was submitted; Status:' + trnStatus);
                     }
                 }
+		subBtn.disabled = false;
             }
             if (debug){
             	console.log('Extract XML\n' + extractXml);
