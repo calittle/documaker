@@ -41,5 +41,7 @@ EOF
     1. Accept the default _Install this deployment as an application_ and click `Next`.
     1. Select the server(s) on which to deploy the application, e.g. _AdminServer_  and click `Next`.
     1. Accept defaults and click `Finish`.
-1. Now the application has been deployed -- time to open up your browser and try it out. If you need to change the HTML, you can redo the steps above to edit and copy your file, but you don't have to redo the deployment. Just copy the new file out there and refresh your browser page.
-1. If you run into issues you can put your browser into "developer mode" and view the console to see if there's any useful error messages.
+* Now the application has been deployed -- time to open up your browser and try it out. 
+* If you need to change the HTML, you can redo the steps above to edit and copy your file, but you don't have to redo the deployment. Just copy the new file out there and refresh your browser page.
+* If you run into issues you can put your browser into "developer mode" and view the console to see if there's any useful error messages. Wait, you aren't getting console messages? Have a look around _line 35_ and make sure `var debug = true;` so you can get some debugging information to your console.
+* Lastly, if you need some assistance, you can comment here or over at the Oracle Documaker [community](https://community.oracle.com/community/groundbreakers/oracle-applications/documaker).
