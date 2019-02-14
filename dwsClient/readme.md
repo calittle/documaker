@@ -1,15 +1,27 @@
-To use the dws Client, you need to configure/edit, and then deploy it to your environment. 
-1. Click [here](https://raw.githubusercontent.com/calittle/documaker/master/dwsClient/index.html) to download the file.
-1. Use [this](https://github.com/calittle/documaker/blob/master/dwsClient/index.html) to reference the original file for line numbers, etc.
+# What Is This?
+It's a very simple demonstration of capability to use SOAP messaging with just about any modern browser that supports ``XmlHttpRequest``. The gist of it is to enable a demonstration of user data capture to augment system data, and then use that to request a document for subsequent visual editing by the user.
 
-Open the file in your favorite text editor, e.g. Notepad. PS you should be using Sublime Text, but whatever.
+# How Do I Use It?
+First, the files:
+* Click [here](https://raw.githubusercontent.com/calittle/documaker/master/dwsClient/index.html) to download the file.
+* Use [this](https://github.com/calittle/documaker/blob/master/dwsClient/index.html) to reference the original file for line numbers, etc.
+To use the dws Client, you need to configure/edit, and then deploy it to your environment. Open the file in your favorite text editor, e.g. Notepad. PS you should be using Sublime Text, but it's your choice.
+## Assumptions
+* You have a working Documaker Enterprise environment on a Linux machine that uses WebLogic. You can adapt the instructions if you are running on Windows (really the only difference is the simply-scripted creation of the _web.xml_ file) and the file copying details. 
+* If you aren't using Documaker Enterprise, and you're using iDocumaker/Docupresentment/EWPS, then this is not for you. However, you will note that the only _real_ difference is the SOAP messaging, and the endpoints, so you can probably figure that out. I will probably come back here some day and make another version for EWPS.
+* This assumes an _*Interactive*_ workflow. What does that mean? It means you're going to be using *_Documaker Interactive_* to allow the user to go mess with the document before it's published.
+   * _Wait, do I have to do that?_ No, you don't. You could...
+   * ...Around _line 44_ set `var returnType = 'Attachments'` and then go around _line 278_ to change what happens when the response is received (e.g. retrieve the PDF from the response, decode it, and present it to the user; or...
+   * ...Around _line 287_ you could remove the redirection to Documaker Interactive and just add something like `alert('Your document was submitted')` and if the user doesn't need to do anything else; or...
+   * Whatever you want!
+## Basic Instructions for Technical Wizards
 The basic configuration goes like this:
 * Edit the HTML form to include the input elements you want the user to enter. Be sure to give each element a unique id attribute.
 * Set the variable dwsUrl to the correct endpoint for your DWS Publishing Service.
 * Set the variable diUrl to the correct endpoint for your Documaker Interactive application.
-* Deploy to your J2EE container (e.g. WebLogic).
+* Deploy to your J2EE container (e.g. WebLogic). Note: you could deploy this to another container or server, but you need to be aware of CORS. I'm not getting into that here, so just keep it simple and deploy to the same container, alright?
 
-So, step by step:
+## Step-By-Step Configuration and Deployment for Those Who Like Words
 1. Around _line 27_ in the file you will see the definition of HTML input tags. You can add as many or as few as you like. The only thing you need to keep in mind is that each one needs a unique ID attribute, like the examples. You’ll see there are two, `lastname` and `firstname`. Add however many you want, and give them each a unique ID.
 1. Around _line 35_, you will have the settings you need to make. These are pretty easy, really you just need to change the IP address to the IP of your environment, on the lines that say `var dwsUrl` and `var diUrl`. You don’t need to change anything else about those lines.
 1. Here’s where it gets interesting, and this is the glue between this sample client and your Documaker installation - the extract data! If you want to use a specific extract file, you can - just make sure it corresponds to what your MRL is expecting. I have presented the extract data here as one big string, so you can read it and replace/add anything you might need. The key is around _line 77_ - you will see my example comments - where you need to replace the data in the extract string with the user-entered data. Look at my example and follow it. You can copy and paste this as you need to. Notice that you’re referencing your user inputs by the unique ID attribute.
