@@ -2,10 +2,11 @@
 It's a very simple demonstration of capability to use SOAP messaging with just about any modern browser that supports ``XmlHttpRequest``. The gist of it is to enable a demonstration of user data capture to augment system data, and then use that to request a document for subsequent visual editing by the user.
 
 # How Do I Use It?
-First, the files:
+To use the dws Client, you need to configure/edit, and then deploy it to your environment. Open the file in your favorite text editor, e.g. Notepad. PS you should be using Sublime Text, but it's your choice.
+The files:
 * Click [here](https://raw.githubusercontent.com/calittle/documaker/master/dwsClient/index.html) to download the file.
 * Use [this](https://github.com/calittle/documaker/blob/master/dwsClient/index.html) to reference the original file for line numbers, etc.
-To use the dws Client, you need to configure/edit, and then deploy it to your environment. Open the file in your favorite text editor, e.g. Notepad. PS you should be using Sublime Text, but it's your choice.
+
 ## Assumptions
 * You have a working Documaker Enterprise environment on a Linux machine that uses WebLogic. You can adapt the instructions if you are running on Windows (really the only difference is the simply-scripted creation of the _web.xml_ file) and the file copying details. 
 * If you aren't using Documaker Enterprise, and you're using iDocumaker/Docupresentment/EWPS, then this is not for you. However, you will note that the only _real_ difference is the SOAP messaging, and the endpoints, so you can probably figure that out. I will probably come back here some day and make another version for EWPS.
