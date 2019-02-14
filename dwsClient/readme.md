@@ -10,11 +10,11 @@ The files:
 ## Assumptions
 * You have a working Documaker Enterprise environment on a Linux machine that uses WebLogic. You can adapt the instructions if you are running on Windows (really the only difference is the simply-scripted creation of the _web.xml_ file) and the file copying details. 
 * If you aren't using Documaker Enterprise, and you're using iDocumaker/Docupresentment/EWPS, then this is not for you. However, you will note that the only _real_ difference is the SOAP messaging, and the endpoints, so you can probably figure that out. I will probably come back here some day and make another version for EWPS.
-* This assumes an _*Interactive*_ workflow. What does that mean? It means you're going to be using *_Documaker Interactive_* to allow the user to go mess with the document before it's published.
-   * _Wait, do I have to do that?_ No, you don't. You could...
-   * ...Around _line 44_ set `var returnType = 'Attachments'` and then go around _line 278_ to change what happens when the response is received (e.g. retrieve the PDF from the response, decode it, and present it to the user; or...
-   * ...Around _line 287_ you could remove the redirection to Documaker Interactive and just add something like `alert('Your document was submitted')` and if the user doesn't need to do anything else; or...
-   * Whatever you want!
+* This assumes an _*Interactive*_ workflow. What does that mean? It means you're going to be using *_Documaker Interactive_* to allow the user to go mess with the document before it's published. _Wait, do I have to do that?_ No, you don't. You could:
+   * ...Present a PDF to the user as a result of their request. Around _line 44_ set `var returnType = 'Attachments'` and then go around _line 278_ to change what happens when the response is received (e.g. retrieve the PDF from the response, decode it, and present it to the user; or...
+   * ...Make it a straight-through process with no user intervention. Around _line 287_ you could remove the redirection to Documaker Interactive and just add something like `alert('Your document was submitted')` and if the user doesn't need to do anything else; or...
+   * ...Do both of the above, depending on data, or the response from Documaker e.g. if it generated a PDF, show it; if it was routed for user entry, redirect there. Or, do nothing!
+
 ## Basic Instructions for Technical Wizards
 The basic configuration goes like this:
 * Edit the HTML form to include the input elements you want the user to enter. Be sure to give each element a unique id attribute.
