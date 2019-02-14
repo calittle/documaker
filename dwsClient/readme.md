@@ -30,7 +30,7 @@ cat > demohtml/WEB-INF/web.xml << EOF
 EOF
 ```
 6. Now you can copy over your saved file to the environment and place it inside the `/home/oracle/demohtml` directory as `index.html`. There are a number of ways to accomplish this, depending on where your system is and how you normally put files there. If it's running as a VM, you might have a shared directory. You can use _scp_ if you're into the whole command-line thing. It's up to you - the key is to make sure the file is named *index.html* and that it is in `/home/oracle/demohtml`.
-1. Just FYI: you can create multiple copies of this file in the `/home/oracle/demohtml` directory, in case you want to try different things. 
+    * Just FYI: you can create multiple copies of this file in the `/home/oracle/demohtml` directory, in case you want to try different things. 
 1. Time to create the deployment in WebLogic. This needs to happen only once, no matter how many copies of the HTML file you have. 
     1. Open your browser to the WebLogic console and log in.
     1. Navigate to Deployments
