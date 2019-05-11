@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Documaker Testing</title>
+    <link href="bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="js/documaker.js"></script>
+    <script type="text/javascript">
+		ewpsJsonRequest = function() {
+			var resultDiv = $("#responseContainer");
+		    $.ajax({
+		        url: "http://192.168.1.72:8080/ewps-axis2/services/DocumentService/doGetBusUnits",
+		        method: "POST",
+				data: { "LibraryId" : "CORRESPONDENCE" },
+		        contentType: "application/json",
+		        dataType: "json",
+		        success: function (result) {
+		            switch (result) {
+		                case true:
+		                    processResponse(result);
+		                    break;
+		                default:
+		                    resultDiv.html(result);
+		            }
+		        },
+		        error: function (xhr, ajaxOptions, thrownError) {
+			        resultDiv.html("XHR.Status = " + xhr.status + "\r\nthrownError = " + thrownError);
+		        }
+		    });
+		};
+	</script>
+  </head>
+  <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Documaker Testing</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="index.html">Home</a></li>
+            <li><a href="ewps.html">EWPS</a></li>
+            <li><a href="sandbox.html">Sandbox</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+    
+<!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <div class="container">
+        <h1>EWPS</h1>
+        <p>Enterprise Web Processing Services</p>
+        <a class="btn btn-primary" href="#" onclick="ewpsJsonRequest();" role="button">Try It &raquo;</a>	        
+        </p>
+      </div>
+    </div>
+
+    <div class="container">
+		<div class="row">
+		        <div class="col-md-4">
+		          <h2>REST Endpoint</h2>
+		          <p>http://<em>&lt;hostname:port&gt;</em>/ewps-axis2/services/DocumentService/<em>&lt;MethodName&gt;</em>, e.g. DoGetTemplateList (see documented schema types)</p>          
+		        </div>
+		        <div class="col-md-4">
+		          <h2>JSON Request</h2>
+		          <pre>
+{ 
+	"LibraryId" : "Correspondence",
+	"BusUnitsList" : [{
+		"Key1" : [{
+			"id" : "CLAIMS"
+		}],
+		"Key2" : [{
+			"id" : "GA"
+		}]
+	}]
+};	          
+		          </pre>          
+		       </div>
+		       <div class="col-md-4">
+			       <h2>JSON Response</h2>
+			       	<pre id="responseContainer">
+					</pre>
+				</div>	       
+		       </div>
+		</div>      
+    <hr/>
+      <footer>
+        <p>&copy; 2017 Me.</p>
+      </footer>
+    </div> <!-- /container -->	  
+	  	  
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+  </body>
+</html>
