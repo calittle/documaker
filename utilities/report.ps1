@@ -96,8 +96,10 @@ Remove-Item "search1.lsc"
 cat "report.txt" | where { $_ -match "Found match" } | foreach-object { 
 
 	$fapName = $_.split('<')[1].split('>')[0] 
+	$resVer = $_.split('<')[3].split('>')[0]
+	$resRev = $_.split('<')[4].split('>')[0]
 	Write-Host "$search found in $fapName"
-	Add-Content FinalReport.txt "$search located in $fapName"
+	Add-Content FinalReport.txt "$search located in $fapName ($resVer.$resRev)"
 	Write-Host "Searching for usages of $fapName"
 	librarySearch "$library" "FAP" "$fapName" "" "" "report$fapName.txt"
 	Add-Content FinalReport.txt "$fapName located in:"
