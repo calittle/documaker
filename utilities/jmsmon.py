@@ -19,7 +19,7 @@ password='Welcome1'
 wlsUrl='t3://127.0.0.1:7001'
 sleepTime=5000;
 connect(username,password, wlsUrl)
-includeServer = ['jms_server'];
+includeServer = ['jms_server_1_1'];
 includeJms = ['AL1Server'];
 # remove any destinations here you don't want to be included in your output.
 includeDestinations = ['IdentifierReq','PresenterReq','AssemblerReq','DistributorReq','ArchiverReq','ReceiverReq','ReceiverRes','PubNotifierReq','BatcherReq','SchedulerReq','PublisherReq']
