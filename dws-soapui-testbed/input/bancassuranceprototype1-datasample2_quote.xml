@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DocumentRequest>
+	<PackageInfo>
+		<Key1>ALAMERE</Key1>
+		<Key2>LIFE</Key2>
+		<Key3></Key3>
+		<KeyID>MI001-45-7524</KeyID>
+		<RunDate></RunDate>
+		<TranCode>QU</TranCode>
+		<Description>Alamere Life Insurance Quote for Wilma Clarkson</Description>
+		<Language>EN</Language>
+		<Locale>en_US</Locale>
+		<Routing>
+			<User>8</User>
+			<UserGroup>3</UserGroup>
+			<SenderEmail/>
+			<SMTPServer/>
+			<WIPReason/>
+			<WIPRoute></WIPRoute>
+		</Routing>
+		<ArchiveData>
+			<WebCenter>
+				<Secgroup/>
+				<Cabinet/>
+				<UCMEffDate/>
+				<Author/>
+			</WebCenter>
+			<FileSystem/>
+			<FTP/>
+			<ESignature/>
+		</ArchiveData>
+		<Action>100011</Action>
+	</PackageInfo>
+	<Addressees>
+		<Addressee>
+			<Type>0</Type>
+			<Role>Insured</Role>
+			<NameLine1 prefix="" first="" middle="" last="" suffix="">Wilma Clarkson</NameLine1>
+			<NameLine2></NameLine2>
+			<AddrLine1>7542 Hopewell Circle</AddrLine1>
+			<AddrLine2></AddrLine2>
+			<City>Atlanta</City>
+			<State>GA</State>
+			<PostalCode>30328</PostalCode>
+			<Country>USA</Country>
+			<Email>Wilma.Clarkson@example.com</Email>
+			<Phone>(770) 555-4444</Phone>
+			<Fax></Fax>
+			<Channel></Channel>
+			<NotificationType></NotificationType>
+			<DistMethods/>
+			<Distribution>SMS</Distribution>
+		</Addressee>
+		<Addressee>
+			<Type>1</Type>
+			<Role>Applicant</Role>
+			<NameLine1 prefix="" first="" middle="" last="" suffix="">Robert Clarkson</NameLine1>
+			<NameLine2></NameLine2>
+			<AddrLine1>7542 Hopewell Circle</AddrLine1>
+			<AddrLine2></AddrLine2>
+			<City>Atlanta</City>
+			<State>GA</State>
+			<PostalCode>30328</PostalCode>
+			<Country>USA</Country>
+			<Email>Robert.Clarkson@example.com</Email>
+			<Phone>(770) 555-4446</Phone>
+			<Fax></Fax>
+			<Channel></Channel>
+			<NotificationType></NotificationType>
+			<DistMethods/>
+			<Distribution>SMS</Distribution>
+		</Addressee>
+			<Addressee>
+			<Type>1</Type>
+			<Role>Agent</Role>
+			<NameLine1 prefix="" first="John" middle="Paul" last="Barthlien" suffix="">J.P. Barthlien</NameLine1>
+			<NameLine2></NameLine2>
+			<AddrLine1>Alamere Life Insurance Company</AddrLine1>
+			<AddrLine2>P.O. Box 123</AddrLine2>
+			<City>Station Z, Mississauga</City>
+			<State>ON</State>
+			<PostalCode>A9B 9Z9</PostalCode>
+			<Country>CN</Country>
+			<Email>jpb@example.com</Email>
+			<Phone>800.555.0123</Phone>
+			<Fax></Fax>
+			<Picture></Picture>
+			<Channel></Channel>
+			<NotificationType></NotificationType>
+			<DistMethods/>
+			<Distribution></Distribution>
+		</Addressee>
+	</Addressees>
+	<DocumentData>
+		<PolicyNumber>MI001-45-7524</PolicyNumber>
+		<EffectiveDate>20140815</EffectiveDate>
+		<PolicyDate>20140812</PolicyDate>
+		<IssueDate>20140810</IssueDate>
+		<EndingDate>20340815</EndingDate>
+		<Premiums>
+			<Period>20</Period>
+			<RiskClass>Preferred Tobacco</RiskClass>
+			<Mode>Semi-Annual</Mode>
+			<Amounts>
+				<Initial policy="450" fee="25" annualPayments="1" annualTotal="475">475</Initial>
+				<Selected policy="450" fee="25" annualPayments="1" annualTotal="475">475</Selected>
+				<Annual policy="575" fee="25" annualPayments="1" annualTotal="600">600</Annual>
+				<Semi-Annual policy="288" fee="25" annualPayments="2" annualTotal="626">313</Semi-Annual>
+				<Quarterly policy="144" fee="20" annualPayments="4" annualTotal="656">164</Quarterly>
+				<Monthly policy="48" fee="10" annualPayments="12" annualTotal="696">58</Monthly>
+			</Amounts> 
+		</Premiums>
+		<Benefits>
+			<Death>500000.00</Death>
+		</Benefits>
+		<Insured>
+			<Age>35</Age>
+			<Gender>Female</Gender>
+			<Tobacco>Recent</Tobacco>
+		</Insured>
+		<Quote>
+			<QuoteDate>20140802</QuoteDate>
+			<ExpirationDate>20140822</ExpirationDate>
+			<ValidDays>20</ValidDays>
+			<ExamType>None</ExamType>
+		</Quote>		
+	</DocumentData>
+</DocumentRequest>

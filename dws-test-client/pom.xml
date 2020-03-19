@@ -48,6 +48,7 @@
                 <verbose>false</verbose>
                 <extension>true</extension>       
                 <keep>false</keep>     
+                <xadditionalHeaders>true</xadditionalHeaders>
             </configuration>
           </execution>
         </executions>

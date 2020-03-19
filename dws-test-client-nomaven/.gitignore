@@ -1,0 +1,6 @@
+#.gitignore for dws-test-client-nomaven
+oracle
+oracle11
+.data
+Client/classes
+wsimport.sh

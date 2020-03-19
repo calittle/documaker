@@ -1,0 +1,757 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DocumentRequest>
+	<PackageInfo>
+		<Key1>Alamere</Key1>
+		<Key2>Financials</Key2>
+		<Key3></Key3>
+		<KeyID>999999999</KeyID>
+		<RunDate></RunDate>
+		<TranCode>EN</TranCode>
+		<Description>Sample Financial Statement for Kelly Kern</Description>
+		<Language>USD</Language>
+		<Locale>en_US</Locale>
+		<Routing>
+			<User>8</User>
+			<UserGroup>3</UserGroup>
+			<SenderEmail/>
+			<SMTPServer/>
+			<WIPReason/>
+			<WIPRoute></WIPRoute>
+		</Routing>
+		<ArchiveData>
+			<WebCenter>
+				<Secgroup/>
+				<Cabinet/>
+				<UCMEffDate/>
+				<Author/>
+			</WebCenter>
+			<FileSystem/>
+			<FTP/>
+			<ESignature/>
+		</ArchiveData>
+		<Action>100011</Action>
+	</PackageInfo>
+	<Addressees>
+		<Addressee>
+			<Type>0</Type>
+			<Role>Owner</Role>
+			<NameLine1 prefix="" first="" middle="" last="" suffix="">Kelly Kern</NameLine1>
+			<NameLine2></NameLine2>
+			<AddrLine1>1002 Hummingbird Lane</AddrLine1>
+			<AddrLine2></AddrLine2>
+			<City>Santa Monica</City>
+			<State>CA</State>
+			<PostalCode>90403</PostalCode>
+			<Country>USA</Country>
+			<Email>Kelly.Kern@example.net</Email>
+			<Phone>3105554444</Phone>
+			<Fax></Fax>
+			<Channel></Channel>
+			<NotificationType></NotificationType>
+			<DistMethods/>
+			<Distribution>SMS</Distribution>
+		</Addressee>
+		<Addressee>
+			<Type>1</Type>
+			<Role>Advisor</Role>
+			<NameLine1 prefix="" first="" middle="" last="" suffix="">Larry Lewis</NameLine1>
+			<NameLine2>Alamere Financial Services</NameLine2>
+			<AddrLine1>4005 Industry Circle</AddrLine1>
+			<AddrLine2>Suite 500A</AddrLine2>
+			<City>Santa Monica</City>
+			<State>CA</State>
+			<PostalCode>90403</PostalCode>
+			<Country>USA</Country>
+			<Email>Larry.Lewis@example.com</Email>
+			<Phone>8005550101</Phone>
+			<Fax></Fax>
+			<Channel></Channel>
+			<NotificationType></NotificationType>
+			<DistMethods/>
+			<Distribution></Distribution>
+		</Addressee>		
+	</Addressees>
+	<DocumentData>
+		<ReportPeriod range="April-June">Second Quarter 2014</ReportPeriod>
+		<EffectiveDate>20140630</EffectiveDate>
+		<Accounts>
+			<Account id="1-456-21-00" name="Retirement">
+				<TotalMarketValue>2507065</TotalMarketValue>
+				<Classifications>
+					<Class name="Cash">						
+						<TotalMarketValue></TotalMarketValue>
+						<PercentageOfTotal></PercentageOfTotal>
+						<SubClasses>
+							<SubClass name="Cash">								
+								<TotalMarketValue></TotalMarketValue>
+								<PercentageOfTotal>15</PercentageOfTotal>
+								<PercentageOfClass></PercentageOfClass>
+								<Assets>
+									<Asset symbol="" name="">															
+										<Units></Units>
+										<CostBasis></CostBasis>
+										<TotalMarketValue></TotalMarketValue>
+										<PercentageOfTotal></PercentageOfTotal>
+										<Performance>
+											<YearToDate amount="" percentage=""></YearToDate>
+											<ReportPeriod amount="" percentage=""></ReportPeriod>
+											<LastTwelveMonths amount="" percentage=""></LastTwelveMonths>											
+										</Performance>
+									</Asset>
+								</Assets>
+							</SubClass>
+						</SubClasses>
+					</Class>
+					<Class name="Stocks">
+						<SubClasses>
+							<SubClass name="International Stocks">
+								<PercentageOfTotal>10</PercentageOfTotal>
+							</SubClass>
+							<SubClass name="US Stocks">
+								<PercentageOfTotal>5</PercentageOfTotal>
+							</SubClass>
+						</SubClasses>
+					</Class>
+					<Class name="Bonds">
+						<SubClasses>
+							<SubClass name="Municipal Bonds">
+								<PercentageOfTotal>20</PercentageOfTotal>
+							</SubClass>
+							<SubClass name="Federal Bonds">
+								<PercentageOfTotal>30</PercentageOfTotal>
+							</SubClass>
+						</SubClasses>
+					</Class>
+					<Class name="Mutual Funds">
+						<SubClasses>
+							<SubClass name="Managed Funds">
+								<PercentageOfTotal>2</PercentageOfTotal>
+							</SubClass>
+							<SubClass name="Non-Managed Funds">
+								<PercentageOfTotal>18</PercentageOfTotal>
+							</SubClass>
+						</SubClasses>
+					</Class>
+				</Classifications>				
+				<Income>
+					<InPeriod amount="" percentage="" interest="" dividends=""/>
+					<YearToDate amount="" percentage="" Interest="" dividends=""/>
+					<SinceInception amount="501413" percentage="" interest="" dividends=""/>
+				</Income>
+				<Investments>
+					<InPeriod amount="" percentage=""/>
+					<YearToDate amount="" percentage=""/>
+					<SinceInception amount="2005652" percentage=""/>
+				</Investments>		
+				<Value>
+					<TotalMarketValue></TotalMarketValue>
+					<InitialValue amount="" percentage=""/>
+					<YearToDate amount="" percentage=""/>
+					<SinceInception amount="" percentage="" netChange="2507065"/>
+					<Valuation year= "" age="">
+						<TotalValue></TotalValue>
+						<HistoricalHighValue></HistoricalHighValue>
+						<HistoricalLowValue></HistoricalLowValue>
+					</Valuation>
+				</Value>
+				<Returns>
+					<InPeriod amount="" percentage="11.0"/>
+					<YearToDate amount="" percentage=""/>
+					<SinceInception amount="" percentage="10.0"/>					
+				</Returns>
+			</Account>
+			<Account id="1-456-21-01" name="Lee's College">
+				<TotalMarketValue>2507066</TotalMarketValue>
+								<Classifications>
+					<Class name="Cash">						
+						<TotalMarketValue></TotalMarketValue>
+						<PercentageOfTotal></PercentageOfTotal>
+						<SubClasses>
+							<SubClass name="Cash">								
+								<TotalMarketValue></TotalMarketValue>
+								<PercentageOfTotal>45</PercentageOfTotal>
+								<PercentageOfClass></PercentageOfClass>
+								<Assets>
+									<Asset symbol="" name="">															
+										<Units></Units>
+										<CostBasis></CostBasis>
+										<TotalMarketValue></TotalMarketValue>
+										<PercentageOfTotal></PercentageOfTotal>
+										<Performance>
+											<YearToDate amount="" percentage=""></YearToDate>
+											<ReportPeriod amount="" percentage=""></ReportPeriod>
+											<LastTwelveMonths amount="" percentage=""></LastTwelveMonths>											
+										</Performance>
+									</Asset>
+								</Assets>
+							</SubClass>
+						</SubClasses>
+					</Class>
+					<Class name="Stocks">
+						<SubClasses>
+							<SubClass name="International Stocks">
+								<PercentageOfTotal>16</PercentageOfTotal>
+							</SubClass>
+							<SubClass name="US Stocks">
+								<PercentageOfTotal>20</PercentageOfTotal>
+							</SubClass>
+						</SubClasses>
+					</Class>
+					<Class name="Bonds">
+						<SubClasses>
+							<SubClass name="Municipal Bonds">
+								<PercentageOfTotal>3</PercentageOfTotal>
+							</SubClass>
+							<SubClass name="Federal Bonds">
+								<PercentageOfTotal>9</PercentageOfTotal>
+							</SubClass>
+						</SubClasses>
+					</Class>
+					<Class name="Mutual Funds">
+						<SubClasses>
+							<SubClass name="Managed Funds">
+								<PercentageOfTotal>7</PercentageOfTotal>
+							</SubClass>
+							<SubClass name="Non-Managed Funds">
+								<PercentageOfTotal>0</PercentageOfTotal>
+							</SubClass>
+						</SubClasses>
+					</Class>
+				</Classifications>	
+				<Investments>
+					<InPeriod amount="" percentage=""/>
+					<YearToDate amount="" percentage=""/>
+					<SinceInception amount="401130" percentage=""/>
+				</Investments>				
+				<Value>
+				<SinceInception amount="" percentage="" netChange="501413"/>
+				</Value>
+								<Returns>
+					<InPeriod amount="" percentage="12.0"/>
+					<YearToDate amount="" percentage=""/>
+					<SinceInception amount="" percentage="13.0"/>					
+				</Returns>
+				
+				<Income>
+					<InPeriod amount="" percentage="" interest="" dividends=""/>
+					<YearToDate amount="" percentage="" Interest="" dividends=""/>
+					<SinceInception amount="100283" percentage="" interest="" dividends=""/>
+				</Income>			
+			</Account>
+			<Account id="1-456-21-02" name="Joint">
+				<TotalMarketValue>2507067</TotalMarketValue>
+								<Classifications>
+					<Class name="Cash">						
+						<TotalMarketValue></TotalMarketValue>
+						<PercentageOfTotal></PercentageOfTotal>
+						<SubClasses>
+							<SubClass name="Cash">								
+								<TotalMarketValue></TotalMarketValue>
+								<PercentageOfTotal>6</PercentageOfTotal>
+								<PercentageOfClass></PercentageOfClass>
+								<Assets>
+									<Asset symbol="" name="">															
+										<Units></Units>
+										<CostBasis></CostBasis>
+										<TotalMarketValue></TotalMarketValue>
+										<PercentageOfTotal></PercentageOfTotal>
+										<Performance>
+											<YearToDate amount="" percentage=""></YearToDate>
+											<ReportPeriod amount="" percentage=""></ReportPeriod>
+											<LastTwelveMonths amount="" percentage=""></LastTwelveMonths>											
+										</Performance>
+									</Asset>
+								</Assets>
+							</SubClass>
+						</SubClasses>
+					</Class>
+					<Class name="Stocks">
+						<SubClasses>
+							<SubClass name="International Stocks">
+								<PercentageOfTotal>21</PercentageOfTotal>
+							</SubClass>
+							<SubClass name="US Stocks">
+								<PercentageOfTotal>23</PercentageOfTotal>
+							</SubClass>
+						</SubClasses>
+					</Class>
+					<Class name="Bonds">
+						<SubClasses>
+							<SubClass name="Municipal Bonds">
+								<PercentageOfTotal>11</PercentageOfTotal>
+							</SubClass>
+							<SubClass name="Federal Bonds">
+								<PercentageOfTotal>28</PercentageOfTotal>
+							</SubClass>
+						</SubClasses>
+					</Class>
+					<Class name="Mutual Funds">
+						<SubClasses>
+							<SubClass name="Managed Funds">
+								<PercentageOfTotal>2</PercentageOfTotal>
+							</SubClass>
+							<SubClass name="Non-Managed Funds">
+								<PercentageOfTotal>9</PercentageOfTotal>
+							</SubClass>
+						</SubClasses>
+					</Class>
+				</Classifications>	
+				<Investments>
+					<InPeriod amount="" percentage=""/>
+					<YearToDate amount="" percentage=""/>
+					<SinceInception amount="935971" percentage=""/>
+				</Investments>				
+				<Value>
+					<SinceInception amount="" percentage="" netChange="1169964"/>
+				</Value>
+				<Returns>
+					<InPeriod amount="" percentage="14.0"/>
+					<YearToDate amount="" percentage=""/>
+					<SinceInception amount="" percentage="15.0"/>					
+				</Returns>				
+				<Income>
+					<InPeriod amount="" percentage="" interest="" dividends=""/>
+					<YearToDate amount="" percentage="" Interest="" dividends=""/>
+					<SinceInception amount="233993" percentage="" interest="" dividends=""/>
+				</Income>			
+			</Account>	
+		</Accounts>
+		<Classifications>
+			<Class name="Cash">
+				<TotalMarketValue>33428</TotalMarketValue>
+				<PercentageOfTotal>10.8</PercentageOfTotal>
+				<History>
+					<Annual year="2006" age="">
+						<PercentageOfTotal>0.9</PercentageOfTotal>
+					</Annual>
+					<Annual year="2007" age="">
+						<PercentageOfTotal>0.7</PercentageOfTotal>
+					</Annual>
+					<Annual year="2008" age="">
+						<PercentageOfTotal>0.6</PercentageOfTotal>
+					</Annual>
+					<Annual year="2009" age="">
+						<PercentageOfTotal>3.0</PercentageOfTotal>
+					</Annual>
+					<Annual year="2010" age="">
+						<PercentageOfTotal>4.9</PercentageOfTotal>
+					</Annual>
+					<Annual year="2011" age="">
+						<PercentageOfTotal>5.8</PercentageOfTotal>
+					</Annual>
+					<Annual year="2012" age="">
+						<PercentageOfTotal>0.9</PercentageOfTotal>
+					</Annual>
+					<Annual year="2013" age="">
+						<PercentageOfTotal>0.5</PercentageOfTotal>
+					</Annual>
+					<Annual year="2014" age="">
+						<PercentageOfTotal>0.8</PercentageOfTotal>
+					</Annual>					
+				</History>				
+			</Class>
+			<Class name="Stocks">
+				<TotalMarketValue>3012656</TotalMarketValue>
+				<PercentageOfTotal>72.1</PercentageOfTotal>
+				<History>
+					<Annual year="2006" age="">
+						<PercentageOfTotal>70.9</PercentageOfTotal>
+					</Annual>
+					<Annual year="2007" age="">
+						<PercentageOfTotal>74.5</PercentageOfTotal>
+					</Annual>
+					<Annual year="2008" age="">
+						<PercentageOfTotal>75.0</PercentageOfTotal>
+					</Annual>
+					<Annual year="2009" age="">
+						<PercentageOfTotal>73.0</PercentageOfTotal>
+					</Annual>
+					<Annual year="2010" age="">
+						<PercentageOfTotal>74.9</PercentageOfTotal>
+					</Annual>
+					<Annual year="2011" age="">
+						<PercentageOfTotal>75.8</PercentageOfTotal>
+					</Annual>
+					<Annual year="2012" age="">
+						<PercentageOfTotal>72.9</PercentageOfTotal>
+					</Annual>
+					<Annual year="2013" age="">
+						<PercentageOfTotal>72.5</PercentageOfTotal>
+					</Annual>
+					<Annual year="2014" age="">
+						<PercentageOfTotal>72.1</PercentageOfTotal>
+					</Annual>					
+				</History>				
+				<SubClasses>
+					<SubClass name="International Stocks">						
+						<TotalMarketValue></TotalMarketValue>
+						<PercentageOfTotal></PercentageOfTotal>
+						<PercentageOfClass></PercentageOfClass>
+						<Performance>
+							<YearToDate amount="" percentage=""></YearToDate>
+							<ReportPeriod amount="" percentage="2.7"></ReportPeriod>
+							<LastTwelveMonths amount="" percentage="1.5"></LastTwelveMonths>											
+						</Performance>						
+						<Assets>
+							<Asset symbol="AVP" name="Aussie Visual Promoters">
+								<Units></Units>
+								<CostBasis></CostBasis>
+								<TotalMarketValue></TotalMarketValue>
+								<PercentageOfTotal></PercentageOfTotal>
+								<PercentageOfClass></PercentageOfClass>
+								<Performance>
+									<YearToDate amount="" percentage=""></YearToDate>
+									<ReportPeriod amount="" percentage=""></ReportPeriod>
+									<LastTwelveMonths amount="" percentage=""></LastTwelveMonths>											
+								</Performance>
+							</Asset>
+							<Asset symbol="" name="">
+								<TotalMarketValue></TotalMarketValue>
+								<PercentageOfClass></PercentageOfClass>
+							</Asset>							
+						</Assets>
+					</SubClass>				
+					<SubClass name="US Stocks">						
+						<TotalMarketValue></TotalMarketValue>
+						<PercentageOfTotal></PercentageOfTotal>
+						<PercentageOfClass></PercentageOfClass>
+						<Performance>
+							<YearToDate amount="" percentage=""></YearToDate>
+							<ReportPeriod amount="" percentage="9.2"></ReportPeriod>
+							<LastTwelveMonths amount="" percentage="8.6"></LastTwelveMonths>											
+						</Performance>						
+						<Assets>
+							<Asset symbol="" name="">
+								<Units></Units>
+								<CostBasis></CostBasis>
+								<TotalMarketValue></TotalMarketValue>
+								<PercentageOfTotal></PercentageOfTotal>
+								<Performance>
+									<YearToDate amount="" percentage=""></YearToDate>
+									<ReportPeriod amount="" percentage=""></ReportPeriod>
+									<LastTwelveMonths amount="" percentage=""></LastTwelveMonths>											
+								</Performance>
+							</Asset>
+						</Assets>
+					</SubClass>				
+				</SubClasses>	
+			</Class>
+			<Class name="Bonds">
+				<TotalMarketValue>580803</TotalMarketValue>
+				<PercentageOfTotal>13.9</PercentageOfTotal>
+				<History>
+					<Annual year="2006" age="">
+						<PercentageOfTotal>0</PercentageOfTotal>
+					</Annual>
+					<Annual year="2007" age="">
+						<PercentageOfTotal>0</PercentageOfTotal>
+					</Annual>
+					<Annual year="2008" age="">
+						<PercentageOfTotal>5.5</PercentageOfTotal>
+					</Annual>
+					<Annual year="2009" age="">
+						<PercentageOfTotal>6</PercentageOfTotal>
+					</Annual>
+					<Annual year="2010" age="">
+						<PercentageOfTotal>8.2</PercentageOfTotal>
+					</Annual>
+					<Annual year="2011" age="">
+						<PercentageOfTotal>7.6</PercentageOfTotal>
+					</Annual>
+					<Annual year="2012" age="">
+						<PercentageOfTotal>10</PercentageOfTotal>
+					</Annual>
+					<Annual year="2013" age="">
+						<PercentageOfTotal>12.5</PercentageOfTotal>
+					</Annual>
+					<Annual year="2014" age="">
+						<PercentageOfTotal>13.9</PercentageOfTotal>
+					</Annual>
+				</History>				
+				<SubClasses>
+					<SubClass name="Municipal Bonds">						
+						<TotalMarketValue></TotalMarketValue>
+						<PercentageOfTotal></PercentageOfTotal>
+						<PercentageOfClass></PercentageOfClass>
+						<Performance>
+							<YearToDate amount="" percentage=""></YearToDate>
+							<ReportPeriod amount="" percentage="1.3"></ReportPeriod>
+							<LastTwelveMonths amount="" percentage="1.9"></LastTwelveMonths>											
+						</Performance>						
+						<Assets>
+							<Asset symbol="" name="">
+								<Units></Units>
+								<CostBasis></CostBasis>
+								<TotalMarketValue></TotalMarketValue>
+								<PercentageOfTotal></PercentageOfTotal>
+								<Performance>
+									<YearToDate amount="" percentage=""></YearToDate>
+									<ReportPeriod amount="" percentage=""></ReportPeriod>
+									<LastTwelveMonths amount="" percentage=""></LastTwelveMonths>											
+								</Performance>
+							</Asset>
+						</Assets>
+					</SubClass>				
+					<SubClass name="Federal Bonds">						
+						<TotalMarketValue></TotalMarketValue>
+						<PercentageOfTotal></PercentageOfTotal>
+						<PercentageOfClass></PercentageOfClass>
+						<Performance>
+							<YearToDate amount="" percentage=""></YearToDate>
+							<ReportPeriod amount="" percentage="0.9"></ReportPeriod>
+							<LastTwelveMonths amount="" percentage="0.9"></LastTwelveMonths>											
+						</Performance>						
+						<Assets>
+							<Asset symbol="" name="">
+								<Units></Units>
+								<CostBasis></CostBasis>
+								<TotalMarketValue></TotalMarketValue>
+								<PercentageOfTotal></PercentageOfTotal>
+								<Performance>
+									<YearToDate amount="" percentage=""></YearToDate>
+									<ReportPeriod amount="" percentage=""></ReportPeriod>
+									<LastTwelveMonths amount="" percentage=""></LastTwelveMonths>											
+								</Performance>
+							</Asset>
+						</Assets>
+					</SubClass>				
+				</SubClasses>
+			</Class>
+			<Class name="Mutual Funds">				
+				<TotalMarketValue>551554</TotalMarketValue>
+				<PercentageOfTotal>13.2</PercentageOfTotal>
+				<History>
+					<Annual year="2006" age="">
+						<PercentageOfTotal>28.2</PercentageOfTotal>
+					</Annual>
+					<Annual year="2007" age="">
+						<PercentageOfTotal>24.8</PercentageOfTotal>
+					</Annual>
+					<Annual year="2008" age="">
+						<PercentageOfTotal>18.90</PercentageOfTotal>
+					</Annual>
+					<Annual year="2009" age="">
+						<PercentageOfTotal>18</PercentageOfTotal>
+					</Annual>
+					<Annual year="2010" age="">
+						<PercentageOfTotal>12</PercentageOfTotal>
+					</Annual>
+					<Annual year="2011" age="">
+						<PercentageOfTotal>10.8</PercentageOfTotal>
+					</Annual>
+					<Annual year="2012" age="">
+						<PercentageOfTotal>16.2</PercentageOfTotal>
+					</Annual>
+					<Annual year="2013" age="">
+						<PercentageOfTotal>14.5</PercentageOfTotal>
+					</Annual>
+					<Annual year="2014" age="">
+						<PercentageOfTotal>13.2</PercentageOfTotal>
+					</Annual>
+				</History>
+				<SubClasses>
+					<SubClass name="Managed Funds">						
+						<TotalMarketValue></TotalMarketValue>
+						<PercentageOfTotal></PercentageOfTotal>
+						<PercentageOfClass></PercentageOfClass>
+						<Performance>
+							<YearToDate amount="" percentage=""></YearToDate>
+							<ReportPeriod amount="" percentage="12.1"></ReportPeriod>
+							<LastTwelveMonths amount="" percentage="12.5"></LastTwelveMonths>											
+						</Performance>						
+						<Assets>
+							<Asset symbol="" name="">
+								<Units></Units>
+								<CostBasis></CostBasis>
+								<TotalMarketValue></TotalMarketValue>
+								<PercentageOfTotal></PercentageOfTotal>
+								<Performance>
+									<YearToDate amount="" percentage=""></YearToDate>
+									<ReportPeriod amount="" percentage=""></ReportPeriod>
+									<LastTwelveMonths amount="" percentage=""></LastTwelveMonths>											
+								</Performance>
+							</Asset>
+						</Assets>
+					</SubClass>
+					<SubClass name="Non-Managed Funds">						
+						<TotalMarketValue></TotalMarketValue>
+						<PercentageOfTotal></PercentageOfTotal>
+						<PercentageOfClass></PercentageOfClass>
+						<Performance>
+							<YearToDate amount="" percentage=""></YearToDate>
+							<ReportPeriod amount="" percentage="11.4"></ReportPeriod>
+							<LastTwelveMonths amount="" percentage="11.8"></LastTwelveMonths>											
+						</Performance>						
+						<Assets>
+							<Asset symbol="" name="">
+								<Units></Units>
+								<CostBasis></CostBasis>
+								<TotalMarketValue></TotalMarketValue>
+								<PercentageOfTotal></PercentageOfTotal>
+								<Performance>
+									<YearToDate amount="" percentage=""></YearToDate>
+									<ReportPeriod amount="" percentage=""></ReportPeriod>
+									<LastTwelveMonths amount="" percentage=""></LastTwelveMonths>											
+								</Performance>
+							</Asset>
+						</Assets>
+					</SubClass>					
+				</SubClasses>
+			</Class>
+		</Classifications>						
+		<Income>
+			<InPeriod amount="" percentage="" interest="" dividends=""/>
+			<YearToDate amount="83569" percentage="" Interest="1671" dividends="81897"/>
+			<SinceInception amount="835688" percentage="" interest="16714" dividends="818974"/>
+		</Income>
+		<Investments>
+			<InPeriod amount="" percentage=""/>
+			<YearToDate amount="60170" percentage=""/>
+			<SinceInception amount="3342753" percentage=""/>
+		</Investments>		
+		<Value>
+			<TotalMarketValue>4178441</TotalMarketValue>
+			<InitialValue amount="2456264" percentage=""/>
+			<YearToDate amount="4660892" percentage=""/>
+			<Valuation year="2006" age="">
+				<TotalValue></TotalValue>
+				<HistoricalHighValue></HistoricalHighValue>
+				<HistoricalLowValue></HistoricalLowValue>
+				<Earnings netValue="91926"/>
+				<Investments netValue="2456264"/>
+			</Valuation>
+			<Valuation year="2007" age="">
+				<TotalValue></TotalValue>
+				<HistoricalHighValue></HistoricalHighValue>
+				<HistoricalLowValue></HistoricalLowValue>
+				<Earnings netValue="117832"/>
+				<Investments netValue="147081"/>
+			</Valuation>
+			<Valuation year="2008" age="">
+				<TotalValue></TotalValue>
+				<HistoricalHighValue></HistoricalHighValue>
+				<HistoricalLowValue></HistoricalLowValue>
+				<Earnings netValue="99447"/>
+				<Investments netValue="163795"/>
+			</Valuation>
+			<Valuation year="2009" age="">
+				<TotalValue></TotalValue>
+				<HistoricalHighValue></HistoricalHighValue>
+				<HistoricalLowValue></HistoricalLowValue>
+				<Earnings netValue="108639"/>
+				<Investments netValue="133710"/>
+			</Valuation>
+			<Valuation year="2010" age="">
+				<TotalValue></TotalValue>
+				<HistoricalHighValue></HistoricalHighValue>
+				<HistoricalLowValue></HistoricalLowValue>
+				<Earnings netValue="66855"/>
+				<Investments netValue="143738"/>
+			</Valuation>
+			<Valuation year="2011" age="">
+				<TotalValue></TotalValue>
+				<HistoricalHighValue></HistoricalHighValue>
+				<HistoricalLowValue></HistoricalLowValue>
+				<Earnings netValue="50141"/>
+				<Investments netValue="93597"/>
+			</Valuation>
+			<Valuation year="2012" age="">
+				<TotalValue></TotalValue>
+				<HistoricalHighValue></HistoricalHighValue>
+				<HistoricalLowValue></HistoricalLowValue>
+				<Earnings netValue="100283"/>
+				<Investments netValue="73541"/>
+			</Valuation>
+			<Valuation year="2013" age="">
+				<TotalValue></TotalValue>
+				<HistoricalHighValue></HistoricalHighValue>
+				<HistoricalLowValue></HistoricalLowValue>
+				<Earnings netValue="116996"/>
+				<Investments netValue="70198"/>
+			</Valuation>
+			<Valuation year="2014" age="">
+				<TotalValue></TotalValue>
+				<HistoricalHighValue></HistoricalHighValue>
+				<HistoricalLowValue></HistoricalLowValue>
+				<Earnings netValue="83569"/>
+				<Investments netValue="60170"/>
+			</Valuation>
+		</Value>
+		<Returns>
+			<InPeriod amount="" percentage=""/>
+			<YearToDate amount="" percentage=""/>
+			<SinceInception amount="" percentage="14.2"/>
+			<History>
+				<Annual year= "2006" age="">
+					<Actual amount="" percentage="11.0"/>
+				</Annual>
+				<Annual year= "2007" age="">
+					<Actual amount="" percentage="14.1"/>
+				</Annual>
+				<Annual year= "2008" age="">
+					<Actual amount="" percentage="11.9"/>
+				</Annual>
+				<Annual year= "2009" age="">
+					<Actual amount="" percentage="13.0"/>
+				</Annual>
+				<Annual year= "2010" age="">
+					<Actual amount="" percentage="8.0"/>
+				</Annual>
+				<Annual year= "2011" age="">
+					<Actual amount="" percentage="6.0"/>
+				</Annual>
+				<Annual year= "2012" age="">
+					<Actual amount="" percentage="12.0"/>
+				</Annual>
+				<Annual year= "2013" age="">
+					<Actual amount="" percentage="14.0"/>
+				</Annual>
+				<Annual year= "2014" age="">
+					<Actual amount="" percentage="10.0"/>
+				</Annual>
+				<Trending>
+					<Period years="1" show="Y">
+						<CurrentAllocation amount="" percentage="Y">
+							<Average amount="" percentage="10"/>
+							<Maximum amount="" percentage="14"/>
+							<Minimum amount="" percentage="5"/>
+						</CurrentAllocation>					
+					</Period>
+					<Period years="5" show="">
+						<CurrentAllocation amount="" percentage="">
+							<Average amount="" percentage="12"/>
+							<Maximum amount="" percentage="18"/>
+							<Minimum amount="" percentage="10"/>
+						</CurrentAllocation>					
+					</Period>
+					<Period years="10" show="Y">
+						<CurrentAllocation amount="" percentage="">
+							<Average amount="" percentage="15"/>
+							<Maximum amount="" percentage="19"/>
+							<Minimum amount="" percentage="11"/>
+						</CurrentAllocation>					
+					</Period>					
+					<Period years="15" show="">
+						<CurrentAllocation amount="" percentage="">
+							<Average amount="" percentage="16"/>
+							<Maximum amount="" percentage="20"/>
+							<Minimum amount="" percentage="12"/>
+						</CurrentAllocation>					
+					</Period>
+					<Period years="20" show="Y">
+						<CurrentAllocation amount="" percentage="">
+							<Average amount="" percentage="22"/>
+							<Maximum amount="" percentage="26"/>
+							<Minimum amount="" percentage="20"/>
+						</CurrentAllocation>					
+					</Period>					
+				</Trending>
+			</History>
+			<Benchmark>
+				<InPeriod amount="" percentage=""/>
+				<YearToDate amount="" percentage=""/>
+				<SinceInception amount="" percentage="13.8"/>
+			</Benchmark>			
+		</Returns>		
+	</DocumentData>
+</DocumentRequest>

@@ -8,9 +8,8 @@ from optparse import OptionParser
 
 #
 # to-do
-# 1) provide ability to specify IP listen address (defaults to localhost currently)
-# 2) support SSL connection
-# 3) provide separate methods for PATCH,PUT,DELETE
+# 1) support SSL connection
+# 2) provide separate methods for PATCH,PUT,DELETE
 
 
 class RequestHandler(BaseHTTPRequestHandler):
@@ -62,12 +61,12 @@ if __name__ == "__main__":
     
     parser = OptionParser("HTTPEcho\nSet up an HTTP server that echos GET and POST messages received on a given port.\nUsage: % httpecho [options]")    
     parser.add_option("-p","--port",dest="port",help="Listen on specified port",type="int", default=8080)
-    #parser.add_option("-i","--host",dest="host",help="Listen on specified IP/host", default="")
+    parser.add_option("-i","--host",dest="host",help="Listen on specified IP/host", default="localhost")
     (options, args) = parser.parse_args()
     
-    print('HTTPEcho : listening on %s:%s' % ('localhost',options.port))
+    print('HTTPEcho : listening on %s:%s' % (options.host,options.port))
     try :
-        server = HTTPServer(('', options.port), RequestHandler)
+        server = HTTPServer((options.host, options.port), RequestHandler)
         server.serve_forever()
     except KeyboardInterrupt:
         print 'Interrupt received; terminating.'
