@@ -1,12 +1,15 @@
 # Oracle Documaker.
-The Documaker [Community](http://community.oracle.com/community/oracle-applications/documaker) on Oracle's community sites.
-My Documaker Tech [Blog](http://blogs.oracle.com/documakertech/).
+1. The Documaker [Community](http://community.oracle.com/community/oracle-applications/documaker) on Oracle's community sites.
+2. My Documaker Tech [Blog](http://blogs.oracle.com/documakertech/).
 
 ## docker-images 
 Docker images to deploy.
 
 ## dwsDemoApplication 
 A one-page web application that demonstrates data capture and integration with Documaker. In an enterprise implementation, you may need an application to facilitate communication between portal sites and Documaker. This demo pages shows that capability, and all you need is just about any modern browser that supports ``XmlHttpRequest``.
+
+## dws-soapui-testbed
+A SoapUI project file for Documaker Web Services (DWS) for ODEE 12.6.2. Includes test cases and automation examples.
 
 ## dws-test-client
 A Maven-enabled test client that demonstrates dynamic web service discovery using JAX-WS ``wsimport`` and calling DWS using Java.
