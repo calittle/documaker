@@ -9,15 +9,13 @@ import javax.jms.QueueConnection;
 import javax.jms.QueueConnectionFactory;
 import javax.jms.QueueSession;
 import javax.jms.Session;
-//import javax.jms.TextMessage;
+
 import javax.jms.BytesMessage;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 class TransUpdate {
-	
-	private static final String usage = "Usage: TransUpdate <constring> <dbuser> <dbpass> <trn_id> [trnstatus] [QCF] [Q]";
 	
 	private static final String SQL_VALIDATE_TRNS = "select count(*) from TRNS where TRN_ID = ?";
 	private static final String SQL_UPDATE_TRNS = "update TRNS set TRNSTATUS = ? WHERE TRN_ID = ?";	
@@ -42,19 +40,17 @@ class TransUpdate {
 		String queuename = "";
 
 		Options options = new Options();
-
-		//required command line options		
 		Option opt;
 		
-		opt = new Option("c","constring",true,"Connection String (e.g. jdbc:oracle:thin:@localhost:1521:orcl)");
+		opt = new Option("c","constring",true,"Database Connection String (e.g. jdbc:oracle:thin:@localhost:1521:orcl)");
 		opt.setRequired(true);
 		options.addOption(opt);
 
-		opt = new Option("u","user",true,"Database User (e.g. dmkr_asline)");
+		opt = new Option("u","user",true,"Assembly Line Database User (e.g. dmkr_asline)");
 		opt.setRequired(true);
 		options.addOption(opt);
 
-		opt = new Option("p","password",true,"Database Password");
+		opt = new Option("p","password",true,"Assembly Line User Password");
 		opt.setRequired(true);
 		options.addOption(opt);
 
@@ -62,8 +58,7 @@ class TransUpdate {
 		opt.setRequired(true);
 		options.addOption(opt);
 
-		//optional options
-		opt = new Option("s","status",true,"Transaction Status (default:221)");
+		opt = new Option("s","status",true,"New Transaction Status (default:221)");
 		opt.setRequired(false);
 		options.addOption(opt);
 
@@ -75,10 +70,9 @@ class TransUpdate {
 		opt.setRequired(false);
 		options.addOption(opt);
 
-		opt = new Option("w","wlsurl",true,"WebLogic URL (default: t3://localhost:7001)");
+		opt = new Option("w","wlsurl",true,"WebLogic JMS Server URL (default: t3://localhost:11001)");
 		opt.setRequired(false);
 		options.addOption(opt);
-
 		
 		CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
@@ -169,7 +163,6 @@ class TransUpdate {
 						
 						BytesMessage message = session.createBytesMessage();
 						message.writeBytes(messageText.getBytes("UTF-8"));
-						//TextMessage message =  session.createTextMessage(messageText);
 						
 						conn.start();						
 						session.createSender(queue).send(message);

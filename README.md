@@ -23,6 +23,9 @@ Sample External Data Transaction service to use with Documaker Interactive.
 ## erd-1262
 SQLDeveloper Data Modeler definition package. Download, unzip, and open in SQLDeveloper for an ER-D of the ODEE 12.6.2 schemas for Admin and ASLine.
 
+## odee_util
+Helpful tools and things for ODEE.
+
 ## phpSoapServer
 Various PHP interfaces for calling DWS
 
