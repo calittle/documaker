@@ -2,6 +2,7 @@
 
 ## TransUpdate.java
 A handy utility that will change the TRNSTATUS for a given TRN_ID, and then post a message to a queue with the TRN_ID.
+
 __Required Libraries__
 1. Apache Commons CLI - commons-cli-1.4.jar available [here](https://commons.apache.org/proper/commons-cli/download_cli.cgi)
 1. Oracle JDBC - found in `<DB_HOME>/jdbc/lib/ojdbc7.jar`
@@ -13,7 +14,7 @@ __Usage__
 javac -cp ./commons-cli-1.4.jar:./ojdbc7.jar:./wljmsclient.jar:. TransUpdate.java
 ```
 
-1. Execute program with appropriate parameters.
+2. Execute program with appropriate parameters.
 ```
 java -cp ./commons-cli-1.4.jar:./ojdbc7.jar:./wljmsclient.jar:. TransUpdate
 usage: TransUpdate
