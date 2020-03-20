@@ -28,6 +28,7 @@ usage: TransUpdate
  -w,--wlsurl <arg>      WebLogic JMS Server URL (default: t3://localhost:11001)
 ```
 Example execution:
+
 ```java -cp ./commons-cli-1.4.jar:/oracle/db/ohome/jdbc/lib/ojdbc7.jar:/oracle/fmw/wcp12c/wlserver/server/lib/wljmsclient.jar:. TransUpdate -i 444 -s 221 -c jdbc:oracle:thin:@localhost:1521:orcl -p tiger -u scott -w t3://localhost:16200```
 
 ### Use Case 1 - Move a stuck transaction
