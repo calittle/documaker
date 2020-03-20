@@ -9,7 +9,9 @@ __Required Libraries__
 
 __Usage__
 1. Download and compile Java code to a class file.
-`javac -cp ./commons-cli-1.4.jar:./ojdbc7.jar:./wljmsclient.jar:. TransUpdate.java`
+```
+javac -cp ./commons-cli-1.4.jar:./ojdbc7.jar:./wljmsclient.jar:. TransUpdate.java
+```
 
 1. Execute program with appropriate parameters.
 ```
@@ -25,7 +27,7 @@ usage: TransUpdate
  -w,--wlsurl <arg>      WebLogic JMS Server URL (default: t3://localhost:11001)
 ```
 Example execution:
-`java -cp ./commons-cli-1.4.jar:/oracle/db/ohome/jdbc/lib/ojdbc7.jar:/oracle/fmw/wcp12c/wlserver/server/lib/wljmsclient.jar:. TransUpdate -i 444 -s 221 -c jdbc:oracle:thin:@localhost:1521:orcl -p tiger -u scott -w t3://localhost:16200`
+```java -cp ./commons-cli-1.4.jar:/oracle/db/ohome/jdbc/lib/ojdbc7.jar:/oracle/fmw/wcp12c/wlserver/server/lib/wljmsclient.jar:. TransUpdate -i 444 -s 221 -c jdbc:oracle:thin:@localhost:1521:orcl -p tiger -u scott -w t3://localhost:16200```
 
 ### Use Case 1 - Move a stuck transaction
 A transaction stuck in DocFactory an arbitrary status can be moved to a previous status. 
