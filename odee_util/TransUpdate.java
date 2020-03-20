@@ -38,7 +38,7 @@ class TransUpdate {
 		boolean trnFound = false;
 		String qcfname = "";
 		String queuename = "";
-
+		String clazz = "";
 		Options options = new Options();
 		Option opt;
 		
@@ -67,6 +67,10 @@ class TransUpdate {
 		options.addOption(opt);
 
 		opt = new Option("q","queue",true,"Queue (default: jms.al1.assemberreq)");
+		opt.setRequired(false);
+		options.addOption(opt);
+
+		opt = new Option("d","dbclass",true,"Database connection class name (default: oracle.jdbc.driver.OracleDriver)");
 		opt.setRequired(false);
 		options.addOption(opt);
 
@@ -112,6 +116,13 @@ class TransUpdate {
 				url = "t3://localhost:7001";
 			}		
 
+			temp = cmd.getOptionValue("dbclass");
+			if (temp != null){
+				clazz = temp;
+			}else{
+				clazz = "oracle.jdbc.driver.OracleDriver";
+			}		
+			
 		}
 		catch (ParseException e){
 			System.err.println(e);
@@ -124,7 +135,7 @@ class TransUpdate {
 		}
 
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
+			Class.forName(clazz);
 			java.sql.Connection c = DriverManager.getConnection(constring, user, pass);
 			PreparedStatement ps = c.prepareStatement(SQL_VALIDATE_TRNS);
 			ps.setInt(1,trnid);

@@ -19,6 +19,7 @@ javac -cp ./commons-cli-1.4.jar:./ojdbc7.jar:./wljmsclient.jar:. TransUpdate.jav
 java -cp ./commons-cli-1.4.jar:./ojdbc7.jar:./wljmsclient.jar:. TransUpdate
 usage: TransUpdate
  -c,--constring <arg>   Connection String (e.g.jdbc:oracle:thin:@localhost:1521:orcl)
+ -d,--dbclass <arg>     Database Classname (default: oracle.jdbc.driver.OracleDriver)
  -f,--qcf <arg>         Queue Connection Factory (default: jms.al1.qcf)
  -i,--id <arg>          Transaction ID
  -p,--password <arg>    Database Password
