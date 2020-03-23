@@ -28,6 +28,7 @@ class TransUpdate {
 		env.put(Context.PROVIDER_URL, url);
 		return new InitialContext(env);
 	}
+
 	public static void main(String[] args)
 	{
 		int trnid=0;
@@ -38,7 +39,7 @@ class TransUpdate {
 		String user = "";
 		String pass = "";
 		String url = "";
-		boolean sweep = false;
+		int sweep = 0;
 		boolean test = false;
 		boolean trnFound = false;
 		String qcfname = "";
@@ -88,16 +89,20 @@ class TransUpdate {
 		opt = new Option("w","wlsurl",true,"WebLogic JMS Server URL (default: t3://localhost:11001)");
 		opt.setRequired(false);
 		options.addOption(opt);
-
-		opt = new Option("d","delete",false,"Delete any existing BCHS, RCPS, PUBS records.");
-		opt.setRequired(false);
+		
+		opt = Option.builder("r")
+			.longOpt("remove")
+			.optionalArg(true)
+			.required(false)
+			.desc("Remove TRNS data elements and related BCHS/RCPS/PUBS records. Optional integer argument:\n[1] removes TRNNAPOL data only.\n[2] removes related BCHS/RCPS/PUBS records only.\n[3] removes both.\nDefault behavior is [1].\n\n[1] or [3] is recommended if setting TRNSTATUS to 221 for Assembler processing.")
+			.build();
+		opt.setArgs(1);
 		options.addOption(opt);
 		
 		opt = new Option("t","test",false,"Test run; no updates will be performed or messages actually sent.");
 		opt.setRequired(false);
 		options.addOption(opt);
 		
-
 		CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
         CommandLine cmd;
@@ -122,9 +127,29 @@ class TransUpdate {
 				trnstatus = 221;
 			}
 
-			if (cmd.hasOption("delete"))
+			if (cmd.hasOption("remove"))
 			{
-				sweep = true;
+				sweep = 1; // default.
+				temp = cmd.getOptionValue("remove");
+				if (temp != null)
+				{
+					sweep = Integer.parseInt(temp);
+					switch (sweep)
+					{
+						case 1:
+							break;
+						case 2:
+							if (trnstatus <= 221) 
+							{
+								System.out.println("===== NOTE =====\nWhen setting TRNSTATUS <= 221, using --remove 1 or --remove 3 option is recommended.");
+							}
+						
+						case 3:
+							break;
+						default:
+							throw new ParseException("Invalid argument for Remove option.  Valid values are [1|2|3].");
+					}
+				}
 			}
 			if (cmd.hasOption("test"))
 			{
@@ -172,18 +197,17 @@ class TransUpdate {
 			}
 			
 		}
-		catch (ParseException e)
-		{
-			System.err.println(e);
-			formatter.printHelp("TransUpdate", options);
-			System.exit(1);
-		}
 		catch (Exception e)
 		{
 			System.err.println(e);
+			formatter.printHelp(
+				"TransUpdate",
+				"\nChange the TRNSTATUS for a given TRN_ID, and then post a message to a queue with the TRN_ID.\n\nOptionally remove existing data associated with the transaction prior to changing the status.\n",
+				options,
+				"\nPlease report issues at https://github.com/calittle/documaker/issues\n"
+				);
 			System.exit(1);
 		}
-
 		
 		try 
 		{
@@ -212,86 +236,93 @@ class TransUpdate {
 					if (rs.getInt(1) == 1)
 					{
 						System.out.println("TRANS " + trnid + " located.");
-						if (sweep)
+						PreparedStatement swps;
+	
+						if (sweep>0)
 						{
-							if (!test)
+							// handle sweep type 1 and 3
+							if (sweep==1 || sweep==3)
 							{
-								System.out.println("Performing sweep for TRNID " + trnid);
-								// Clean up:
-								// DELETE FROM BCHS WHERE BCH_ID IN (SELECT BCH_ID FROM BCHS_RCPS WHERE TRN_ID = ?)
-								// DELETE FROM RCPS WHERE RCP_ID IN (SELECT RCP_ID FROM BCHS_RCPS WHERE TRN_ID = ?)
-								PreparedStatement swps = c.prepareStatement("DELETE FROM PUBS WHERE PUB_ID IN (SELECT PUB_ID FROM BCHS_RCPS WHERE TRN_ID = ?)");
-								swps.setInt(1,trnid);
-								updatedTrns = swps.executeUpdate();
-								if (updatedTrns >= 1)
+								if (!test)
 								{
-									System.out.println(updatedTrns + " PUBS releated to TRNID " + trnid + " deleted. ");
+									swps = c.prepareStatement("UPDATE TRNS SET TRNNAPOLXML=null, TRNNAPOLBLOB=null, TRNNAPOLSIZE=0 WHERE TRN_ID = ?");
+									swps.setInt(1,trnid);
+									updatedTrns = swps.executeUpdate();
+									if (updatedTrns == 1)
+									{
+										System.out.println("TRNS NAPOL data deleted. ");
+									}
+									else if (updatedTrns > 1)
+									{
+										System.out.println("Something bad happened trying to delete TRNS NAPOL data for TRNID " + trnid);
+									}else 
+									{
+										System.err.println("Unable to remove TRNS NAPOL data for TRNID " + trnid);
+									}
 								}
-								else 
+								else
 								{
-									System.out.println("No PUBS to remove for TRNID " + trnid);
+									System.out.println("Test enabled -- TRNNAPOL data will not be removed for TRNID " + trnid);		
 								}
-
-								swps = c.prepareStatement("DELETE FROM BCHS WHERE BCH_ID IN (SELECT BCH_ID FROM BCHS_RCPS WHERE TRN_ID = ?)");
-								swps.setInt(1,trnid);
-								updatedTrns = swps.executeUpdate();
-								if (updatedTrns >= 1)
-								{
-									System.out.println(updatedTrns + " BCHS releated to TRNID " + trnid + " deleted. ");
-								}
-								else 
-								{
-									System.out.println("No BCHS to remove for TRNID " + trnid);
-								}
-
-								swps = c.prepareStatement("DELETE FROM RCPS WHERE RCP_ID IN (SELECT RCP_ID FROM BCHS_RCPS WHERE TRN_ID = ?)");
-								swps.setInt(1,trnid);
-								updatedTrns = swps.executeUpdate();
-								if (updatedTrns >= 1)
-								{
-									System.out.println(updatedTrns + " RCPS releated to TRNID " + trnid + " deleted. ");
-								}
-								else 
-								{
-									System.out.println("No RCPS to remove for TRNID " + trnid);
-								}
-
-								swps = c.prepareStatement("DELETE FROM BCHS_RCPS WHERE TRN_ID = ?");
-								swps.setInt(1,trnid);
-								updatedTrns = swps.executeUpdate();
-								if (updatedTrns >= 1)
-								{
-									System.out.println(updatedTrns + " BCHS_RCPS releated to TRNID " + trnid + " deleted. ");
-								}
-								else 
-								{
-									System.out.println("No BCHS_RCPS to remove for TRNID " + trnid);
-								}							
-
-								// TRNS.TRNNAPOLXML, TRNNAPOLBLOB, TRNNAPOLSIZE (set to null)
-								swps = c.prepareStatement("UPDATE TRNS SET TRNNAPOLXML=null, TRNNAPOLBLOB=null, TRNNAPOLSIZE=0 WHERE TRN_ID = ?");
-								swps.setInt(1,trnid);
-								updatedTrns = swps.executeUpdate();
-								if (updatedTrns == 1)
-								{
-									System.out.println("TRNS NAPOL data deleted. ");
-								}
-								else if (updatedTrns > 1)
-								{
-									System.out.println("Something bad happened trying to delete TRNS NAPOL data for TRNID " + trnid);
-								}else 
-								{
-									System.err.println("Unable to remove TRNS NAPOL data for TRNID " + trnid);
-								}
-
-
-
-
- 							}
-							else
+							}
+							if (sweep==2 || sweep==3)
 							{
-								System.out.println("Test enabled -- no sweep will be performed for TRNID " + trnid + ".");
-							}					
+								if (test)
+								{
+									System.out.println("Test enabled -- BCHS, RCPS, PUBS will not be removed for TRNID " + trnid);
+								}
+								else
+								{ 
+									System.out.println("Performing sweep for TRNID " + trnid);
+									swps = c.prepareStatement("DELETE FROM PUBS WHERE PUB_ID IN (SELECT PUB_ID FROM BCHS_RCPS WHERE TRN_ID = ?)");
+									swps.setInt(1,trnid);
+									updatedTrns = swps.executeUpdate();
+									if (updatedTrns >= 1)
+									{
+										System.out.println(updatedTrns + " PUBS releated to TRNID " + trnid + " deleted. ");
+									}
+									else 
+									{
+										System.out.println("No PUBS to remove for TRNID " + trnid);
+									}
+
+									swps = c.prepareStatement("DELETE FROM BCHS WHERE BCH_ID IN (SELECT BCH_ID FROM BCHS_RCPS WHERE TRN_ID = ?)");
+									swps.setInt(1,trnid);
+									updatedTrns = swps.executeUpdate();
+									if (updatedTrns >= 1)
+									{
+										System.out.println(updatedTrns + " BCHS releated to TRNID " + trnid + " deleted. ");
+									}
+									else 
+									{
+										System.out.println("No BCHS to remove for TRNID " + trnid);
+									}
+
+									swps = c.prepareStatement("DELETE FROM RCPS WHERE RCP_ID IN (SELECT RCP_ID FROM BCHS_RCPS WHERE TRN_ID = ?)");
+									swps.setInt(1,trnid);
+									updatedTrns = swps.executeUpdate();
+									if (updatedTrns >= 1)
+									{
+										System.out.println(updatedTrns + " RCPS releated to TRNID " + trnid + " deleted. ");
+									}
+									else 
+									{
+										System.out.println("No RCPS to remove for TRNID " + trnid);
+									}
+
+									swps = c.prepareStatement("DELETE FROM BCHS_RCPS WHERE TRN_ID = ?");
+									swps.setInt(1,trnid);
+									updatedTrns = swps.executeUpdate();
+									if (updatedTrns >= 1)
+									{
+										System.out.println(updatedTrns + " BCHS_RCPS releated to TRNID " + trnid + " deleted. ");
+									}
+									else 
+									{
+										System.out.println("No BCHS_RCPS to remove for TRNID " + trnid);
+									}	
+								}
+							}
 						}
 						if (!test) 
 						{	
@@ -304,15 +335,21 @@ class TransUpdate {
 						}
 						else
 						{						
-							System.out.println("Test enabled -- no update performed for TRNID " + trnid +", ignore following message.");
-							updatedTrns=1;
-						
+							// Test enabled -- no update performed for TRNID
+							updatedTrns=1;						
 						}
 
 						if (updatedTrns>0)
 						{						
-							System.out.println("TRANS " + trnid + " updated to TRNSTATUS = " +trnstatus);
-													
+							if (test)
+							{
+								System.out.println("Test enabled -- TRANS " + trnid + " simulating update to TRNSTATUS = " +trnstatus);	
+							}
+							else
+							{
+								System.out.println("TRANS " + trnid + " updated to TRNSTATUS = " +trnstatus);	
+							}
+							
 							try
 							{
 							    InitialContext namingContext = getInitialContext(url);
@@ -328,14 +365,14 @@ class TransUpdate {
 								
 								if (test)
 								{
-									System.out.println("Test enabled -- no message will be sent for TRNID " + trnid);
+									System.out.println("Test enabled -- simulated posting message to " + qcfname + "/" + queuename + " on " + url + " for TRNID " + trnid);
 
 								}else
 								{
 									conn.start();						
 									session.createSender(queue).send(message);
 									conn.close();					
-									System.out.println("Message posted to " + qcfname + "/" + queuename + " on " + url);
+									System.out.println("Message posted to " + qcfname + "/" + queuename + " on " + url + " for TRNID " + trnid);
 								}
 							}
 							catch(NamingException e){
