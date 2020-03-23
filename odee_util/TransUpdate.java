@@ -31,6 +31,7 @@ class TransUpdate {
 	public static void main(String[] args){
 		int trnid=0;
 		int trnstatus=0;
+		String[] trnids = null;
 		String constring = "";
 		String user = "";
 		String pass = "";
@@ -54,8 +55,14 @@ class TransUpdate {
 		opt.setRequired(true);
 		options.addOption(opt);
 
-		opt = new Option("i","id",true,"Transaction ID");
-		opt.setRequired(true);
+		opt = Option.builder("i")
+			.required()
+			.longOpt("id")
+			.hasArgs()
+			.desc("Transaction ID")
+			.valueSeparator(new Character(','))
+			.build();			
+		opt.setArgs(Option.UNLIMITED_VALUES);
 		options.addOption(opt);
 
 		opt = new Option("s","status",true,"New Transaction Status (default:221)");
@@ -84,7 +91,9 @@ class TransUpdate {
 		
 		try{
 			cmd = parser.parse(options, args);			
-			trnid = Integer.parseInt(cmd.getOptionValue("id"));
+			
+			trnids = cmd.getOptionValues("id");
+			
 			constring = cmd.getOptionValue("constring");
 			user = cmd.getOptionValue("user");
 			pass = cmd.getOptionValue("password");
@@ -134,68 +143,75 @@ class TransUpdate {
 			System.exit(1);
 		}
 
+		
 		try {
 			Class.forName(clazz);
 			java.sql.Connection c = DriverManager.getConnection(constring, user, pass);
-			PreparedStatement ps = c.prepareStatement(SQL_VALIDATE_TRNS);
-			ps.setInt(1,trnid);
+		
+			for (int trncounter=0; trncounter < trnids.length; trncounter++) {
 
-			ResultSet rs = ps.executeQuery();
-			
-			while (rs.next()){
-				if (rs.getInt(1) == 1){
-					System.out.println("TRANS " + trnid + " located.");
-					trnFound = true;
-				}else {
-					System.err.println("TRANS " + trnid + " was not located.");
-					trnFound = false;
+				trnid = Integer.parseInt(trnids[trncounter]);
+				System.out.println("TRNID: " + trnid);
+
+				PreparedStatement ps = c.prepareStatement(SQL_VALIDATE_TRNS);
+				ps.setInt(1,trnid);
+
+				ResultSet rs = ps.executeQuery();
+				
+				while (rs.next()){
+					if (rs.getInt(1) == 1){
+						System.out.println("TRANS " + trnid + " located.");
+						trnFound = true;
+					}else {
+						System.err.println("TRANS " + trnid + " was not located.");
+						trnFound = false;
+					}
+				}
+
+				if (trnFound){
+					
+					ps = c.prepareStatement(SQL_UPDATE_TRNS);
+					ps.setInt(1,trnstatus);
+					ps.setInt(2,trnid);
+					int i = ps.executeUpdate();
+
+					if (i>0){
+					
+						System.out.println("TRANS " + trnid + " updated to TRNSTATUS = " +trnstatus);
+												
+						try{
+						    InitialContext namingContext = getInitialContext(url);
+							QueueConnectionFactory queueConnectionFactory = (QueueConnectionFactory) namingContext.lookup(qcfname);
+							Queue queue = (Queue) namingContext.lookup(queuename); 
+							QueueConnection  conn = queueConnectionFactory.createQueueConnection();						
+							QueueSession session = conn.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
+
+							String messageText = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><TransactionTicket xmlns='oracle/documaker/schema/tables/trns'><TRN_ID>" + trnid + "</TRN_ID></TransactionTicket>";
+							
+							BytesMessage message = session.createBytesMessage();
+							message.writeBytes(messageText.getBytes("UTF-8"));
+							
+							conn.start();						
+							session.createSender(queue).send(message);
+							conn.close();					
+						
+							System.out.println("Message posted to " + qcfname + "/" + queuename + " on " + url);
+
+						}
+						catch(NamingException e){
+							e.printStackTrace();
+						}
+						catch(JMSException e){
+							e.printStackTrace();
+						}
+						
+					}
 				}
 			}
-
-			if (trnFound){
-				
-				ps = c.prepareStatement(SQL_UPDATE_TRNS);
-				ps.setInt(1,trnstatus);
-				ps.setInt(2,trnid);
-				int i = ps.executeUpdate();
-
-				if (i>0){
-				
-					System.out.println("TRANS " + trnid + " updated to TRNSTATUS = " +trnstatus);
-											
-					try{
-					    InitialContext namingContext = getInitialContext(url);
-						QueueConnectionFactory queueConnectionFactory = (QueueConnectionFactory) namingContext.lookup(qcfname);
-						Queue queue = (Queue) namingContext.lookup(queuename); 
-						QueueConnection  conn = queueConnectionFactory.createQueueConnection();						
-						QueueSession session = conn.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
-
-						String messageText = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><TransactionTicket xmlns='oracle/documaker/schema/tables/trns'><TRN_ID>" + trnid + "</TRN_ID></TransactionTicket>";
-						
-						BytesMessage message = session.createBytesMessage();
-						message.writeBytes(messageText.getBytes("UTF-8"));
-						
-						conn.start();						
-						session.createSender(queue).send(message);
-						conn.close();					
-					
-						System.out.println("Message posted to " + qcfname + "/" + queuename + " on " + url);
-
-					}
-					catch(NamingException e){
-						e.printStackTrace();
-					}
-					catch(JMSException e){
-						e.printStackTrace();
-					}
-					
-				}
-			}
-
 			c.close();
 		}
 		catch (Exception e){
 			System.err.println(e);
-		}
+		}		
 	}
 }
