@@ -28,14 +28,18 @@ class TransUpdate {
 		env.put(Context.PROVIDER_URL, url);
 		return new InitialContext(env);
 	}
-	public static void main(String[] args){
+	public static void main(String[] args)
+	{
 		int trnid=0;
 		int trnstatus=0;
+		int updatedTrns=0;
 		String[] trnids = null;
 		String constring = "";
 		String user = "";
 		String pass = "";
 		String url = "";
+		boolean sweep = false;
+		boolean test = false;
 		boolean trnFound = false;
 		String qcfname = "";
 		String queuename = "";
@@ -84,12 +88,22 @@ class TransUpdate {
 		opt = new Option("w","wlsurl",true,"WebLogic JMS Server URL (default: t3://localhost:11001)");
 		opt.setRequired(false);
 		options.addOption(opt);
+
+		opt = new Option("d","delete",false,"Delete any existing BCHS, RCPS, PUBS records.");
+		opt.setRequired(false);
+		options.addOption(opt);
 		
+		opt = new Option("t","test",false,"Test run; no updates will be performed or messages actually sent.");
+		opt.setRequired(false);
+		options.addOption(opt);
+		
+
 		CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
         CommandLine cmd;
 		
-		try{
+		try
+		{
 			cmd = parser.parse(options, args);			
 			
 			trnids = cmd.getOptionValues("id");
@@ -98,119 +112,255 @@ class TransUpdate {
 			user = cmd.getOptionValue("user");
 			pass = cmd.getOptionValue("password");
 			String temp = cmd.getOptionValue("status");
-			if (temp != null){
+			
+			if (temp != null)
+			{
 				trnstatus = Integer.parseInt(temp);
-			}else{
+			}
+			else
+			{
 				trnstatus = 221;
 			}
 
+			if (cmd.hasOption("delete"))
+			{
+				sweep = true;
+			}
+			if (cmd.hasOption("test"))
+			{
+				test = true;
+			}
+
 			temp = cmd.getOptionValue("qcf");
-			if (temp != null){
+			if (temp != null)
+			{
 				qcfname = temp;
-			}else{
+			}
+			else
+			{
 				qcfname = "jms.al1.qcf";
 			}		
 
 			temp = cmd.getOptionValue("queue");
-			if (temp != null){
+			if (temp != null)
+			{
 				queuename = temp;
-			}else{
+			}
+			else
+			{
 				queuename = "jms.al1.assemblerreq";
 			}
 
 			temp = cmd.getOptionValue("wlsurl");
+			
 			if (temp != null){
 				url = temp;
-			}else{
+			}
+			else
+			{
 				url = "t3://localhost:7001";
 			}		
 
 			temp = cmd.getOptionValue("dbclass");
-			if (temp != null){
+			if (temp != null)
+			{
 				clazz = temp;
-			}else{
+			}
+			else
+			{
 				clazz = "oracle.jdbc.driver.OracleDriver";
-			}		
+			}
 			
 		}
-		catch (ParseException e){
+		catch (ParseException e)
+		{
 			System.err.println(e);
 			formatter.printHelp("TransUpdate", options);
 			System.exit(1);
 		}
-		catch (Exception e){
+		catch (Exception e)
+		{
 			System.err.println(e);
 			System.exit(1);
 		}
 
 		
-		try {
-			Class.forName(clazz);
+		try 
+		{
+			
+			Class.forName(clazz);			
+			
 			java.sql.Connection c = DriverManager.getConnection(constring, user, pass);
-		
-			for (int trncounter=0; trncounter < trnids.length; trncounter++) {
+			
+			System.out.println("Database connection opened.");			
+			System.out.println("Transactions to process: " + trnids.length);
+
+			for (int trncounter=0; trncounter < trnids.length; trncounter++) 
+			{
 
 				trnid = Integer.parseInt(trnids[trncounter]);
-				System.out.println("TRNID: " + trnid);
+				System.out.println("============ " + (trncounter + 1) + ". TRNID "  + trnid + " ============");
 
 				PreparedStatement ps = c.prepareStatement(SQL_VALIDATE_TRNS);
 				ps.setInt(1,trnid);
 
 				ResultSet rs = ps.executeQuery();
 				
-				while (rs.next()){
-					if (rs.getInt(1) == 1){
+				while (rs.next())
+				{
+
+					if (rs.getInt(1) == 1)
+					{
 						System.out.println("TRANS " + trnid + " located.");
-						trnFound = true;
-					}else {
-						System.err.println("TRANS " + trnid + " was not located.");
-						trnFound = false;
-					}
-				}
+						if (sweep)
+						{
+							if (!test)
+							{
+								System.out.println("Performing sweep for TRNID " + trnid);
+								// Clean up:
+								// DELETE FROM BCHS WHERE BCH_ID IN (SELECT BCH_ID FROM BCHS_RCPS WHERE TRN_ID = ?)
+								// DELETE FROM RCPS WHERE RCP_ID IN (SELECT RCP_ID FROM BCHS_RCPS WHERE TRN_ID = ?)
+								PreparedStatement swps = c.prepareStatement("DELETE FROM PUBS WHERE PUB_ID IN (SELECT PUB_ID FROM BCHS_RCPS WHERE TRN_ID = ?)");
+								swps.setInt(1,trnid);
+								updatedTrns = swps.executeUpdate();
+								if (updatedTrns >= 1)
+								{
+									System.out.println(updatedTrns + " PUBS releated to TRNID " + trnid + " deleted. ");
+								}
+								else 
+								{
+									System.out.println("No PUBS to remove for TRNID " + trnid);
+								}
 
-				if (trnFound){
-					
-					ps = c.prepareStatement(SQL_UPDATE_TRNS);
-					ps.setInt(1,trnstatus);
-					ps.setInt(2,trnid);
-					int i = ps.executeUpdate();
+								swps = c.prepareStatement("DELETE FROM BCHS WHERE BCH_ID IN (SELECT BCH_ID FROM BCHS_RCPS WHERE TRN_ID = ?)");
+								swps.setInt(1,trnid);
+								updatedTrns = swps.executeUpdate();
+								if (updatedTrns >= 1)
+								{
+									System.out.println(updatedTrns + " BCHS releated to TRNID " + trnid + " deleted. ");
+								}
+								else 
+								{
+									System.out.println("No BCHS to remove for TRNID " + trnid);
+								}
 
-					if (i>0){
-					
-						System.out.println("TRANS " + trnid + " updated to TRNSTATUS = " +trnstatus);
-												
-						try{
-						    InitialContext namingContext = getInitialContext(url);
-							QueueConnectionFactory queueConnectionFactory = (QueueConnectionFactory) namingContext.lookup(qcfname);
-							Queue queue = (Queue) namingContext.lookup(queuename); 
-							QueueConnection  conn = queueConnectionFactory.createQueueConnection();						
-							QueueSession session = conn.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
+								swps = c.prepareStatement("DELETE FROM RCPS WHERE RCP_ID IN (SELECT RCP_ID FROM BCHS_RCPS WHERE TRN_ID = ?)");
+								swps.setInt(1,trnid);
+								updatedTrns = swps.executeUpdate();
+								if (updatedTrns >= 1)
+								{
+									System.out.println(updatedTrns + " RCPS releated to TRNID " + trnid + " deleted. ");
+								}
+								else 
+								{
+									System.out.println("No RCPS to remove for TRNID " + trnid);
+								}
 
-							String messageText = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><TransactionTicket xmlns='oracle/documaker/schema/tables/trns'><TRN_ID>" + trnid + "</TRN_ID></TransactionTicket>";
-							
-							BytesMessage message = session.createBytesMessage();
-							message.writeBytes(messageText.getBytes("UTF-8"));
-							
-							conn.start();						
-							session.createSender(queue).send(message);
-							conn.close();					
+								swps = c.prepareStatement("DELETE FROM BCHS_RCPS WHERE TRN_ID = ?");
+								swps.setInt(1,trnid);
+								updatedTrns = swps.executeUpdate();
+								if (updatedTrns >= 1)
+								{
+									System.out.println(updatedTrns + " BCHS_RCPS releated to TRNID " + trnid + " deleted. ");
+								}
+								else 
+								{
+									System.out.println("No BCHS_RCPS to remove for TRNID " + trnid);
+								}							
+
+								// TRNS.TRNNAPOLXML, TRNNAPOLBLOB, TRNNAPOLSIZE (set to null)
+								swps = c.prepareStatement("UPDATE TRNS SET TRNNAPOLXML=null, TRNNAPOLBLOB=null, TRNNAPOLSIZE=0 WHERE TRN_ID = ?");
+								swps.setInt(1,trnid);
+								updatedTrns = swps.executeUpdate();
+								if (updatedTrns == 1)
+								{
+									System.out.println("TRNS NAPOL data deleted. ");
+								}
+								else if (updatedTrns > 1)
+								{
+									System.out.println("Something bad happened trying to delete TRNS NAPOL data for TRNID " + trnid);
+								}else 
+								{
+									System.err.println("Unable to remove TRNS NAPOL data for TRNID " + trnid);
+								}
+
+
+
+
+ 							}
+							else
+							{
+								System.out.println("Test enabled -- no sweep will be performed for TRNID " + trnid + ".");
+							}					
+						}
+						if (!test) 
+						{	
 						
-							System.out.println("Message posted to " + qcfname + "/" + queuename + " on " + url);
-
-						}
-						catch(NamingException e){
-							e.printStackTrace();
-						}
-						catch(JMSException e){
-							e.printStackTrace();
-						}
+							ps = c.prepareStatement(SQL_UPDATE_TRNS);
+							ps.setInt(1,trnstatus);
+							ps.setInt(2,trnid);
+							updatedTrns = ps.executeUpdate();
 						
+						}
+						else
+						{						
+							System.out.println("Test enabled -- no update performed for TRNID " + trnid +", ignore following message.");
+							updatedTrns=1;
+						
+						}
+
+						if (updatedTrns>0)
+						{						
+							System.out.println("TRANS " + trnid + " updated to TRNSTATUS = " +trnstatus);
+													
+							try
+							{
+							    InitialContext namingContext = getInitialContext(url);
+								QueueConnectionFactory queueConnectionFactory = (QueueConnectionFactory) namingContext.lookup(qcfname);
+								Queue queue = (Queue) namingContext.lookup(queuename); 
+								QueueConnection  conn = queueConnectionFactory.createQueueConnection();						
+								QueueSession session = conn.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
+
+								String messageText = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><TransactionTicket xmlns='oracle/documaker/schema/tables/trns'><TRN_ID>" + trnid + "</TRN_ID></TransactionTicket>";
+								
+								BytesMessage message = session.createBytesMessage();
+								message.writeBytes(messageText.getBytes("UTF-8"));
+								
+								if (test)
+								{
+									System.out.println("Test enabled -- no message will be sent for TRNID " + trnid);
+
+								}else
+								{
+									conn.start();						
+									session.createSender(queue).send(message);
+									conn.close();					
+									System.out.println("Message posted to " + qcfname + "/" + queuename + " on " + url);
+								}
+							}
+							catch(NamingException e){
+								e.printStackTrace();
+							}
+							catch(JMSException e){
+								e.printStackTrace();
+							}	
+						}
 					}
-				}
-			}
+					else 
+					{
+						System.out.println("TRANS " + trnid + " was not located.");					
+					}
+
+				} // end of while on RS of TRNID find
+			} // end of for on TRNID array 
+			
 			c.close();
-		}
-		catch (Exception e){
+			System.out.println("Database connection closed.");
+			System.exit(0);
+
+		}// end of try
+		catch (Exception e)
+		{
 			System.err.println(e);
 		}		
 	}
