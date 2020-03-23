@@ -59,7 +59,7 @@ class TransUpdate {
 			.required()
 			.longOpt("id")
 			.hasArgs()
-			.desc("Transaction ID")
+			.desc("Transaction ID(s) to modify (comma-delimited)")
 			.valueSeparator(new Character(','))
 			.build();			
 		opt.setArgs(Option.UNLIMITED_VALUES);

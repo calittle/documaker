@@ -21,7 +21,7 @@ usage: TransUpdate
  -c,--constring <arg>   Connection String (e.g.jdbc:oracle:thin:@localhost:1521:orcl)
  -d,--dbclass <arg>     Database Classname (default: oracle.jdbc.driver.OracleDriver)
  -f,--qcf <arg>         Queue Connection Factory (default: jms.al1.qcf)
- -i,--id <arg>          Transaction ID
+ -i,--id <arg>          Transaction ID(s) to modify (comma-delimited)
  -p,--password <arg>    Database Password
  -q,--queue <arg>       Queue (default: jms.al1.assemberreq)
  -s,--status <arg>      Transaction Status (default:211)
@@ -30,7 +30,7 @@ usage: TransUpdate
 ```
 Example execution:
 
-```java -cp ./commons-cli-1.4.jar:/oracle/db/ohome/jdbc/lib/ojdbc7.jar:/oracle/fmw/wcp12c/wlserver/server/lib/wljmsclient.jar:. TransUpdate -i 444 -s 221 -c jdbc:oracle:thin:@localhost:1521:orcl -p tiger -u scott -w t3://localhost:16200```
+```java -cp ./commons-cli-1.4.jar:/oracle/db/ohome/jdbc/lib/ojdbc7.jar:/oracle/fmw/wcp12c/wlserver/server/lib/wljmsclient.jar:. TransUpdate -i 444,434,20234 -s 221 -c jdbc:oracle:thin:@localhost:1521:orcl -p tiger -u scott -w t3://localhost:16200```
 
 ### Use Case 1 - Move a stuck transaction
 A transaction stuck in DocFactory an arbitrary status can be moved to a previous status. 
