@@ -21,8 +21,8 @@ To reuse the reference implementation for integration at a customer site, there 
 1. Override the following methods in _oracle.documaker.edt.custom.**ExternalDataTransaction**_. You can, of course, use the base 
 classes in _oracle.documaker.edt_ but this is not recommended as you will have to modify the annotations to properly generate the web service and methods:
     
-*. **getKeys**: This method should be changed to dynamically build an HTML form or dynamically select an external HTML file to return as dictated by requirements.   
-*. **getData**: This method should be changed to integrate with customer system(s) to gather the necessary data and collate into a single data stream that conforms to the Documaker resource library schema of the implementation.
-*. **validateFile**: This method should be changed to perform validations as stipulated by customer requirements.
+* **getKeys**: This method should be changed to dynamically build an HTML form or dynamically select an external HTML file to return as dictated by requirements.   
+* **getData**: This method should be changed to integrate with customer system(s) to gather the necessary data and collate into a single data stream that conforms to the Documaker resource library schema of the implementation.
+* **validateFile**: This method should be changed to perform validations as stipulated by customer requirements.
     
 Once the methods are prepared, you can build the project using the configured deployment profile, or use a new one. You may deploy to a WAR file which you can then import and deploy in WebLogic, or you may deploy directly to WebLogic server through the deployment profile. 
