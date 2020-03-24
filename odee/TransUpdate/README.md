@@ -1,6 +1,4 @@
-# ODEE Utilities
-
-## TransUpdate.java
+# TransUpdate.java
 A handy utility that will change the TRNSTATUS for a given TRN_ID, and then post a message to a queue with the TRN_ID. Optionally you can have the program remove existing data associated with the transaction prior to changing the status.
 
 __Required Libraries__

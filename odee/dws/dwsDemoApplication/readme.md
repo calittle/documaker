@@ -4,8 +4,8 @@ It's a very simple demonstration of capability to use SOAP messaging with just a
 # How Do I Use It?
 To use the dws Client, you need to configure/edit, and then deploy it to your environment. Open the file in your favorite text editor, e.g. Notepad. PS you should be using Sublime Text, but it's your choice.
 The files:
-* Click [here](https://raw.githubusercontent.com/calittle/documaker/master/dwsClient/index.html) to download the file.
-* Use [this](https://github.com/calittle/documaker/blob/master/dwsClient/index.html) to reference the original file for line numbers, etc.
+* Click [here](https://raw.githubusercontent.com/calittle/documaker/master/odee/dws/dwsDemoApplication/index.html) to download the file.
+* Use [this](https://github.com/calittle/documaker/blob/master/odee/dws/dwsDemoApplication/index.html) to reference the original file for line numbers, etc.
 
 ## Assumptions
 * You have a working Documaker Enterprise environment on a Linux machine that uses WebLogic. You can adapt the instructions if you are running on Windows (really the only difference is the simply-scripted creation of the _web.xml_ file) and the file copying details. 

@@ -6,7 +6,10 @@
 # Author: andy.little@oracle.com
 # Description: WebLogic JMS Monitor
 # Useful for tracking JMS Message levels in Documaker
-# Enterprise environments.
+# Enterprise environments. Run in WLST :
+#   #!/bin/sh
+#   . ./set_middleware_env.sh
+#   wlst.sh jmsmon.py
 #
 # DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
 #
