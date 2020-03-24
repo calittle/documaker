@@ -1,6 +1,20 @@
-Applicability: ODSE, ODEE. Version: Any.
-***
-First of all, you're probably wondering what exactly is a "preheader"? It's the summary text that short summary text that follows the subject line when viewing an email from the inbox. Whether or not this is displayed depends largely on the device or service used to view the inbox. The objective is to give the recipient some idea of what the message contains prior to opening it. Here’s an example in Gmail.
+# Generating Content for Emails with Documaker
+* Documaker Editions: Standard, Enterprise
+* Documaker Versions: 12.0 or newer, perhaps 11.5
+
+The purpose of this HOW-TO is to give you some information on how you can generate email content for Documaker. Not specifically how to _send_ email, as I expect you already have mechanisms in place to do this, perhaps using a tool such as Eloqua to track email bouncebacks. So let's assume that our interest is squarely situated around the email content itself.
+
+A customer asked me about some specific elements of email:
+1. **Sender Image** : this is a little graphic that some email clients place next to the sender's name to help identify the sender. This is not a feature of Documaker, it's a feature of an email provider, such as Google. Enabling this requires your company to subscribe to Google services and linking the sending email account (e.g. _yourcompany@yourdomain.com_ to a Google account). This is well outside the scope of Documaker. **OUT OF SCOPE**
+2. **Sender Name** : emails often contain a name and address, and the format is typically something like _"My Name"<myname@domain.com>_. This type of email metadata is needed for the _sending_ of the email, not the composition of the message itself. Let's put this as outside the scope of Documaker. **OUT OF SCOPE**
+3. **Subject** : Now we're starting to get in a little bit of a grey area, since the subject could contain transaction-specific information. Let's put this on our to-do list. Oh, and let's get into the current decade and add emojis 😄 to our subject too! **IN SCOPE**
+4. **Email Preheader** : this is the bit of the message that some email clients display that may or may not actually be displayed in the email body (often it is not) so we need a way to dynamically generate this information. **IN SCOPE**
+5. **_Extra Credit_**: let's include some code to send the email just for testing purposes. See [here](https://github.com/calittle/documaker/blob/master/utilities/SendEMLMail.java) 
+
+## Subject
+TBD. 
+## Email Preheader
+Whether or not this is displayed depends largely on the device or service used to view the inbox. The objective is to give the recipient some idea of what the message contains prior to opening it. Here’s an example in Gmail.
 
 ![text](/img/preheader-preview.png)
 
