@@ -7,19 +7,19 @@ class SendEMLMail {
 	
 	public static void main(String[] args)
 	{
-		String to = "someone@oracle.com";
-		String from = "someoneelse@oracle.com";
+		String to = "Jo Customer <customer@oracle.com>";
+		String from = "Oracle <documaker@andylittle.org>";
 		
 		Properties props = new Properties();
 		props.put("mail.smtp.auth","true");
-		props.put("mail.smtp.host","smtp.hostname.com");
+		props.put("mail.smtp.host","smtp.oracle.com");
 		props.put("mail.smtp.port","587");
 		props.put("mail.smtp.starttls.enable","true");
 
 		Session session = Session.getInstance(props,
 			new javax.mail.Authenticator() {
 				protected PasswordAuthentication getPasswordAuthentication(){
-					return new PasswordAuthentication("smtp@user.com","smtp**pass");
+					return new PasswordAuthentication("smtpuser","smtppass");
 				}
 			}
 		);
@@ -33,7 +33,7 @@ class SendEMLMail {
 		
 			message.setFrom(new InternetAddress(from));
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
-			message.setSubject("Hi! Email from Documaker!");
+			message.setSubject("=?utf-8?Q?=F0=9F=8F=A1_Your_tenant_insurance_quote_D-EN-ON?=");
 			// Not using this since we're embedding the EML from Documaker.
 			//message.setContent("<h1>This is actual message embedded in HTML tags</h1>","text/html");
 			Transport.send(message);
