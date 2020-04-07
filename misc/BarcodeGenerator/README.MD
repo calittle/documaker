@@ -14,7 +14,7 @@ Use the Maven Spring Boot tool to run the server from `misc/BarcodeGenerator/bar
 ```
 ./mvnw spring-boot:run
 ```
-Access the server at [http://localhost:8080/barcodes]
+Access the server at [http://localhost:8080/barcodes](http://localhost:8080/barcodes)
 
 # Test Notes
 Use the Postman collection to exercise the various requests using different barcode generators. Some methods use POST, others use GET (query string).
