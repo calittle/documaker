@@ -1,0 +1,371 @@
+{
+	"info": {
+		"_postman_id": "6f5e10c9-9d48-4f09-b5c9-b8c42b5623de",
+		"name": "Barcode Generator",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "QR Code",
+			"item": [
+				{
+					"name": "ZXing QR Code",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+						},
+						"url": {
+							"raw": "http://localhost:8080/barcodes/zxing/qrcode",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"barcodes",
+								"zxing",
+								"qrcode"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "QRGen QR Code",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+						},
+						"url": {
+							"raw": "http://localhost:8080/barcodes/qrgen/qrcode",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"barcodes",
+								"qrgen",
+								"qrcode"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "UPC-A",
+			"item": [
+				{
+					"name": "ZXing UPC-A",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/barcodes/zxing/upca/12345678901",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"barcodes",
+								"zxing",
+								"upca",
+								"12345678901"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Barbeque UPC-A",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/barcodes/barbecue/upca/12345678901",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"barcodes",
+								"barbecue",
+								"upca",
+								"12345678901"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Barcode4J UPC-A",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/barcodes/barcode4j/upca/12345678901",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"barcodes",
+								"barcode4j",
+								"upca",
+								"12345678901"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Code 128",
+			"item": [
+				{
+					"name": "Barbeque Code 128",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+						},
+						"url": {
+							"raw": "http://localhost:8080/barcodes/barbecue/code128",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"barcodes",
+								"barbecue",
+								"code128"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Barcode4J Code 128",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+						},
+						"url": {
+							"raw": "http://localhost:8080/barcodes/barcode4j/code128",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"barcodes",
+								"barcode4j",
+								"code128"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ZXing Code 128",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+						},
+						"url": {
+							"raw": "http://localhost:8080/barcodes/zxing/code128",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"barcodes",
+								"zxing",
+								"code128"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "PDF417",
+			"item": [
+				{
+					"name": "ZXing pdf417",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "Lorem ipsum dolor sit amet, consectetur adipiscing elit,\n sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+						},
+						"url": {
+							"raw": "http://localhost:8080/barcodes/zxing/pdf417",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"barcodes",
+								"zxing",
+								"pdf417"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Barbeque pdf417",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "Lorem ipsum dolor sit amet, consectetur adipiscing elit,\n sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+						},
+						"url": {
+							"raw": "http://localhost:8080/barcodes/barbecue/pdf417",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"barcodes",
+								"barbecue",
+								"pdf417"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Barcode4J pdf417",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "Lorem ipsum dolor sit amet, consectetur adipiscing elit,\n sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+						},
+						"url": {
+							"raw": "http://localhost:8080/barcodes/barcode4j/pdf417",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"barcodes",
+								"barcode4j",
+								"pdf417"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "EAN-13",
+			"item": [
+				{
+					"name": "ZXing EAN-13",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/barcodes/zxing/ean13/012345678901",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"barcodes",
+								"zxing",
+								"ean13",
+								"012345678901"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Barbeque EAN-13",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/barcodes/barbecue/ean13/012345678901",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"barcodes",
+								"barbecue",
+								"ean13",
+								"012345678901"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Barcode4J EAN-13",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/barcodes/barcode4j/ean13/012345678901",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"barcodes",
+								"barcode4j",
+								"ean13",
+								"012345678901"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	]
+}
