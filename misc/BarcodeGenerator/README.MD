@@ -1,3 +1,6 @@
+# What Is This?
+BarcodeGenerator uses the Spring Boot framework to standup an HTTP server that accepts requests with data and generates/returns a barcode, using a REST API.
+
 # Install Notes
 1. Clone the project. You're going to get a lot of stuff; do this once.
 1. Move into misc/BarcodeGenerator/barcode-service
