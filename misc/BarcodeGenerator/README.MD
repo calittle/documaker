@@ -1,13 +1,24 @@
 # Install Notes
-1. Clone the project. You're going to get a lot of stuff; do this once and then proceed from `misc/BarcodeGenerator`
+1. Clone the project. You're going to get a lot of stuff; do this once.
+1. Move into misc/BarcodeGenerator/barcode-service
+1. Perform Maven install.
+1. Run Spring Boot.
 ```
 git clone git://github.com/calittle/documaker.git
+cd documaker/misc/BarcodeGenerator/barcode-service
+maven install
+./mvnw spring-boot:run
 ```
-1. Build your project.
+# Run Notes
+Use the Maven Spring Boot tool to run the server from `misc/BarcodeGenerator/barcode-service`
 ```
-mvn clean compile assembly:single
+./mvnw spring-boot:run
 ```
-1. Run the project. You should see an output file.
-```
-java -cp target/barcode-generator-1.0-SNAPSHOT-jar-with-dependencies.jar: com.oracle.documaker.external.BarcodeGenerator
-```
+Access the server at [http://localhost:8080/barcodes]
+
+# Test Notes
+Use the Postman collection to exercise the various requests using different barcode generators. Some methods use POST, others use GET (query string).
+* Barbecue Library
+* Barcode4J
+* ZXing
+* QRGen
