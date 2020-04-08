@@ -33,6 +33,6 @@ public class BarcodeControllerIT {
     public void getIndex() throws Exception {
         ResponseEntity<String> response = template.getForEntity(base.toString(),
                 String.class);
-        assertThat(response.getBody()).isEqualTo("Missing required parameters.");
+        assertThat(response.getBody()).isEqualTo("Missing required parameters. <a href='/help'>Help?</a>");
     }
 }

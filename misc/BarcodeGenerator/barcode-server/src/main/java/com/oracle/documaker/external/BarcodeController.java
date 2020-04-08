@@ -17,7 +17,12 @@ import java.awt.image.BufferedImage;
 public class BarcodeController {
 	@GetMapping("")
 	public String index(){
-		return ("Missing required parameters.");
+		return ("Missing required parameters. <a href='/help'>Help?</a>");
+	}
+
+	@GetMapping("/help")
+	public String getHelp(){
+		return ("Usage: <i>/barcodes</i>/{library}/{codetype}/{data}<br/>Where:<br/><ul><li><i>{library}</i> is one of: <ul><li>barbecue</li><li>barcode4j</li><li>qrgen</li><li>zxing</li></ul></li><li><i>{codetype}</i> is one of: <ul><li>upca</li><li>ean13</li><li>code128</li><li>pdf417</li><li>qrcode</li></ul></li><li><i>{data}</i> is either passed on querystring (GET) or as raw unencoded in POST.</li></ul><i>Note</i><ul><li>Not all libraries generate the same codetype in the same way. Use what works for you.</li><li>All libraries support all codetypes with the exception of <i>qrcode</i> which is only supported by <b>zxing</b> and <b>qrgen</b></li></ul>");
 	}
     // //Barbecue library
     @GetMapping(value = "/barbecue/upca/{barcode}", produces = MediaType.IMAGE_PNG_VALUE)

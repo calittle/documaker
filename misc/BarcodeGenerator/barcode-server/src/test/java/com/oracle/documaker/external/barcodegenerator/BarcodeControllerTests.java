@@ -24,6 +24,6 @@ public class BarcodeControllerTests {
 	public void getIndex() throws Exception {
 		mvc.perform(MockMvcRequestBuilders.get("/barcodes").accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
-				.andExpect(content().string(equalTo("Missing required parameters.")));
+				.andExpect(content().string(equalTo("Missing required parameters. <a href='/help'>Help?</a>")));
 	}
 }
