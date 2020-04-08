@@ -21,8 +21,12 @@ maven install
 3. To listen on a different interface, modify `main/resources/application.properties` to reflect the hostname or IP address interface desired.
 
 # Test Notes
-Use the Postman collection to exercise the various requests using different barcode generators. Some methods use POST, others use GET (query string).
-* Barbecue Library
-* Barcode4J
-* ZXing
-* QRGen
+* A simple test is to open a browser on a client and try to access the Help [page](http://localhost:8080/barcodes/help). If your client doesn't have a browser, you can use `curl http://localhost:8080/barcodes/help`, substituting your server's hostname or IP address (make sure the service is running on a network interface that resolves to that hostname or interface).
+* Use the Postman collection to exercise the various requests using different barcode generators. Some methods use POST, others use GET (query string).
+	* Barbecue Library
+	* Barcode4J
+	* ZXing
+	* QRGen
+* Make sure the service is accessible from the desired location/client. You may need to allow the service to listen on a different network interface as mentioned in **Run Notes** or you may need to open a port in your firewall using one or both commands below (check your OS firewall settings):
+	* `sudo iptables -I INPUT -p tcp --dport 8080 -j ACCEPT`
+	* `sudo firewall-cmd --zone=public --add-port=8080/tcp --permanent`
