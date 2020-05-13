@@ -14,16 +14,20 @@ AFTER INSERT ON DMKR_ASLINE.ERRS FOR EACH ROW
 declare
 l_mail_conn   UTL_SMTP.connection;
 BEGIN
-  -- this should be self-explanatory: replace with your email host and port. 
-  -- Note:
-  -- the default port is 25.
-  -- This particular design is not doing authentication, but you can
-  -- of course add this.
+  -- ==== NOTE WELL =====
+  -- You might want to consider filtering out which INSERTed messages are worthy of sending in email.
+  -- A single transaction could result in multiple errors, so you might instead consider putting this trigger
+  -- on AFTER UPDATE of the JOBS or TRNS table, and only send if the status code is like *41. 
+  -- Or you could filter on the contents of the INSERTed ERRS message and determine if you really want to email it at all.
 
+
+  -- this should be self-explanatory: replace with your email host and port. 
   l_mail_conn := UTL_SMTP.open_connection('your-email-host', your_email_host_port);
   UTL_SMTP.helo(l_mail_conn, 'your-email-host');
+  -- This particular design is not doing authentication, but you can add this if you want to.
   UTL_SMTP.mail(l_mail_conn, 'from@address');
   UTL_SMTP.rcpt(l_mail_conn, 'to@address');
+  
   UTL_SMTP.open_data(l_mail_conn);
   
   -- The send date of the email.
