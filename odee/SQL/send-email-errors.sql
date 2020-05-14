@@ -1,3 +1,7 @@
+/*
+send-email-errors.sql
+This example for Oracle DB demonstrates creating a trigger on the ERRS table that fires an email whenever a row is inserted.
+*/ 
 
 /*
 CREATE
@@ -7,6 +11,7 @@ so that INSERTS are allowed to complete, and the trigger inserts a record into a
 to send emails. This design is detailed here: https://asktom.oracle.com/pls/apex/f?p=100:11:0::::P11_QUESTION_ID:7267435205059
 If you want to create other types of email, look at other options here: https://oracle-base.com/articles/misc/email-from-oracle-plsql
 */
+
 CONNECT / as sysdba;
 
 CREATE OR REPLACE TRIGGER DMKR_ASLINE.SEND_EMAIL 
