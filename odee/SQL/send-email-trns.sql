@@ -4,6 +4,8 @@ This example for Oracle DB demonstrates creating a trigger on the TRNS table tha
 the table is updated -- specifically the TRNSTATUS column. The trigger further evaluates the TRNSTATUS to determine if it is 
 an error condition, and if so, sends the first error for that TRN_ID.
 
+This is not production-ready code! You will want to have a DBA review this and make recommendations.
+
 This is an updated version of send-email-errors.sql that operates on updates to the TRNS.TRNSTATUS column.
 This version only sends an email if the TRNSTATUS value is *41 (141, 241, *41), and it sends the details of only 
 the first error. You can modify this to grab _all_ errors and include them if you wish using a looping structure.
