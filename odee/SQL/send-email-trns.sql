@@ -1,7 +1,19 @@
 /*
+send-email-trns.sql
+This example for Oracle DB demonstrates creating a trigger on the TRNS table that fires an email whenever an existing row in
+the table is updated -- specifically the TRNSTATUS column. The trigger further evaluates the TRNSTATUS to determine if it is 
+an error condition, and if so, sends the first error for that TRN_ID.
+
 This is an updated version of send-email-errors.sql that operates on updates to the TRNS.TRNSTATUS column.
 This version only sends an email if the TRNSTATUS value is *41 (141, 241, *41), and it sends the details of only 
 the first error. You can modify this to grab _all_ errors and include them if you wish using a looping structure.
+
+You may wish to use a decoupled trigger/send paradigm. In such a model, TRNS updates would complete regardless of SMTP
+errors. The trigger would instead insert a record into a new, separate table (such as EMAIL_JOBS). A DB job would need to be 
+created which periodically scans for rows in the EMAIL_JOBS table, and then handles the SMTP work to send the emails and
+remove the rows from the EMAIL_JOBS table. This design is detailed here: https://asktom.oracle.com/pls/apex/f?p=100:11:0::::P11_QUESTION_ID:7267435205059
+
+If you want to create other types of email, look at other options here: https://oracle-base.com/articles/misc/email-from-oracle-plsql
 */
 
 create or replace trigger email_on_error_update 
