@@ -22,7 +22,7 @@ BEGIN
 
 
   -- this should be self-explanatory: replace with your email host and port. 
-  l_mail_conn := UTL_SMTP.open_connection('your-email-host', your_email_host_port);
+  l_mail_conn := UTL_SMTP.open_connection('your-email-host', your-email-port);
   UTL_SMTP.helo(l_mail_conn, 'your-email-host');
   -- This particular design is not doing authentication, but you can add this if you want to.
   UTL_SMTP.mail(l_mail_conn, 'from@address');
@@ -57,16 +57,16 @@ that grants the DMKR_ADMIN and DMKR_ASLINE users access to the SMTP library.
 BEGIN
   DBMS_NETWORK_ACL_ADMIN.append_host_ace (
     host       => 'your-email-host', 
-    lower_port => your_email_host_post,
-    upper_port => your_email_host_post,
+    lower_port => your-email-port,
+    upper_port => your-email-port,
     ace        => xs$ace_type(privilege_list => xs$name_list('smtp'),
                               principal_name => 'dmkr_admin',
                               principal_type => xs_acl.ptype_db)); 
 
 DBMS_NETWORK_ACL_ADMIN.append_host_ace (
     host       => 'your-email-host', 
-    lower_port => your_email_host_post,
-    upper_port => your_email_host_post,
+    lower_port => your-email-port,
+    upper_port => your-email-port,
     ace        => xs$ace_type(privilege_list => xs$name_list('smtp'),
                               principal_name => 'dmkr_asline',
                               principal_type => xs_acl.ptype_db)); 
