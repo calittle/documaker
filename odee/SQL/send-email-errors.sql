@@ -1,15 +1,20 @@
 /*
 send-email-errors.sql
 This example for Oracle DB demonstrates creating a trigger on the ERRS table that fires an email whenever a row is inserted.
+
+This is not production-ready code! You will want to have a DBA review this and make recommendations.
+
+You may wish to use a decoupled trigger/send paradigm. In such a model, TRNS updates would complete regardless of SMTP
+errors. The trigger would instead insert a record into a new, separate table (such as EMAIL_JOBS). A DB job would need to be 
+created which periodically scans for rows in the EMAIL_JOBS table, and then handles the SMTP work to send the emails and
+remove the rows from the EMAIL_JOBS table. This design is detailed here: https://asktom.oracle.com/pls/apex/f?p=100:11:0::::P11_QUESTION_ID:7267435205059
+
+If you want to create other types of email, look at other options here: https://oracle-base.com/articles/misc/email-from-oracle-plsql
 */ 
 
 /*
 CREATE
-1. Attach trigger to the ERRS table. This is not production-ready code! You will want to 
-have a DBA review this and make recommendations. You may wish to use a decoupled trigger/send paradigm
-so that INSERTS are allowed to complete, and the trigger inserts a record into a separate table which is then used
-to send emails. This design is detailed here: https://asktom.oracle.com/pls/apex/f?p=100:11:0::::P11_QUESTION_ID:7267435205059
-If you want to create other types of email, look at other options here: https://oracle-base.com/articles/misc/email-from-oracle-plsql
+1. Attach trigger to the ERRS table. 
 */
 
 CONNECT / as sysdba;
