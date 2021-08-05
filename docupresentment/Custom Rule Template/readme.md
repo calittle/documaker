@@ -32,7 +32,7 @@ You will also need to add the rule into a request type in the `docserv.xml` conf
 
 *Where*
 
-`RuleClassName` is the class name of your rule, e.g. com.oracle.documaker.ids.customrules.MyCustomRule
+`RuleClassName` is the class name of your rule, e.g. ``com.oracle.documaker.ids.customrules.MyCustomRule`
 
 `ScopeObject` is a unique name to maintain the state of your rule according to your designated scope; note that if multiple IDS request types use your rule and they have need to share data, then the ScopeObject can be the same. Use with caution!
 
