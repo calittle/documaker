@@ -31,13 +31,20 @@ You will also need to add the rule into a request type in the `docserv.xml` conf
 `<entry name="function">java;RuleClassName;ScopeObject;Scope;Method;Arguments</entry>`
 
 *Where*
+
 `RuleClassName` is the class name of your rule, e.g. com.oracle.documaker.ids.customrules.MyCustomRule
+
 `ScopeObject` is a unique name to maintain the state of your rule according to your designated scope; note that if multiple IDS request types use your rule and they have need to share data, then the ScopeObject can be the same. Use with caution!
+
 `Scope` is one of the following which determines how your rule is created as a Java object:
+
 	`global` – The object will remain until IDS is restarted.
+
     `transaction` The object will be created during the MSG_INIT message and will remain until the request has processed all the MSG_INIT, MSG_RUNF, MSG_RUNR and MSG_TERM messages.
     `local` – The object is created and destroyed for every message run during the request.
+
     `static` – No object is created; the method is a static method of the class and will be run as such
+
 `Arguments` is a string that contains any arguments you want to pass to your rule. Format is up to you; the example herein uses comma-delimited name-value pairs which are parsed into a Properties object.
 
 Example (lines are split for readability):
