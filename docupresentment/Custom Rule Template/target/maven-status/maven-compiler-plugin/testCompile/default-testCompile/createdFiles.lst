@@ -1,6 +1,0 @@
-com/oracle/documaker/ids/customrule/test/MyCustomRule_myCustomMethod_BadSysPropsTest.class
-com/oracle/documaker/ids/customrule/test/MyCustomRule_myCustomMethod_DefaultArgsTest.class
-com/oracle/documaker/ids/customrule/test/MyCustomRule_myCustomMethod_SysPropsArgsTest.class
-com/oracle/documaker/ids/customrule/test/MyCustomRule_myCustomMethod_BadIDSArgsTest.class
-com/oracle/documaker/ids/customrule/test/SystemProperty.class
-com/oracle/documaker/ids/customrule/test/SystemPropertyExtension.class
