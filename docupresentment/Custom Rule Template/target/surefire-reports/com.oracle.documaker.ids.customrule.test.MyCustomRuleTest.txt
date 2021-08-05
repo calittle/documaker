@@ -1,0 +1,12 @@
+-------------------------------------------------------------------------------
+Test set: com.oracle.documaker.ids.customrule.test.MyCustomRuleTest
+-------------------------------------------------------------------------------
+Tests run: 16, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 1.325 s <<< FAILURE! - in com.oracle.documaker.ids.customrule.test.MyCustomRuleTest
+getEmployeesSysPropsInit  Time elapsed: 0.005 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <0> but was: <1>
+	at com.oracle.documaker.ids.customrule.test.MyCustomRuleTest.getEmployeesSysPropsInit(MyCustomRuleTest.java:150)
+
+getEmployeesSysPropsForward  Time elapsed: 0.023 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <0> but was: <1>
+	at com.oracle.documaker.ids.customrule.test.MyCustomRuleTest.getEmployeesSysPropsForward(MyCustomRuleTest.java:166)
+
