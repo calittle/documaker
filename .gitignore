@@ -1,11 +1,12 @@
 .DS_Store
 devOps
-12.5
-12.6.4
-12.7.0
+localbuild
+**/installs/*.zip
+**/installs/*.rpm
+documentation
 wls1411
 wls12214
-master.zip
+!.gitignore
 target/
 # Created by https://www.toptal.com/developers/gitignore/api/intellij+all
 # Edit at https://www.toptal.com/developers/gitignore?templates=intellij+all
