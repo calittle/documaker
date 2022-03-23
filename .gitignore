@@ -1,6 +1,11 @@
 .DS_Store
 devOps
-
+12.5
+12.6.4
+12.7.0
+wls1411
+wls12214
+master.zip
 target/
 # Created by https://www.toptal.com/developers/gitignore/api/intellij+all
 # Edit at https://www.toptal.com/developers/gitignore?templates=intellij+all
