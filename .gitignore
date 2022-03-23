@@ -3,7 +3,9 @@ devOps
 localbuild
 **/installs/*.zip
 **/installs/*.rpm
-documentation
+**/documentation/*.pdf
+*.icloud
+/documentation
 wls1411
 wls12214
 !.gitignore
