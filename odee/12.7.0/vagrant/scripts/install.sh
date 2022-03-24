@@ -195,7 +195,7 @@ EOF"
 		sudo cp /vagrant/scripts/setPassword.sh /home/oracle/
 		sudo chmod a+rx /home/oracle/setPassword.sh
 		echo "INSTALLER: setPassword.sh file setup";
-		su -l oracle -c "echo 'delete this file to register system services.'>>/opt/oracle/db-step4.txt"
+		su -l oracle -c "echo 'delete this file to register system services.'>>/opt/oracle/provision/db-step4.txt"
 		echo "ORACLE PASSWORD FOR SYS, SYSTEM AND PDBADMIN: $ORACLE_PWD";
 	fi
 	su -l oracle -c "echo 'delete this file to reinstall'>>/opt/oracle/provision/oracledb.txt"
@@ -217,15 +217,15 @@ else
 	# Setup password if not already provided.
 	export WLS_PWD=${WLS_PWD:-"`openssl rand -base64 9`1"}
 	echo "INSTALLER: PASSWORD FOR WebLogic : $WLS_PWD";
-	export ODEE_HOME=$ORACLE_BASE/applications/odee
+	export WLS_ODEE_HOME=$ORACLE_BASE/applications/odee
 
 	# create directories
 	mkdir -p $MW_HOME
 	mkdir -p $ORACLE_BASE/domains
-	mkdir -p $ODEE_HOME	
+	mkdir -p $WLS_ODEE_HOME	
 	chown oracle:oinstall $MW_HOME
 	chown oracle:oinstall $ORACLE_BASE/domains
-	chown oracle:oinstall $ODEE_HOME	
+	chown oracle:oinstall $WLS_ODEE_HOME	
 	echo 'INSTALLER: Domain directories created'
 
 	# set environment variables
@@ -239,6 +239,7 @@ else
 		echo "export JAVA_HOME=$JAVA_PATH" >> /home/oracle/.bashrc
 		echo "export JAVA_HOME=$JAVA_PATH" >> /root/.bashrc
 		echo "export PATH=$JAVA_HOME/bin:\$PATH" >> /home/oracle/.bashrc
+		echo "export WLS_ODEE_HOME=$WLS_ODEE_HOME" >> /home/oracle/.bashrc		
 		echo "export ODEE_HOME=$ODEE_HOME" >> /home/oracle/.bashrc		
 		echo 'INSTALLER: Environment variables set'
 	fi
@@ -265,7 +266,6 @@ fi
 # Install ODEE
 if [ -f "/opt/oracle/provision/odee.txt" ]; then
 	echo "INSTALLER: ODEE installation skipped. Delete /opt/oracle/provision/odee.txt to attempt reprovision steps."
-
 else
 	echo "INSTALLER: Installing ODEE"
 	# set up passwords if not already provisioned
@@ -288,14 +288,31 @@ else
 
 	chown oracle:oinstall -R /home/oracle
 	chown oracle:oinstall -R $ORACLE_BASE/oraInventory
-	
+
 	su -l oracle -c "/home/oracle/Disk1/runInstaller -silent -responseFile /home/oracle/odee.rsp -jreLoc /usr/java/jdk1.8.0_311-amd64/jre -invPtrLoc $ORACLE_BASE/oraInventory/oraInst.loc"
-	
-	# rm /home/oracle/odee.rsp
+	rm /home/oracle/odee.rsp
 	
 	echo 'INSTALLER: ODEE installed.'		
 	
 	su -l oracle -c "echo 'delete this file to reinstall ODEE. Note you may need to manually remove everything that was created to redo this step!'>>/opt/oracle/provision/odee.txt"
+fi
+
+# Provision database artifacts for ODEE
+if [ -f "/opt/oracle/provision/odee-1.txt" ]; then
+	echo "INSTALLER: ODEE database provision skipped. Delete /opt/oracle/provision/odee-1.txt to attempt reprovision steps."
+else
+	echo "INSTALLER: Creating ODEE database artifacts."
+
+	su -l oracle -c "cd $ODEE_HOME/documaker/database/oracle11g && sqlplus / as sysdba <<EOF
+alter session set container=orclpdb1;
+@dmkr_admin.sql
+@dmkr_asline.sql
+@dmkr_admin_user_examples.sql
+EOF"
+	su -l oracle -c "cd $ODEE_HOME/documaker/mstrres/dmres && ./deploysamplemrl.sh"
+	
+	echo 'INSTALLER: ODEE database artifacts provisioned.'			
+	su -l oracle -c "echo 'delete this file to provision ODEE database artifacts. You will need to manually drop existing users/schemas/datafiles to redo this step!'>>/opt/oracle/provision/odee-1.txt"
 fi
 
 # run user-defined post-setup scripts
