@@ -289,8 +289,7 @@ else
 	chown oracle:oinstall -R /home/oracle
 	chown oracle:oinstall -R $ORACLE_BASE/oraInventory
 
-	su -l oracle -c "/home/oracle/Disk1/runInstaller -silent -responseFile /home/oracle/odee.rsp -jreLoc /usr/java/jdk1.8.0_311-amd64/jre -invPtrLoc $ORACLE_BASE/oraInventory/oraInst.loc"
-	rm /home/oracle/odee.rsp
+	su -l oracle -c "/home/oracle/Disk1/runInstaller -silent -responseFile /home/oracle/odee.rsp -jreLoc /usr/java/jdk1.8.0_311-amd64/jre -invPtrLoc $ORACLE_BASE/oraInventory/oraInst.loc && rm /home/oracle/odee.rsp"
 	
 	echo 'INSTALLER: ODEE installed.'		
 	
