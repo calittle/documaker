@@ -21,11 +21,8 @@ Instructions assume a POSIX-based terminal is used for installation, however, th
   
 4. Run `vagrant up`
    1. The first time you run this it will provision everything and may take a while. Ensure you have a good internet connection as the scripts will update the VM to the latest via `yum`.
-   2. The main script is in `scripts\install.sh` - this takes care of installing and deploying the database.
-   3. Subsequent script files in `userscripts` are executed:
-      1. `01-oipadb1.sh` unpacks and imports the OIPA database artifacts.
-      2. `02-weblogic.sh` creates the WebLogic domain and deploys the applications using the `wls.py` script.
-   5. The installation can be customized, if desired (see [Configuration](#configuration)).
+   2. The main script is in `scripts\install.sh` - this takes care of installing and deploying the software and performing initial configuration.
+   3. The installation can be customized, if desired (see [Configuration](#configuration)).
 5. Connect to the database (see [Connecting to Oracle](#connecting-to-oracle-database))
 6. You can shut down the VM via the usual `vagrant halt` and then start it up again via `vagrant up`. You can also [reprovision[(#reprovision)]].
 
@@ -46,8 +43,10 @@ These parameters can be customized, if desired (see [Configuration](#configurati
 
 Ports are automatically forwarded from your host machine, so you can access the apps from your browser:
 * WebLogic Console [http://localhost:7001/console](http://localhost:7001/console)
-* OIPA PAS [http://localhost:10001/PASJava](http://localhost:10001/PASJava)
-* OIPA Palette Config [http://localhost:10001/PASJava](http://localhost:11001/PaletteConfig)
+* Documaker Administrator [http://localhost:10001/DocumakerAdministrator](http://localhost:10001/DocumakerAdministrator)
+* Documaker Dashboard [http://localhost:10001/DocumakerDashboard](http://localhost:10001/DocumakerDashboard)
+* Documaker Interactive [http://localhost:12001/DocumakerInteractive](http://localhost:10001/DocumakerInteractive)
+
 
 ## Services
 Before accessing servers, ensure the appropriate services are started by running the following commands:
@@ -74,22 +73,14 @@ To run scripts in a specific order, prefix the file names with a number, e.g., `
 
 Sometimes it may be necessary to reprovision the VM if something did not deploy correctly, or simply just to start over. To reprovision, make sure your VM is in a halted stated (e.g. `vagrant halt`) and then run `vagrant up --provision`). Before you do that, make sure you have corrected the elements of the deployment that failed. In order to provide more granular control over what steps are rerun, the deployment scripts create some simple txt files at various points of the deployment process. Delete these files to rerun that step. Note that there isn't a rollback, so sometimes you might need to undo what the deployment step did. This isn't foolproof, so use your best judgment (e.g. if you're not sure, just `vagrant destroy oipa-vagrant` and then `vagrant up` to redo the whole thing.) 
 
-- `/opt/oracle/dbinstalled.txt` - delete this file to redo the entire unpacking and installation of the database software, and listener configuration, CDB/PDB deployment, and database services.
-- `/opt/oracle/db-step1.txt` - delete this file to redo the database sfotware unpack and install.
-- `/opt/oracle/db-step2.txt` - delete this file to redo the listener configuration.
-- `/opt/oracle/db-step3.txt` - delete this file to redo the CDB/PDB creation.
-- `/opt/oracle/db-step4.txt` - delete this file to redo the database service registration with the OS.
+- `/opt/oracle/provision/oracledb.txt` - delete this file to redo the entire unpacking and installation of the database software, and listener configuration, CDB/PDB deployment, and database services.
+- `/opt/oracle/provision/oracledb-step1.txt` - delete this file to redo the database sfotware unpack and install.
+- `/opt/oracle/provision/oracledb-step2.txt` - delete this file to redo the listener configuration.
+- `/opt/oracle/provision/oracledb-step3.txt` - delete this file to redo the CDB/PDB creation.
+- `/opt/oracle/oracledb-step4.txt` - delete this file to redo the database service registration with the OS.
 
-- `/opt/oracle/oipadb.txt` - delete this file to redo the the OIPA database import and oipa/ivs user creation.
-- `/opt/oracle/oipadb-step1.txt` - delete this file to redo oipa/ivs user creation. You may need to drop the users before reprovision.
-- `/opt/oracle/oipadb-step2.txt` - delete this file to redo oipa db import. You must adjust impdp settings in `userscripts/01-oipadb.sh` for this to work correctly. Advise dropping user schemas with cascade and start over.
-- `/opt/oracle/oipadb-step3.txt` - delete this file to redo ivs db import. You must adjust impdp settings in `userscripts/01-oipadb.sh` for this to work correctly. Advise dropping user schemas with cascade and start over.
-
-- `/opt/oracle/weblogic.txt` - delete this file to redo WebLogic install and domain creation.
-- `/opt/oracle/weblogic-step1.txt` - delete this file to reinstall WebLogic server.
-- `/opt/oracle/weblogic-step2.txt` - delete this file to redo the prerequisite download and preparation for domain deployment.
-- `/opt/oracle/weblogic-step3.txt` - delete this file to recreate the WebLogic domain and application deployment. You may need to delete a directory to do this correctly.
-- `/opt/oracle/weblogic-step4.txt` - delete to reprovision WebLogic services.
+- `/opt/oracle/provision/weblogic.txt` - delete this file to redo WebLogic/FMW install and deployment.
+- `/opt/oracle/provision/weblogic-step1.txt` - delete this file to reinstall Fusion Middleware infrastructure.
 
 ## Configuration
 
@@ -147,11 +138,14 @@ Parameters are considered in the following order (first one wins):
 * `VM_MW_PORT_DMKR` (default: `10001`): Documaker Admin/Dashboard app port
 * `VM_MW_PORT_JMS` (default: `11001`): DocFactory JMS Server port
 * `VM_MW_PORT_IDM` (default: `12001`): Documaker Interactive app port
-
+    
 ### ODEE parameters
 
 * `VM_ZIP_ODEE` (default: `V1018888-01.zip`): Oracle Documaker installer ZIP.
 * `VM_ODEE_HOME` (default: `/opt/oracle/odee`): Oracle Docuamker home directory.
+* `VM_ODEE_DOMAIN` (default: `odee`): WebLogic domain name for Oracle Documaker
+* `VM_ODEE_PWD` (default: auto-generated): Password for Documaker administrative user
+* `VM_ODEE_SCHEMA_PWD` (default: auto-generated): Password for DMKR_ASLINE and DMKR_ADMIN schemas.
 
 ## Optional plugins
 
