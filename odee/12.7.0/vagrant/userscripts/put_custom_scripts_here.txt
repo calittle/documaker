@@ -1,0 +1,7 @@
+Put SH, SQL or other files here.
+Files will be run in numeric order e.g. 
+
+01-do_a.sql
+02-do_b.sh
+
+See bottom of install.sh for additional info.
