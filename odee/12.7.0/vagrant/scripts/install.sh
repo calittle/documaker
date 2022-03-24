@@ -286,6 +286,9 @@ else
 	sed -i -e "s|###ORACLE_BASE###|$ORACLE_BASE|g" /home/oracle/odee.rsp	
 	sed -i -e "s|###MW_PORT_JMS###|$MW_PORT_JMS|g" /home/oracle/odee.rsp	
 
+	chown oracle:oinstall -R /home/oracle
+	chown oracle:oinstall -R $ORACLE_BASE/oraInventory
+	
 	su -l oracle -c "/home/oracle/Disk1/runInstaller -silent -responseFile /home/oracle/odee.rsp -jreLoc /usr/java/jdk1.8.0_311-amd64/jre -invPtrLoc $ORACLE_BASE/oraInventory/oraInst.loc"
 	
 	# rm /home/oracle/odee.rsp
