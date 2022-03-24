@@ -11,3 +11,11 @@ Place installation zip files in this directory.
 	- Tick box for `Oracle Fusion Middleware 12c Infrastructure 12.2.1.4.0` for `Linux x86-64`, click Continue
 	- Tick box to accept license, click Continue
 	- Download the zip file.
+
+* `V1018888-01.zip` - Oracle Documaker Enterprise Ed 12.7.0.0.0 lx64, 823.9 MB from [eDelivery](http://edelivery.oracle.com). 
+	- Search for `Oracle Documaker Enterprise Edition` and select `DLP: Oracle Documaker Enterprise Edition 12.7.0.0.0 (Oracle Documaker Enterprise Edition)`, click Continue
+	- Untick box for `Download Queue` which should unselect all packages.
+	- Tick the box for `Oracle Documaker Enterprise Edition 12.7.0.0.0` (the second option, that has no child packages) for `Linux x86-64`, click Continue
+	- Tick box to accept license, click Continue
+	- Download the zip file.
+

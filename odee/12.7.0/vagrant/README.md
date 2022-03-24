@@ -4,7 +4,7 @@ This Vagrant project provisions:
 - Oracle Linux 7
 - Oracle Database 19c
 - Oracle WebLogic Server and Fusion Middleware Infrastructure 12.2.1.4.0
-- Oracle Documaker Enterprise Edition 12.7.0
+- Oracle Documaker Enterprise Edition 12.7.0 [Documentation](https://docs.oracle.com/cd/F51808_01/)
 
 Instructions assume a POSIX-based terminal is used for installation, however, these instructions can be easily adapted to Windows-based systems.
 
@@ -132,29 +132,26 @@ Parameters are considered in the following order (first one wins):
 * `VM_LISTENER_PORT` (default: `1521`): Listener port.
 * `VM_EM_EXPRESS_PORT` (default: `5500`): EM Express port.
 * `VM_ORACLE_PWD` (default: automatically generated): Oracle Database password for the SYS, SYSTEM and PDBADMIN accounts.
-
+* `VM_ZIP_ORACLEDB` (default :`LINUX.X64_193000_db_home.zip`): Oracle Database installer ZIP.
+  
 ### Oracle WebLogic Server parameters
 
+* `VM_WLS_PWD` (default: automatically generated): password for the WebLogic administrator account (_weblogic_)
 * `VM_VM_MW_HOME` (default: `/opt/oracle/middleware`): base directory for WebLogic.
-* `VM_MW_DOMAIN` (default: `oipa`): WebLogic domain name
+* `VM_MW_DOMAIN` (default: `odee`): WebLogic domain name
 * `VM_WLS_PORT_ADMIN` (default: `7001`): WebLogic administrative port
-* `VM_WLS_OIPA_PORT` (default: `10001`): OIPA PASJava server port
-* `VM_WLS_OIPA_SSLPORT` (default: `10002`): OIPA PASJava server SSL port
-* `VM_WLS_PALETTECONFIG_PORT` (default: `11001`): OIPA Palette Config server port
-* `VM_WLS_PALETTECONFIG_SSLPORT` (default: `11002`): OIPA Palette Config serfver SSL port
-* `VM_JDK` (default: `8u311`): Java version used (must align with download package obtained from [Getting Started](#Getting-Started))
 * `VM_JAVA_PATH` (default: `/usr/java/jdk1.8.0_311-amd64`): Java installation path on VM
-* `VM_WLS` (default: `12.2.1.4.0`): WebLogic server version used (must align with download package obtained from [Getting Started](#Getting-Started))
+* `VM_ZIP_FMW` (default: `V983368-01.zip`): FMW Infra zip file
+* `VM_JAR_FMW` (default: `fmw_12.2.1.4.0_infrastructure.jar`): JAR installer for FMW Infra (contained within `VM_ZIP_FMW`)
+* `VM_MW_PORT_ADMIN` (default: `7001`): WebLogic AdminServer console app port
+* `VM_MW_PORT_DMKR` (default: `10001`): Documaker Admin/Dashboard app port
+* `VM_MW_PORT_JMS` (default: `11001`): DocFactory JMS Server port
+* `VM_MW_PORT_IDM` (default: `12001`): Documaker Interactive app port
 
-### OIPA parameters
-* `VM_ZIP_OIPA_DB` (default: `V997069-01.zip`): The zip package containing the OIPA DB installation files.
-* `VM_ZIP_OIPAWLS` (default: `V997071-01.zip`): The zip package containing the OIPA WebLogic installation files.
-* `VM_ZIP_ORACLEDB` (default: `LINUX.X64_193000_db_home.zip`): The zip package containing the Oracle datbase installer.
-* `VM_ZIP_PCWLS` (default: `V997078-01.zip`): The zip package containing the OIPA Palette Config installation files.
-* `VM_DB_USER_OIPA` (default: `oipa`): The db user that owns OIPA tables. Password is set to `VM_ORACLE_PWD`.
-* `VM_DB_USER_IVS` (default: `oipaivs`): The db user that owns IVS tables. Password is set to `VM_ORACLE_PWD`.
-* `VM_OIPA_URL_ASPECTJ` (default: `https://eclipse.mirror.rafal.ca/tools/aspectj/aspectj-1.8.10.jar`): The *direct download URL* to download AspectJ (OIPA prerequisite component). Download is automated. To find a different mirror and upload the link, search here: https://www.eclipse.org/downloads/download.php?file=/tools/aspectj/aspectj-1.8.10.jar
-* `VM_OIPA_URL_LOG4J` (default: `https://archive.apache.org/dist/logging/log4j/1.2.17/log4j-1.2.17.jar`): The URL to download Log4J (OIPA prerequisite component). Download is automated.
+### ODEE parameters
+
+* `VM_ZIP_ODEE` (default: `V1018888-01.zip`): Oracle Documaker installer ZIP.
+* `VM_ODEE_HOME` (default: `/opt/oracle/odee`): Oracle Docuamker home directory.
 
 ## Optional plugins
 
@@ -177,3 +174,12 @@ vagrant plugin install <name>...
 * If you need to, you can connect to the virtual machine via `vagrant ssh`.
 * You can `sudo su - oracle` to switch to the oracle user.
 * On the guest OS, the directory `/vagrant` is a shared folder and maps to wherever you have this file checked out.
+* If you need to X11 with any user other than the `vagrant` user:
+  - `vagrant ssh` -- login to your vm
+  - `$ echo $DISPLAY` -- note the current display value, e.g. `localhost:10.0`
+  - `$ echo xauth add `xauth list ${DISPLAY#localhost}`` -- copy the entire line that is output
+  - `$ sudo su - oracle` -- switch to the oracle user
+  - `$ echo $DISPLAY` -- if this is empty, set it to the value for the `vagrant` user, e.g. `$ export DISPLAY=localhost:10.0`
+  - Paste the echoed string from the `echo xauth` command, and hit enter.
+  - X11 should work now for the `oracle` user
+ri
