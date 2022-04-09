@@ -9,6 +9,7 @@ localbuild
 *.gz
 installs
 dxs
+*.war
 **/documentation/*.pdf
 *.icloud
 /documentation
