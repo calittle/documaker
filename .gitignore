@@ -8,6 +8,7 @@ localbuild
 *.pak
 *.gz
 installs
+dxs
 **/documentation/*.pdf
 *.icloud
 /documentation
