@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DocumentRequest>                 <!-- Major Node Name -->
+	<PackageInfo>                      <!-- Secondary Major Node Name -->
+       <EntryData>                    <!-- This would be the node for captured entry data -->
+       </EntryData>		
+		<Key1>KEY1</Key1>     <!-- Primary Identifier - Company Name (UMR)? -->
+		<Key2>KEY2</Key2>      <!-- Secondary Identifier - LOB?  DocType? this is more associated to the librarian/author setup to separate/categorize documents -->
+		<KeyID>A2003888</KeyID>                <!-- Transaction Identifier - Policy/Customer Number? -->
+		<TranCode>PP</TranCode>                <!-- From here down are NOT required but provide information -->
+		<EffDate>20171005</EffDate>
+		<ExpDate>20171005</ExpDate>
+		<IssueStateCode>TX</IssueStateCode>
+		<UserGroup></UserGroup>
+		<User>8</User>                      <!-- For IStream this will be the userID associated with who is requesting the document -->
+	</PackageInfo>
+</DocumentRequest>

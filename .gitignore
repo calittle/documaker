@@ -1,8 +1,13 @@
 .DS_Store
 devOps
+local*
+localsrc
 localbuild
-**/installs/*.zip
-**/installs/*.rpm
+*.zip
+*.rpm
+*.pak
+*.gz
+installs
 **/documentation/*.pdf
 *.icloud
 /documentation
@@ -12,6 +17,7 @@ wls12214
 target/
 .vagrant
 *.local
+**/vagrant/tmp
 # Created by https://www.toptal.com/developers/gitignore/api/intellij+all
 # Edit at https://www.toptal.com/developers/gitignore?templates=intellij+all
 

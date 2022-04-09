@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Documents>
+    <GlobalData>
+        <RunDate>20050830</RunDate>
+        <TranCode>EN</TranCode>
+        <Product>Foundation Life</Product>
+        <PolicyNumber></PolicyNumber>
+        <PolicyIssueDate>20050203</PolicyIssueDate>
+        <RetroactiveDate>20050203</RetroactiveDate>
+        <EffDate>20050501</EffDate>
+        <ExpDate>20060501</ExpDate>
+        <Createtime>06/30/2009 12:01:03</Createtime>
+        <Modifytime>07/02/2009 12:55:09</Modifytime>
+        <IssueStateCode>GA</IssueStateCode>
+        <WipReason>MISSING SIG</WipReason>
+        <UserGroup>3</UserGroup>
+        <User>8</User>
+        <Description>Welcome Packet</Description>
+        <ApprovalState>50</ApprovalState>
+        <Action>100011</Action>
+    </GlobalData>
+    <DocumentRequest>
+    <PackageInfo>
+        <Key1>CENTRAL</Key1>
+        <Key2>ACCOUNT_STATUS</Key2>
+        <KeyID>0000004</KeyID>
+        <RunDate>20050830</RunDate>
+        <TranCode>EN</TranCode>
+        <Product>Foundation Life</Product>
+        <PolicyIssueDate>20050203</PolicyIssueDate>
+        <RetroactiveDate>20050203</RetroactiveDate>
+        <EffDate>20050501</EffDate>
+        <ExpDate>20060501</ExpDate>
+        <Createtime>06/30/2009 12:01:03</Createtime>
+        <Modifytime>07/02/2009 12:55:09</Modifytime>
+        <IssueStateCode>GA</IssueStateCode>
+        <WipReason>MISSING SIG</WipReason>
+        <UserGroup>3</UserGroup>
+        <User>8</User>
+        <Description>Welcome Packet</Description>
+        <ApprovalState>50</ApprovalState>
+        <Action>100011</Action>
+    </PackageInfo>
+    <PolicyData>
+        <PlanCode>UL</PlanCode>
+        <Payee>Bill M Smith</Payee>
+        <PolicyForm>AM-LI-9642</PolicyForm>
+        <PolicyRoleType>
+            <Insured>
+                <InsPrefix>Mr.</InsPrefix>
+                <InsFName>Bill</InsFName>
+                <InsMName>M</InsMName>
+                <InsLName>Smith</InsLName>
+                <InsSex>M</InsSex>
+                <InsAddress1>5400 LBJ Expressway</InsAddress1>
+                <InsAddress2>Suite 300</InsAddress2>
+                <InsCity>Dallas</InsCity>
+                <InsState>TX</InsState>
+                <InsZip>75240</InsZip>
+                <InsBirthdate>19800715</InsBirthdate>
+                <InsSSN>123456789</InsSSN>
+                <InsDayphone>2148762789778</InsDayphone>
+                <InsNightPhone>2148974464</InsNightPhone>
+                <InsBirthCity>Dallas</InsBirthCity>
+                <InsBirthState>TX</InsBirthState>
+                <InsDriverState>TX</InsDriverState>
+                <InsDriverLicense>987654654A465</InsDriverLicense>
+            </Insured>
+            <Agent>
+                <AgentPrefix>Mr.</AgentPrefix>
+                <AgentFName>John</AgentFName>
+                <AgentLName>Doe</AgentLName>
+                <AgentAddress1>2727 Paces Ferry Road</AgentAddress1>
+                <AgentCity>Atlanta</AgentCity>
+                <AgentState>GA</AgentState>
+                <AgentZip>30339</AgentZip>
+                <AgentEmail>jdoe@amergen.com</AgentEmail>
+                <AgentPhone>2148582200</AgentPhone>
+                <AgentNo>R98798</AgentNo>
+                <AgentCustServPhone>8882637436</AgentCustServPhone>
+                <AgentCustServOpenTime>8:00</AgentCustServOpenTime>
+                <AgentCustServCloseTime>5:00</AgentCustServCloseTime>
+                <AgentCustServTimeZone>eastern</AgentCustServTimeZone>
+            </Agent>
+            <Owner>
+                <OwnFName>Bill</OwnFName>
+                <OwnMName>M</OwnMName>
+                <OwnLName>Smith</OwnLName>
+                <OwnCompany>Adventures Inc.</OwnCompany>
+                <OwnAddress1>5910 North Central Expressway</OwnAddress1>
+                <OwnAddress2>Suite 900</OwnAddress2>
+                <OwnCity>Dallas</OwnCity>
+                <OwnState>TX</OwnState>
+                <OwnZipCode>75206</OwnZipCode>
+                <OwnEin>896851098</OwnEin>
+                <OwnSig>Added</OwnSig>
+            </Owner>
+            <Beneficiary1>
+                <Ben1FName>Bill</Ben1FName>
+                <Ben1MName>P</Ben1MName>
+                <Ben1LName>Smith, Jr.</Ben1LName>
+                <Ben1BirthDate>19840401</Ben1BirthDate>
+                <Ben1Sex>M</Ben1Sex>
+                <Ben1Relationship>Son</Ben1Relationship>
+                <Ben1Address1>5910 North Central Expressway</Ben1Address1>
+                <Ben1Address2>Suite 800</Ben1Address2>
+                <Ben1City>Dallas</Ben1City>
+                <Ben1State>TX</Ben1State>
+                <Ben1ZipCode>75026</Ben1ZipCode>
+                <Ben1SSN>123456780</Ben1SSN>
+            </Beneficiary1>
+            <Beneficiary2>
+                <Ben2FName>Mary</Ben2FName>
+                <Ben2MName>T</Ben2MName>
+                <Ben2LName>Smith</Ben2LName>
+                <Ben2BirthDate>19620320</Ben2BirthDate>
+                <Ben2Sex>F</Ben2Sex>
+                <Ben2Relationship>Cousin</Ben2Relationship>
+                <Ben2Address1>5910 North Central Expressway</Ben2Address1>
+                <Ben2Address2>Suite 800</Ben2Address2>
+                <Ben2City>Dallas</Ben2City>
+                <Ben2State>TX</Ben2State>
+                <Ben2ZipCode>75026</Ben2ZipCode>
+                <Ben2SSN>987654321</Ben2SSN>
+            </Beneficiary2>
+            <Adjuster>
+                <ADJ.BRANCH>SYRACUSE</ADJ.BRANCH>
+                <ADJ.CODE>SM3</ADJ.CODE>
+                <ADJ.EMAIL>swellspring@testins.com</ADJ.EMAIL>
+                <ADJ.MANAGER>Jerry Cook</ADJ.MANAGER>
+                <ADJ.NAME>Shannon Wellspring</ADJ.NAME>
+                <ADJ.TITLE>Manager</ADJ.TITLE>
+            </Adjuster>
+            <Branch>
+                <BRANCH.ADDRESS.FULL>100 South Street New York, NY 23921</BRANCH.ADDRESS.FULL>
+                <BRANCH.CSZ>New York, NY 23921</BRANCH.CSZ>
+                <BRANCH.HDR.PHONE>(513) 870-2000</BRANCH.HDR.PHONE>
+                <BRANCH.PO>PO Box 29283</BRANCH.PO>
+            </Branch>
+        </PolicyRoleType>
+        <Life>
+            <Application>
+                <AppAproved>N</AppAproved>
+                <PrimaryInsured>X</PrimaryInsured>
+                <AppForm>
+                    <NAME>C:\FAP\FSDMS2\FORMS\app.tif</NAME>
+                </AppForm>
+                <InsHealthInfo>
+                    <Height>60</Height>
+                    <Weight>120</Weight>
+                    <BloodPress>N</BloodPress>
+                    <Cholestrol>N</Cholestrol>
+                    <Cancerrel>N</Cancerrel>
+                    <HeartDiseaseRel>N</HeartDiseaseRel>
+                    <Alcoholism>N</Alcoholism>
+                    <Anxiety>N</Anxiety>
+                    <Asthma>Y</Asthma>
+                    <Cancer>N</Cancer>
+                    <Depression>N</Depression>
+                    <Diabetes>N</Diabetes>
+                    <DrugAbuse>N</DrugAbuse>
+                    <Epilepsy>N</Epilepsy>
+                    <HeartDisease>N</HeartDisease>
+                    <Hepatitis>N</Hepatitis>
+                    <Kidney-Liver>N</Kidney-Liver>
+                    <MS>N</MS>
+                    <Respiratory>N</Respiratory>
+                    <Sleep>N</Sleep>
+                    <Stroke>N</Stroke>
+                    <Ulcer>N</Ulcer>
+                    <Vascular>N</Vascular>
+                    <Other>N</Other>
+                    <Explaination>Treated during childhood.  No adult incidents.</Explaination>
+                    <Continuation>N</Continuation>
+                </InsHealthInfo>
+            </Application>
+        </Life>
+    </PolicyData>
+    <AddresseeData>
+        <Addressee>
+            <Type>0</Type>
+            <NameLine1>ほえる犬 Andy Jones</NameLine1>
+            <NameLine2/>
+            <AddrLine1>1 Westfield Road</AddrLine1>
+            <AddrLine2>Suite 100</AddrLine2>
+            <City>Waterford</City>
+            <Country>US</Country>
+            <Zip>06385</Zip>
+            <Role>AGENT</Role>
+            <State>CT</State>
+            <Phone>603-624-2938</Phone>
+            <Email>andy.jones@example.com</Email>
+            <Fax>603-624-2900</Fax>
+            <DistMethods>Email</DistMethods>
+            <Distribution>Email</Distribution>
+        </Addressee>
+        <Addressee>
+            <Code/>
+            <Type>1</Type>
+            <NameLine1>ほえる犬 Sally Brown</NameLine1>
+            <NameLine2/>
+            <AddrLine1>14746 Northside Drive</AddrLine1>
+            <AddrLine2>Apartment C</AddrLine2>
+            <City>Waterford</City>
+            <Country>US</Country>
+            <Zip>06385</Zip>
+            <Role>INSURED</Role>
+            <State>CT</State>
+            <Phone>603-624-0002</Phone>
+            <Email>sally.brown@example.com</Email>
+            <Fax>603-624-2900</Fax>
+            <DistMethods>Batch</DistMethods>
+            <Distribution>Batch</Distribution>
+        </Addressee>
+        <Addressee>
+            <Code/>
+            <Type>1</Type>
+            <NameLine1>Лай собаки Jason Barrs</NameLine1>
+            <NameLine2/>
+            <AddrLine1>80 Wolfe Road</AddrLine1>
+            <AddrLine2>Suite D101</AddrLine2>
+            <City>Albany</City>
+            <Country>US</Country>
+            <Zip>06385</Zip>
+            <Role>INJURED PARTY</Role>
+            <State>NY</State>
+            <Phone>603-624-2938</Phone>
+            <Email>andy.jones@example.com</Email>
+            <Fax>603-624-2900</Fax>
+            <DistMethods>Batch</DistMethods>
+            <Distribution>Batch</Distribution>
+        </Addressee>
+    </AddresseeData>
+    </DocumentRequest>
+    <DocumentRequest>
+    <PackageInfo>
+        <Key1>CENTRAL</Key1>
+        <Key2>ACCOUNT_STATUS</Key2>
+        <KeyID>0000004</KeyID>
+        <RunDate>20050830</RunDate>
+        <TranCode>EN</TranCode>
+        <Product>Foundation Life</Product>
+        <PolicyIssueDate>20050203</PolicyIssueDate>
+        <RetroactiveDate>20050203</RetroactiveDate>
+        <EffDate>20050501</EffDate>
+        <ExpDate>20060501</ExpDate>
+        <Createtime>06/30/2009 12:01:03</Createtime>
+        <Modifytime>07/02/2009 12:55:09</Modifytime>
+        <IssueStateCode>GA</IssueStateCode>
+        <WipReason>MISSING SIG</WipReason>
+        <UserGroup>3</UserGroup>
+        <User>8</User>
+        <Description>Welcome Packet</Description>
+        <ApprovalState>50</ApprovalState>
+        <Action>100011</Action>
+    </PackageInfo>
+    <PolicyData>
+        <PlanCode>UL</PlanCode>
+        <Payee>Bill M Smith</Payee>
+        <PolicyForm>AM-LI-9642</PolicyForm>
+        <PolicyRoleType>
+            <Insured>
+                <InsPrefix>Mr.</InsPrefix>
+                <InsFName>Bill</InsFName>
+                <InsMName>M</InsMName>
+                <InsLName>Smith</InsLName>
+                <InsSex>M</InsSex>
+                <InsAddress1>5400 LBJ Expressway</InsAddress1>
+                <InsAddress2>Suite 300</InsAddress2>
+                <InsCity>Dallas</InsCity>
+                <InsState>TX</InsState>
+                <InsZip>75240</InsZip>
+                <InsBirthdate>19800715</InsBirthdate>
+                <InsSSN>123456789</InsSSN>
+                <InsDayphone>2148762789778</InsDayphone>
+                <InsNightPhone>2148974464</InsNightPhone>
+                <InsBirthCity>Dallas</InsBirthCity>
+                <InsBirthState>TX</InsBirthState>
+                <InsDriverState>TX</InsDriverState>
+                <InsDriverLicense>987654654A465</InsDriverLicense>
+            </Insured>
+            <Agent>
+                <AgentPrefix>Mr.</AgentPrefix>
+                <AgentFName>John</AgentFName>
+                <AgentLName>Doe</AgentLName>
+                <AgentAddress1>2727 Paces Ferry Road</AgentAddress1>
+                <AgentCity>Atlanta</AgentCity>
+                <AgentState>GA</AgentState>
+                <AgentZip>30339</AgentZip>
+                <AgentEmail>jdoe@amergen.com</AgentEmail>
+                <AgentPhone>2148582200</AgentPhone>
+                <AgentNo>R98798</AgentNo>
+                <AgentCustServPhone>8882637436</AgentCustServPhone>
+                <AgentCustServOpenTime>8:00</AgentCustServOpenTime>
+                <AgentCustServCloseTime>5:00</AgentCustServCloseTime>
+                <AgentCustServTimeZone>eastern</AgentCustServTimeZone>
+            </Agent>
+            <Owner>
+                <OwnFName>Bill</OwnFName>
+                <OwnMName>M</OwnMName>
+                <OwnLName>Smith</OwnLName>
+                <OwnCompany>Adventures Inc.</OwnCompany>
+                <OwnAddress1>5910 North Central Expressway</OwnAddress1>
+                <OwnAddress2>Suite 900</OwnAddress2>
+                <OwnCity>Dallas</OwnCity>
+                <OwnState>TX</OwnState>
+                <OwnZipCode>75206</OwnZipCode>
+                <OwnEin>896851098</OwnEin>
+                <OwnSig>Added</OwnSig>
+            </Owner>
+            <Beneficiary1>
+                <Ben1FName>Bill</Ben1FName>
+                <Ben1MName>P</Ben1MName>
+                <Ben1LName>Smith, Jr.</Ben1LName>
+                <Ben1BirthDate>19840401</Ben1BirthDate>
+                <Ben1Sex>M</Ben1Sex>
+                <Ben1Relationship>Son</Ben1Relationship>
+                <Ben1Address1>5910 North Central Expressway</Ben1Address1>
+                <Ben1Address2>Suite 800</Ben1Address2>
+                <Ben1City>Dallas</Ben1City>
+                <Ben1State>TX</Ben1State>
+                <Ben1ZipCode>75026</Ben1ZipCode>
+                <Ben1SSN>123456780</Ben1SSN>
+            </Beneficiary1>
+            <Beneficiary2>
+                <Ben2FName>Mary</Ben2FName>
+                <Ben2MName>T</Ben2MName>
+                <Ben2LName>Smith</Ben2LName>
+                <Ben2BirthDate>19620320</Ben2BirthDate>
+                <Ben2Sex>F</Ben2Sex>
+                <Ben2Relationship>Cousin</Ben2Relationship>
+                <Ben2Address1>5910 North Central Expressway</Ben2Address1>
+                <Ben2Address2>Suite 800</Ben2Address2>
+                <Ben2City>Dallas</Ben2City>
+                <Ben2State>TX</Ben2State>
+                <Ben2ZipCode>75026</Ben2ZipCode>
+                <Ben2SSN>987654321</Ben2SSN>
+            </Beneficiary2>
+            <Adjuster>
+                <ADJ.BRANCH>SYRACUSE</ADJ.BRANCH>
+                <ADJ.CODE>SM3</ADJ.CODE>
+                <ADJ.EMAIL>swellspring@testins.com</ADJ.EMAIL>
+                <ADJ.MANAGER>Jerry Cook</ADJ.MANAGER>
+                <ADJ.NAME>Shannon Wellspring</ADJ.NAME>
+                <ADJ.TITLE>Manager</ADJ.TITLE>
+            </Adjuster>
+            <Branch>
+                <BRANCH.ADDRESS.FULL>100 South Street New York, NY 23921</BRANCH.ADDRESS.FULL>
+                <BRANCH.CSZ>New York, NY 23921</BRANCH.CSZ>
+                <BRANCH.HDR.PHONE>(513) 870-2000</BRANCH.HDR.PHONE>
+                <BRANCH.PO>PO Box 29283</BRANCH.PO>
+            </Branch>
+        </PolicyRoleType>
+        <Life>
+            <Application>
+                <AppAproved>N</AppAproved>
+                <PrimaryInsured>X</PrimaryInsured>
+                <AppForm>
+                    <NAME>C:\FAP\FSDMS2\FORMS\app.tif</NAME>
+                </AppForm>
+                <InsHealthInfo>
+                    <Height>60</Height>
+                    <Weight>120</Weight>
+                    <BloodPress>N</BloodPress>
+                    <Cholestrol>N</Cholestrol>
+                    <Cancerrel>N</Cancerrel>
+                    <HeartDiseaseRel>N</HeartDiseaseRel>
+                    <Alcoholism>N</Alcoholism>
+                    <Anxiety>N</Anxiety>
+                    <Asthma>Y</Asthma>
+                    <Cancer>N</Cancer>
+                    <Depression>N</Depression>
+                    <Diabetes>N</Diabetes>
+                    <DrugAbuse>N</DrugAbuse>
+                    <Epilepsy>N</Epilepsy>
+                    <HeartDisease>N</HeartDisease>
+                    <Hepatitis>N</Hepatitis>
+                    <Kidney-Liver>N</Kidney-Liver>
+                    <MS>N</MS>
+                    <Respiratory>N</Respiratory>
+                    <Sleep>N</Sleep>
+                    <Stroke>N</Stroke>
+                    <Ulcer>N</Ulcer>
+                    <Vascular>N</Vascular>
+                    <Other>N</Other>
+                    <Explaination>Treated during childhood.  No adult incidents.</Explaination>
+                    <Continuation>N</Continuation>
+                </InsHealthInfo>
+            </Application>
+        </Life>
+    </PolicyData>
+    <AddresseeData>
+        <Addressee>
+            <Type>0</Type>
+            <NameLine1>ほえる犬 Andy Jones</NameLine1>
+            <NameLine2/>
+            <AddrLine1>1 Westfield Road</AddrLine1>
+            <AddrLine2>Suite 100</AddrLine2>
+            <City>Waterford</City>
+            <Country>US</Country>
+            <Zip>06385</Zip>
+            <Role>AGENT</Role>
+            <State>CT</State>
+            <Phone>603-624-2938</Phone>
+            <Email>andy.jones@example.com</Email>
+            <Fax>603-624-2900</Fax>
+            <DistMethods>Email</DistMethods>
+            <Distribution>Email</Distribution>
+        </Addressee>
+        <Addressee>
+            <Code/>
+            <Type>1</Type>
+            <NameLine1>ほえる犬 Sally Brown</NameLine1>
+            <NameLine2/>
+            <AddrLine1>14746 Northside Drive</AddrLine1>
+            <AddrLine2>Apartment C</AddrLine2>
+            <City>Waterford</City>
+            <Country>US</Country>
+            <Zip>06385</Zip>
+            <Role>INSURED</Role>
+            <State>CT</State>
+            <Phone>603-624-0002</Phone>
+            <Email>sally.brown@example.com</Email>
+            <Fax>603-624-2900</Fax>
+            <DistMethods>Batch</DistMethods>
+            <Distribution>Batch</Distribution>
+        </Addressee>
+        <Addressee>
+            <Code/>
+            <Type>1</Type>
+            <NameLine1>Лай собаки Jason Barrs</NameLine1>
+            <NameLine2/>
+            <AddrLine1>80 Wolfe Road</AddrLine1>
+            <AddrLine2>Suite D101</AddrLine2>
+            <City>Albany</City>
+            <Country>US</Country>
+            <Zip>06385</Zip>
+            <Role>INJURED PARTY</Role>
+            <State>NY</State>
+            <Phone>603-624-2938</Phone>
+            <Email>andy.jones@example.com</Email>
+            <Fax>603-624-2900</Fax>
+            <DistMethods>Batch</DistMethods>
+            <Distribution>Batch</Distribution>
+        </Addressee>
+    </AddresseeData>
+    </DocumentRequest>
+</Documents>

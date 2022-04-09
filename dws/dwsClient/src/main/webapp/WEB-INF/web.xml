@@ -1,0 +1,53 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+  <servlet>
+    <servlet-name>formProcessor</servlet-name>
+    <servlet-class>oracle.documaker.dwsclient.formProcessor</servlet-class>
+    <init-param>
+      <description>endpoint for DWS publishing service with ?WSDL</description>
+      <param-name>soapEndpoint</param-name>
+      <param-value>http://192.168.1.125:10001/DWSAL1/PublishingService?WSDL</param-value>
+    </init-param>
+    <init-param>
+      <description>endpoint for DWS publishing service without ?WSDL</description>
+      <param-name>soapAction</param-name>
+      <param-value>http://192.168.1.125:10001/DWSAL1/PublishingService</param-value>
+    </init-param>
+    <init-param>
+      <description>Set to True to run a test with the default extract data for the Reference Implementation. Set to False to use the extract data in WEB-INF/extract.xml</description>
+      <param-name>baseTest</param-name>
+    <param-value>false</param-value>
+    </init-param>
+    <init-param>
+      <description>Set to correct edit url. Leave &lt;DOCID&gt; and &lt;UNIQUEID&gt; as-is.</description>
+      <param-name>editURL</param-name>
+      <param-value> https://deepthought:9002/DocumakerCorrespondence/faces/load?docId=&lt;DOCID&gt;&amp;uniqueId=&lt;UNIQUEID&gt;&amp;taskflow=compose</param-value>
+    </init-param>
+    <init-param>
+      <description>Set to true to output soap request and response to server log.</description>
+      <param-name>debug</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <description>The node afterwhich to insert worksheet data.</description>
+      <param-name>locateNode</param-name>
+      <param-value>&lt;PackageInfo&gt;</param-value>
+    </init-param>
+    <init-param>
+      <description>Path for extract data. Must reside in WEB-INF.</description>
+      <param-name>extractFile</param-name>
+      <param-value>/WEB-INF/extract.xml</param-value>
+    </init-param>
+    <init-param>
+      <description>The node to insert after "locateNode" that will contain the worksheet data. Note that it is JUST the text of the node name, not the brackets.</description>
+      <param-name>insertNodeText</param-name>
+      <param-value>EntryData</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>formProcessor</servlet-name>
+    <url-pattern>/formprocessor</url-pattern>
+  </servlet-mapping>
+</web-app>

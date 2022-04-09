@@ -48,6 +48,7 @@ mkdir -p $ORACLE_HOME
 mkdir -p /u01/app
 ln -sf $ORACLE_BASE /u01/app/oracle
 mkdir -p $ORACLE_BASE/provision
+
 echo 'INSTALLER: Oracle directories created'
 
 # Check swap file size.
@@ -86,6 +87,7 @@ else
 
 	# Install Oracle Database prereq and openssl packages
 	echo 'INSTALLER: Installing prerequisites via yum'
+	## Note >> oracle user does not exist until after this step.
 	yum install -q -y oracle-database-preinstall-19c openssl nfs-utils xauth curl sysstat-10.1.5 binutils compat-libcap1 compat-libstdc++-33 compat-libstdc++-33.i686 glibc glibc.i686 glibc-devel glibc-devel.i686 ksh libaio libaio.i686 libaio-devel libaio-devel.i686 libX11 libX11.i686 libXau libXau.i686 libXi libXi.i686 libXtst libXtst.i686 xorg-x11-apps xdpyinfo libXp.i686 libXrender.i686  libXp libgcc libgcc.i686 libstdc++ libstdc++.i686 libstdc++-devel libstdc++-devel.i686 libxcb libxcb.i686 make  smartmontools sysstat unixODBC unixODBC-devel libtiff-4.0.3-27.el7_3.i686 	
 	echo 'delete this file to rerun system update. '>>/opt/oracle/provision/sysupdate.txt
 	echo 'INSTALLER: Prerequisite install complete'
@@ -98,8 +100,26 @@ else
 	echo "export ORACLE_BASE=$ORACLE_BASE" >> /home/oracle/.bashrc
 	echo "export ORACLE_HOME=$ORACLE_HOME" >> /home/oracle/.bashrc
 	echo "export ORACLE_SID=$ORACLE_SID" >> /home/oracle/.bashrc
+	echo "export ODEE_HOME=$ODEE_HOME" >> /home/oracle/.bashrc
+	#chown oracle:oinstall $ODEE_HOME
 	echo "export PATH=\$PATH:\$ORACLE_HOME/bin" >> /home/oracle/.bashrc
+
+	echo "export DISPLAY=127.0.0.1:10.0" >> /home/vagrant/.bashrc
+	echo "export DISPLAY=127.0.0.1:10.0" >> /home/oracle/.bashrc
+	
 	echo 'INSTALLER: Environment variables set'
+fi
+
+# Install Apache DS
+if [ -f "/opt/oracle/provision/apacheds.txt" ]; then	
+	echo "INSTALLER: ApacheDS installation skipped."
+else
+	wget -q -O ~/apacheds.rpm "https://dlcdn.apache.org//directory/apacheds/dist/2.0.0.AM26/apacheds-2.0.0.AM26-x86_64.rpm"
+	yum -y localinstall ~/apacheds.rpm
+	/etc/init.d/apacheds-2.0.0.AM26-default start
+	chkconfig --add /etc/init.d/apacheds-2.0.0.AM26-default
+	chkconfig --level 2345 apacheds-2.0.0.AM26-default on
+	su -l oracle -c "echo 'delete this file to redploy ApacheDS '>>/opt/oracle/provision/apacheds.txt"
 fi
 
 # Install Oracle
@@ -154,6 +174,14 @@ else
 	else    
 		# Auto generate ORACLE PWD if not passed on
 		export ORACLE_PWD=${ORACLE_PWD:-"`openssl rand -base64 9`1"}
+		export ORACLE_PWD=`echo $ORACLE_PWD| tr -dc '[:alnum:]'`
+		if grep -q VM_ORACLE_PWD /vagrant/.env.local; then
+			# do nothing
+			echo "INSTALLER: ORACLE_PWD already stored in .env.local"
+		else
+			echo "VM_ORACLE_PWD=\"${ORACLE_PWD}\"" >> /vagrant/.env.local
+		fi
+
 		echo "INSTALLER: ORACLE_PWD set to $ORACLE_PWD"
 
 		cp /vagrant/ora-response/dbca.rsp.tmpl /vagrant/ora-response/dbca.rsp
@@ -206,6 +234,8 @@ if [ -f "/opt/oracle/provision/jdk.txt" ]; then
 	echo 'INSTALLER: JDK is already installed'
 else
 	rpm -ivh /vagrant/installs/${RPM_JAVA}
+	echo "export JAVA_HOME=$JAVA_PATH" >> /home/oracle/.bashrc
+	echo "export PATH=${JAVA_HOME}/bin:\$PATH" >> /home/oracle/.bashrc
 	su -l oracle -c "echo 'delete this file to reinstall JDK'>>/opt/oracle/provision/jdk.txt"
 	echo 'INSTALLER: JDK installed'
 fi
@@ -216,6 +246,15 @@ if [ -f "/opt/oracle/provision/weblogic.txt" ]; then
 else
 	# Setup password if not already provided.
 	export WLS_PWD=${WLS_PWD:-"`openssl rand -base64 9`1"}
+	export WLS_PWD=`echo $WLS_PWD| tr -dc '[:alnum:]'`
+
+	if grep -q VM_WLS_PWD /vagrant/.env.local; then
+		# do nothing
+		echo "INSTALLER: WLS_PWD already stored in .env.local"
+	else
+		echo "VM_WLS_PWD=\"${ORACLE_PWD}\"" >> /vagrant/.env.local
+	fi
+
 	echo "INSTALLER: PASSWORD FOR WebLogic : $WLS_PWD";
 	export WLS_ODEE_HOME=$ORACLE_BASE/applications/odee
 
@@ -229,7 +268,7 @@ else
 	echo 'INSTALLER: Domain directories created'
 
 	# set environment variables
-	if grep -q ODEE_HOME /home/oracle/.bashrc; then
+	if grep -q "ODEE_HOME" /home/oracle/.bashrc; then
 		echo 'INSTALLER: Environment variables previously set; retaining.'
 	else
 		echo "export PATH=\$PATH:\$ORACLE_HOME/bin" >> /home/oracle/.bashrc
@@ -269,8 +308,25 @@ if [ -f "/opt/oracle/provision/odee.txt" ]; then
 else
 	echo "INSTALLER: Installing ODEE"
 	# set up passwords if not already provisioned
+	# note we have to wrangle passwords because the installer has weird limitations on PWD characters.
 	export ODEE_PWD=${ODEE_PWD:-"`openssl rand -base64 9`1"}
-	export ODEE_SCHEMA_PWD=${ODEE_SCHEMA_PWD:-"`openssl rand -base64 9`1"}
+	export ODEE_PWD=`echo $ODEE_PWD| tr -dc '[:alnum:]'`
+	if grep -q "VM_ODEE_PWD" /vagrant/.env.local; then
+		# do nothing
+		echo "INSTALLER: ODEE_PWD already stored in .env.local"
+	else
+		echo "VM_ODEE_PWD=\"${ODEE_PWD}\"" >> /vagrant/.env.local
+	fi
+	# have to prefix with alpha otherwise DB scripts complain.
+	export ODEE_SCHEMA_PWD=${ODEE_SCHEMA_PWD:-"a`openssl rand -base64 9`1"}
+	export ODEE_SCHEMA_PWD=`echo $ODEE_SCHEMA_PWD| tr -dc '[:alnum:]'`
+	
+	if grep -q "VM_ODEE_SCHEMA_PWD" /vagrant/.env.local; then
+		# do nothing
+		echo "INSTALLER: WLS_PWD already stored in .env.local"
+	else
+		echo "VM_ODEE_SCHEMA_PWD=\"${ODEE_SCHEMA_PWD}\"" >> /vagrant/.env.local
+	fi
 
 	unzip -qn "/vagrant/installs/${ZIP_ODEE}" -d /home/oracle
 	cp /vagrant/ora-response/odee.rsp.tmpl /home/oracle/odee.rsp
@@ -288,12 +344,19 @@ else
 
 	chown oracle:oinstall -R /home/oracle
 	chown oracle:oinstall -R $ORACLE_BASE/oraInventory
+	
+	echo "INSTALLER: running /home/oracle/Disk1/runInstaller -silent -force -waitforcompletion -ignoreSysPrereqs -responseFile /home/oracle/odee.rsp -jreLoc ${JAVA_PATH}/jre -invPtrLoc ${ORACLE_BASE}/oraInventory/oraInst.loc"	
+	su -l oracle -c "/home/oracle/Disk1/runInstaller -waitforcompletion -silent -force -ignoreSysPrereqs -responseFile /home/oracle/odee.rsp -jreLoc ${JAVA_PATH}/jre -invPtrLoc ${ORACLE_BASE}/oraInventory/oraInst.loc"
 
-	su -l oracle -c "/home/oracle/Disk1/runInstaller -silent -responseFile /home/oracle/odee.rsp -jreLoc /usr/java/jdk1.8.0_311-amd64/jre -invPtrLoc $ORACLE_BASE/oraInventory/oraInst.loc && rm /home/oracle/odee.rsp"
-	
-	echo 'INSTALLER: ODEE installed.'		
-	
-	su -l oracle -c "echo 'delete this file to reinstall ODEE. Note you may need to manually remove everything that was created to redo this step!'>>/opt/oracle/provision/odee.txt"
+	if [ -f /opt/oracle/odee/documaker ]; then
+		echo 'INSTALLER: ODEE installation failed.'
+		exit 2
+	else
+		echo .
+		rm /home/oracle/odee.rsp
+		echo 'INSTALLER: ODEE installed.'
+		su -l oracle -c "echo 'delete this file to reinstall ODEE. Note you may need to manually remove everything that was created to redo this step'>>/opt/oracle/provision/odee.txt"
+	fi
 fi
 
 # Provision database artifacts for ODEE
@@ -304,15 +367,131 @@ else
 
 	su -l oracle -c "cd $ODEE_HOME/documaker/database/oracle11g && sqlplus / as sysdba <<EOF
 alter session set container=orclpdb1;
+spool /home/oracle/odee_install_sql.log
 @dmkr_admin.sql
 @dmkr_asline.sql
 @dmkr_admin_user_examples.sql
+spool off
 EOF"
 	su -l oracle -c "cd $ODEE_HOME/documaker/mstrres/dmres && ./deploysamplemrl.sh"
 	
 	echo 'INSTALLER: ODEE database artifacts provisioned.'			
-	su -l oracle -c "echo 'delete this file to provision ODEE database artifacts. You will need to manually drop existing users/schemas/datafiles to redo this step!'>>/opt/oracle/provision/odee-1.txt"
+	su -l oracle -c "echo 'delete this file to provision ODEE database artifacts. You will need to manually drop existing users/schemas/datafiles to redo this step'>>/opt/oracle/provision/odee-1.txt"
 fi
+
+# # Run RCU
+# if [ -f "/opt/oracle/provision/odee-2.txt" ]; then
+# 	echo "INSTALLER: ODEE RCU provision skipped. Delete /opt/oracle/provision/odee-2.txt to attempt reprovision steps."
+# else
+# 	echo "INSTALLER: Running RCU."
+
+# 	cp /vagrant/ora-response/rcu.rsp.tmpl /home/oracle/rcu.properties
+
+# 	sed -i -e "s|###LISTENER_PORT###|$LISTENER_PORT|g" /home/oracle/rcu.properties
+# 	sed -i -e "s|###ORACLE_PDB###|$ORACLE_PDB|g" /home/oracle/rcu.properties
+	
+# 	su -l oracle -c "$MW_HOME/oracle_common/bin/rcu -silent -responseFile /home/oracle/rcu.properties<<EOF
+# $ORACLE_PWD
+# $ODEE_SCHEMA_PWD
+# EOF"
+	
+# 	echo "INSTALLER: RCU completed. Schema prefix is DEV and password is $ODEE_SCHEMA_PWD"
+# 	su -l oracle -c "echo 'delete this file to rerun RCU. You must manually remove the existing artifacts.'>>/opt/oracle/provision/odee-2.txt"
+# fi
+
+if [ -f "/opt/oracle/provision/odee-3.txt" ]; then
+ 	echo "INSTALLER: ODEE Domain provision skipped. Delete /opt/oracle/provision/odee-3.txt to attempt reprovision steps."
+ else
+
+	echo "INSTALLER: Deploying WebLogic domain for ODEE."
+
+	
+	if [ -f /opt/oracle/weblogic-deploy/bin/createDomain.sh ]; then
+		echo "INSTALLER: Found WebLogic Deploy Tooling."
+	else
+		echo "INSTALLER: Getting WebLogic Deploy Tooling."
+		rm -rf /opt/oracle/weblogic-deploy
+		wget -q -O /opt/oracle/wdt.zip "https://github.com/oracle/weblogic-deploy-tooling/releases/download/release-2.1.1/weblogic-deploy.zip"
+		unzip -qn /opt/oracle/wdt.zip -d /opt/oracle
+	fi
+
+	cp /vagrant/ora-response/OdeeDomainModel.properties /opt/oracle/weblogic-deploy/bin/OdeeDomainModel.properties
+	cp /vagrant/ora-response/OdeeDomainModel.json /opt/oracle/weblogic-deploy/bin/OdeeDomainModel.json
+
+	chown oracle:oinstall -R /opt/oracle
+
+	sed -i -e "s|###WLS_PWD###|$WLS_PWD|g" /opt/oracle/weblogic-deploy/bin/OdeeDomainModel.properties
+	sed -i -e "s|###ODEE_SCHEMA_PWD###|$ODEE_SCHEMA_PWD|g" /opt/oracle/weblogic-deploy/bin/OdeeDomainModel.properties
+
+	sed -i -e "s|###JAVA_HOME###|$JAVA_PATH|g" /opt/oracle/weblogic-deploy/bin/OdeeDomainModel.json
+	sed -i -e "s|###ORACLE_PDB###|$ORACLE_PDB|g" /opt/oracle/weblogic-deploy/bin/OdeeDomainModel.json
+	sed -i -e "s|###ODEE_SCHEMA_PWD###|$ODEE_SCHEMA_PWD|g" /opt/oracle/weblogic-deploy/bin/OdeeDomainModel.json
+	
+	sed -i -e "s|###ODEE_HOME###|$ODEE_HOME|g" /opt/oracle/weblogic-deploy/bin/OdeeDomainModel.json
+	sed -i -e "s|###ODEE_PWD###|$ODEE_PWD|g" /opt/oracle/weblogic-deploy/bin/OdeeDomainModel.json	
+	sed -i -e "s|###LISTENER_PORT###|$LISTENER_PORT|g" /opt/oracle/weblogic-deploy/bin/OdeeDomainModel.json
+	
+	sed -i -e "s|###MW_PORT_ADMIN###|$MW_PORT_ADMIN|g" /opt/oracle/weblogic-deploy/bin/OdeeDomainModel.json
+	sed -i -e "s|###MW_PORT_DMKR###|$MW_PORT_DMKR|g" /opt/oracle/weblogic-deploy/bin/OdeeDomainModel.json	
+	sed -i -e "s|###MW_PORT_JMS###|$MW_PORT_JMS|g" /opt/oracle/weblogic-deploy/bin/OdeeDomainModel.json
+
+	sed -i -e "s|###MW_SSLPORT_ADMIN###|$MW_SSLPORT_ADMIN|g" /opt/oracle/weblogic-deploy/bin/OdeeDomainModel.json	
+	sed -i -e "s|###MW_SSLPORT_JMS###|$MW_SSLPORT_JMS|g" /opt/oracle/weblogic-deploy/bin/OdeeDomainModel.json
+	sed -i -e "s|###MW_SSLPORT_DMKR###|$MW_SSLPORT_DMKR|g" /opt/oracle/weblogic-deploy/bin/OdeeDomainModel.json
+	
+	sed -i -e "s|###ODEE_DOMAIN###|$ODEE_DOMAIN|g" /opt/oracle/weblogic-deploy/bin/OdeeDomainModel.json
+	sed -i -e "s|###ORACLE_BASE###|$ORACLE_BASE|g" /opt/oracle/weblogic-deploy/bin/OdeeDomainModel.json
+	
+	su -l oracle -c "export MODEL_PWD=$ORACLE_PWD && ~/weblogic-deploy/bin/encryptModel.sh -passphrase_env MODEL_PWD -model_file /opt/oracle/weblogic-deploy/bin/OdeeDomainModel.json -variable_file /opt/oracle/weblogic-deploy/bin/OdeeDomainModel.properties -oracle_home $MW_HOME"	
+	su -l oracle -c "export WLSDEPLOY_PROPERTIES=-Dwlsdeploy.debugToStdout=true && export MODEL_PWD=$ORACLE_PWD && ~/weblogic-deploy/bin/createDomain.sh -model_file /opt/oracle/weblogic-deploy/bin/OdeeDomainModel.json -variable_file /opt/oracle/weblogic-deploy/bin/OdeeDomainModel.properties -domain_home $ORACLE_BASE/domains/$ODEE_DOMAIN -oracle_home $MW_HOME -domain_type JRF -java_home $JAVA_PATH -run_rcu -rcu_db localhost:$LISTENER_PORT/$ORACLE_PDB -rcu_prefix DEV -rcu_db_user sys -passphrase_env MODEL_PWD <<EOF
+$ORACLE_PWD
+$ODEE_SCHEMA_PWD
+EOF"
+	# su -l oracle -c "echo 'delete this file to provision WebLogic ODEE domain. You must manually remove the existing domain artifacts.'>>/opt/oracle/provision/odee-3.txt"
+	echo "INSTALLER: WebLogic domain deployed."
+fi
+# Create WebLogic domain
+# if [ -f "/opt/oracle/provision/odee-3.txt" ]; then
+# 	echo "INSTALLER: ODEE WebLogic  domain provision skipped. Delete /opt/oracle/provision/odee-2.txt to attempt reprovision steps."
+# else
+	# echo "INSTALLER: Deploying WebLogic domain for ODEE."
+
+	# echo "INSTALLER: Getting WebLogic Deploy Tooling."
+	# wget -q -O /home/oracle/wdt.zip "https://github.com/oracle/weblogic-deploy-tooling/releases/download/release-2.1.1/weblogic-deploy.zip"
+	# unzip /home/oracle/wdt.zip -d /home/oracle
+	# chown oracle:oinstall -R /home/oracle
+
+	# su -l oracle -c "~/weblogic-deploy/bin/createDomain.cmd -oracle_home c:\wls12213 -domain_type WLS -domain_parent d:\demo\domains -model_file MinimalDemoDomain.yaml	"
+
+	# cp $ODEE_HOME/documaker/j2ee/weblogic/oracle11g/scripts/weblogic_installation.properties $ODEE_HOME/documaker/j2ee/weblogic/oracle11g/scripts/weblogic_installation.tmpl
+
+# 	sed -i -e "s|jdbcAdminPassword='<SECURE VALUE>'|jdbcAdminPassword=$ODEE_SCHEMA_PWD|g" $ODEE_HOME/documaker/j2ee/weblogic/oracle11g/scripts/weblogic_installation.properties
+# 	sed -i -e "s|jdbcAslinePassword='<SECURE VALUE>'|jdbcAslinePassword=$ODEE_SCHEMA_PWD|g" $ODEE_HOME/documaker/j2ee/weblogic/oracle11g/scripts/weblogic_installation.properties
+# 	sed -i -e "s|jmsCredential='<SECURE VALUE>'|jmsCredential=$WLS_PWD|g" $ODEE_HOME/documaker/j2ee/weblogic/oracle11g/scripts/weblogic_installation.properties
+# 	sed -i -e "s|adminPasswd='<SECURE VALUE>'|adminPasswd=$ODEE_PWD|g" $ODEE_HOME/documaker/j2ee/weblogic/oracle11g/scripts/weblogic_installation.properties
+# 	sed -i -e "s|weblogicPassword='<SECURE VALUE>'|weblogicPassword=$WLS_PWD|g" $ODEE_HOME/documaker/j2ee/weblogic/oracle11g/scripts/weblogic_installation.properties
+
+# 	cp /vagrant/scripts/wls.py $ODEE_HOME/documaker/j2ee/weblogic/oracle11g/scripts/wls_create_domain_silent.py
+# 	chown oracle:oinstall -R $ODEE_HOME/documaker/j2ee/weblogic/oracle11g/scripts
+
+# 	# WebLogic domain creation routine included with base product uses WLS config.sh,
+# 	# which invokes the FMW Domain Config tool -- which has no silent mode.
+# 	# Therefore we have to use WLST-based scripting to create the domain,
+# 	# then invoke the add clustered environment script to deploy Documaker artifacts.
+# 	# This is the Method #1 described in the documentaiton. https://docs.oracle.com/cd/F51808_01/DEIG/Content/post-setup.htm
+
+# 	rm -rf /opt/oracle/domains/odee 
+# #wls_extend_clustered_server_interactive.sh
+# 	su -l oracle -c "$ODEE_HOME/documaker/j2ee/weblogic/oracle11g/scripts && $MW_HOME/oracle_common/common/bin/wlst.sh wls_create_domain_silent.py && ./wls_extended_clustered_server.sh<<EOF
+# n
+# y
+
+# EOF"
+
+# 	echo 'INSTALLER: ODEE WebLogic domain artifacts provisioned.'			
+# 	# su -l oracle -c "echo 'delete this file to provision WebLogic ODEE domain. You must manually remove the existing domain artifacts.'>>/opt/oracle/provision/odee-3.txt"
+# fi
+
 
 # run user-defined post-setup scripts
 # echo 'INSTALLER: Running user-defined post-setup scripts'

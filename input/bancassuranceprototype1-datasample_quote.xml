@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DocumentRequest>
+	<PackageInfo>
+		<Key1>Alamere</Key1>
+		<Key2>Life</Key2>
+		<Key3></Key3>
+		<KeyID>MI001-90-3458</KeyID>
+		<RunDate></RunDate>
+		<TranCode>QU</TranCode>
+		<Description>Alamere Life Insurance Quote for Bob Stinson</Description>
+		<Language>EN</Language>
+		<Locale>en_US</Locale>
+		<Routing>
+			<User>8</User>
+			<UserGroup>3</UserGroup>
+			<SenderEmail/>
+			<SMTPServer/>
+			<WIPReason/>
+			<WIPRoute></WIPRoute>
+		</Routing>
+		<ArchiveData>
+			<WebCenter>
+				<Secgroup/>
+				<Cabinet/>
+				<UCMEffDate/>
+				<Author/>
+			</WebCenter>
+			<FileSystem/>
+			<FTP/>
+			<ESignature/>
+		</ArchiveData>
+		<Action>100011</Action>
+	</PackageInfo>
+	<Addressees>
+		<Addressee>
+			<Type>0</Type>
+			<Role>Insured</Role>
+			<NameLine1 prefix="" first="" middle="" last="" suffix="">Bob Stinson</NameLine1>
+			<NameLine2></NameLine2>
+			<AddrLine1>1002 Hummingbird Lane</AddrLine1>
+			<AddrLine2></AddrLine2>
+			<City>Santa Monica</City>
+			<State>CA</State>
+			<PostalCode>90403</PostalCode>
+			<Country>USA</Country>
+			<Email>Bob.Stinson@cox.net</Email>
+			<Phone>(310) 203-4444</Phone>
+			<Fax></Fax>
+			<Channel></Channel>
+			<NotificationType></NotificationType>
+			<DistMethods/>
+			<Distribution>SMS</Distribution>
+		</Addressee>
+		<Addressee>
+			<Type>1</Type>
+			<Role>Applicant</Role>
+			<NameLine1 prefix="" first="" middle="" last="" suffix="">Margaret Stinson</NameLine1>
+			<NameLine2></NameLine2>
+			<AddrLine1>1002 Hummingbird Lane</AddrLine1>
+			<AddrLine2></AddrLine2>
+			<City>Santa Monica</City>
+			<State>CA</State>
+			<PostalCode>90403</PostalCode>
+			<Country>USA</Country>
+			<Email>Margaret.Stinson@golddiggers.com</Email>
+			<Phone>(310) 203-4446</Phone>
+			<Fax></Fax>
+			<Channel></Channel>
+			<NotificationType></NotificationType>
+			<DistMethods/>
+			<Distribution></Distribution>
+		</Addressee>
+			<Addressee>
+			<Type>1</Type>
+			<Role>Agent</Role>
+			<NameLine1 prefix="" first="John" middle="Paul" last="Barthlien" suffix="">J.P. Barthlien</NameLine1>
+			<NameLine2></NameLine2>
+			<AddrLine1>Alamere Life Insurance Company</AddrLine1>
+			<AddrLine2>P.O. Box 123</AddrLine2>
+			<City>Station Z, Mississauga</City>
+			<State>ON</State>
+			<PostalCode>A9B 9Z9</PostalCode>
+			<Country>CN</Country>
+			<Email>jpb@example.com</Email>
+			<Phone>800.555.0123</Phone>
+			<Fax></Fax>
+			<Picture></Picture>
+			
+			<Channel></Channel>
+			<NotificationType></NotificationType>
+			<DistMethods/>
+			<Distribution></Distribution>
+		</Addressee>	
+	</Addressees>
+			
+	<DocumentData>
+		<PolicyNumber>MI001-90-3458</PolicyNumber>
+		<EffectiveDate>20140807</EffectiveDate>
+		<PolicyDate>20140807</PolicyDate>
+		<IssueDate>20140807</IssueDate>
+		<EndingDate>20290807</EndingDate>
+		<Premiums>
+			<Period>15</Period> 
+			<RiskClass>Preferred Non-tobacco</RiskClass>
+			<Mode>Annual</Mode>
+			<Amounts>
+				<Initial policy="450" fee="25" annualPayments="1" annualTotal="475">475</Initial>
+				<Selected policy="450" fee="25" annualPayments="1" annualTotal="475">475</Selected>
+				<Annual policy="450" fee="25" annualPayments="1" annualTotal="475">475</Annual>
+				<Semi-Annual policy="225" fee="25" annualPayments="2" annualTotal="500">250</Semi-Annual>
+				<Quarterly policy="113" fee="20" annualPayments="4" annualTotal="532">133</Quarterly>
+				<Monthly policy="38" fee="10" annualPayments="12" annualTotal="576">48</Monthly>
+			</Amounts> 
+		</Premiums>
+		<Benefits>
+			<Death>1000000.00</Death>
+		</Benefits>
+		<Insured>
+			<Age>40</Age>
+			<Gender>Male</Gender>
+			<Tobacco>No</Tobacco>
+		</Insured>
+		<Quote>
+			<QuoteDate>20140801</QuoteDate>
+			<ExpirationDate>20141030</ExpirationDate>
+			<ValidDays>90</ValidDays>
+			<ExamType>Full</ExamType>
+		</Quote>
+	</DocumentData>
+</DocumentRequest>

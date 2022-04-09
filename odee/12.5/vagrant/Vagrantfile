@@ -19,6 +19,7 @@
 
 #VAGRANT_LOG=debug
 
+
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
@@ -37,7 +38,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   # VM name
-  VM_NAME = default_s('VM_NAME', 'odee-1270-vagrant')
+  VM_NAME = default_s('VM_NAME', 'odee-1250-vagrant')
 
   # Memory/Swap for the VM.
   # Note: SWAP should be 100% of mem size and the VM box defaults to 50%, so we add another 50%...
@@ -96,7 +97,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   VM_ZIP_FMW = default_s('VM_ZIP_FMW','V983368-01.zip')  
   VM_JAR_FMW = default_s('VM_JAR_FMW','fmw_12.2.1.4.0_infrastructure.jar') # this is inside the VM_ZIP_FMW
   VM_ZIP_ORACLEDB = default_s('VM_ZIP_ORACLEDB','LINUX.X64_193000_db_home.zip')
-  VM_ZIP_ODEE = default_s('VM_ZIP_ODEE','V1018888-01.zip')
+  VM_ZIP_ODEE = default_s('VM_ZIP_ODEE','ODEE12.5.00.29909linux64.zip')
   VM_RPM_JAVA = default_s('VM_RPM_JAVA','jdk-8u311-linux-x64.rpm')
   VM_ODEE_HOME = default_s('VM_ODEE_HOME','/opt/oracle/odee')
   VM_ODEE_DOMAIN = default_s('VM_ODEE_DOMAIN','odee')
@@ -188,15 +189,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Oracle port forwarding
   config.ssh.forward_agent = true
   config.ssh.forward_x11 = true
-  config.vm.network "forwarded_port", guest: VM_LISTENER_PORT, host: VM_LISTENER_PORT
+  config.vm.network "forwarded_port", guest: 9443, host: 9443 # WAS admin console
+  config.vm.network "forwarded_port", guest: 9043, host: 9043 # WAS admin console
+  config.vm.network "forwarded_port", guest: 10389, host: 10389 # ApacheDS
+  config.vm.network "forwarded_port", guest: 8080, host: 8080 # ApacheDS Admin
   config.vm.network "forwarded_port", guest: VM_EM_EXPRESS_PORT, host: VM_EM_EXPRESS_PORT
-  config.vm.network "forwarded_port", guest: VM_MW_PORT_ADMIN, host: VM_MW_PORT_ADMIN
-  config.vm.network "forwarded_port", guest: VM_MW_PORT_IDM, host: VM_MW_PORT_IDM
-  config.vm.network "forwarded_port", guest: VM_MW_PORT_DMKR, host: VM_MW_PORT_DMKR
-  config.vm.network "forwarded_port", guest: VM_MW_SSLPORT_ADMIN, host: VM_MW_SSLPORT_ADMIN
-  config.vm.network "forwarded_port", guest: VM_MW_SSLPORT_IDM, host: VM_MW_SSLPORT_IDM
-  config.vm.network "forwarded_port", guest: VM_MW_SSLPORT_DMKR, host: VM_MW_SSLPORT_DMKR
-  config.vm.network "forwarded_port", guest: 10389, host: 10389 # Apache DS
   
   # Provision everything on the first run
   config.vm.provision "shell", path: "scripts/install.sh", env:

@@ -1,0 +1,601 @@
+{
+    "domainInfo" : {
+        "AdminUserName" : "@@PROP:AdminUserName@@",
+        "AdminPassword" : "@@PROP:AdminPassword@@"
+    },
+    "topology" : {
+        "Name" : "###ODEE_DOMAIN###",
+        "DomainVersion" : "12.2.1.4.0",
+        "NMProperties" : {
+            "JavaHome" : "###JAVA_HOME###",
+            "weblogic.StartScriptName" : "startWebLogic.sh"
+        },
+        "Cluster" : {
+            "dmkr" : {
+                "CoherenceClusterSystemResource" : "defaultCoherenceCluster"
+            }
+        },
+        "Server" : {
+            "AdminServer" : {
+                "ListenPort" : ###MW_PORT_ADMIN###,
+                "Machine" : "machine01",
+                "SSL" : {
+                    "ListenPort" : ###MW_SSLPORT_ADMIN###,
+                    "Enabled" : true
+                },
+                "WebServer" : {
+                    "WebServerLog" : {
+                        "LogFileFormat" : "extended",
+                        "ELFFields" : "date time cs-method ctx-ecid ctx-rid cs-uri sc-status bytes"
+                    }
+                }
+            },
+            "dmkr_app" : {
+                "ListenPort" : ###MW_PORT_DMKR###,
+                "Machine" : "machine01",
+                "Cluster" : "dmkr",
+                "SSL" : {
+                    "ListenPort" : ###MW_SSLPORT_DMKR###,
+                    "Enabled" : true
+                },
+                "WebServer" : {
+                    "WebServerLog" : {
+                        "LogFileFormat" : "extended",
+                        "ELFFields" : "date time cs-method ctx-ecid ctx-rid cs-uri sc-status bytes"
+                    }
+                }
+            },
+            "dmkr_jms" : {
+                "ListenPort" : ###MW_PORT_JMS###,
+                "Machine" : "machine01",
+                "Cluster" : "dmkr",
+                "SSL" : {
+                    "ListenPort" : ###MW_SSLPORT_JMS###,
+                    "Enabled" : true
+                },
+                "WebServer" : {
+                    "WebServerLog" : {
+                        "LogFileFormat" : "extended",
+                        "ELFFields" : "date time cs-method ctx-ecid ctx-rid cs-uri sc-status bytes"
+                    }
+                }
+            }
+        },
+        "MigratableTarget" : {
+            "dmkr_app (migratable)" : {
+                "Cluster" : "dmkr",
+                "UserPreferredServer" : "dmkr_app"
+            },
+            "dmkr_jms (migratable)" : {
+                "Cluster" : "dmkr",
+                "UserPreferredServer" : "dmkr_jms"
+            }
+        },
+        "ServerTemplate" : {
+            "wsm-cache-server-template" : {
+                "ListenPort" : 7100,
+                "SSL" : {
+                    "ListenPort" : 8100
+                }
+            }
+        },
+        "UnixMachine" : {
+            "machine01" : {
+            }
+        },
+        "SecurityConfiguration" : {
+            "NodeManagerPasswordEncrypted" : "@@PROP:SecurityConfig.NodeManagerPasswordEncrypted@@",
+            "UseKSSForDemo" : true,
+            "Realm" : {
+                "myrealm" : {
+                    "CertPathBuilder" : "WebLogicCertPathProvider",
+                    "AuthenticationProvider" : {
+                        "Trust Service Identity Asserter" : {
+                            "weblogic.management.security.authentication.AuthenticationProvider" : {
+                            }
+                        },
+                        "DefaultAuthenticator" : {
+                            "DefaultAuthenticator" : {
+                                "UseRetrievedUserNameAsPrincipal" : true
+                            }
+                        },
+                        "DefaultIdentityAsserter" : {
+                            "DefaultIdentityAsserter" : {
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "resources" : {
+        "StartupClass" : {
+            "WSM Startup Class" : {
+                "ClassName" : "oracle.wsm.config.WSMServerStartupShutdownProvider",
+                "Target" : "AdminServer"
+            },
+            "Web Services Startup Class" : {
+                "LoadBeforeAppActivation" : true,
+                "DeploymentOrder" : 150,
+                "LoadBeforeAppDeployments" : true,
+                "ClassName" : "oracle.j2ee.ws.server.WebServiceServerStartup",
+                "Target" : "AdminServer"
+            },
+            "JRF Startup Class" : {
+                "LoadBeforeAppActivation" : true,
+                "DeploymentOrder" : 110,
+                "LoadBeforeAppDeployments" : true,
+                "ClassName" : "oracle.jrf.wls.JRFStartup",
+                "Target" : "AdminServer"
+            },
+            "ODL-Startup" : {
+                "LoadBeforeAppActivation" : true,
+                "DeploymentOrder" : 145,
+                "LoadBeforeAppDeployments" : true,
+                "ClassName" : "oracle.core.ojdl.weblogic.ODLConfiguration",
+                "Target" : "AdminServer"
+            },
+            "DMS-Startup" : {
+                "LoadBeforeAppActivation" : true,
+                "DeploymentOrder" : 150,
+                "LoadBeforeAppDeployments" : true,
+                "ClassName" : "oracle.dms.wls.DMSStartup",
+                "Target" : "AdminServer"
+            },
+            "AWT Application Context Startup Class" : {
+                "LoadBeforeAppActivation" : true,
+                "DeploymentOrder" : 150,
+                "LoadBeforeAppDeployments" : true,
+                "ClassName" : "oracle.jrf.AppContextStartup",
+                "Target" : "AdminServer"
+            }
+        },
+        "ShutdownClass" : {
+            "DMSShutdown" : {
+                "DeploymentOrder" : 150,
+                "ClassName" : "oracle.dms.wls.DMSShutdown",
+                "Target" : "AdminServer"
+            }
+        },
+        "JDBCSystemResource" : {
+            "WLSSchemaDataSource" : {
+                "JdbcResource" : {
+                    "JDBCConnectionPoolParams" : {
+                        "TestTableName" : "SQL ISVALID",
+                        "MaxCapacity" : 75
+                    },
+                    "JDBCDataSourceParams" : {
+                        "GlobalTransactionsProtocol" : "None",
+                        "JNDIName" : "jdbc/WLSSchemaDataSource"
+                    },
+                    "JDBCDriverParams" : {
+                        "URL" : "jdbc:oracle:thin:@//localhost:###LISTENER_PORT###/###ORACLE_PDB###",
+                        "PasswordEncrypted" : "@@PROP:JDBC.WLSSchemaDataSource.PasswordEncrypted@@",
+                        "DriverName" : "oracle.jdbc.OracleDriver",
+                        "Properties" : {
+                            "user" : {
+                                "Value" : "@@PROP:JDBC.WLSSchemaDataSource.user.Value@@"
+                            }
+                        }
+                    }
+                }
+            },
+            "LocalSvcTblDataSource" : {
+                "Target" : "AdminServer",
+                "JdbcResource" : {
+                    "JDBCConnectionPoolParams" : {
+                        "InitialCapacity" : 0,
+                        "CapacityIncrement" : 1,
+                        "TestConnectionsOnReserve" : true,
+                        "ConnectionCreationRetryFrequencySeconds" : 10,
+                        "TestTableName" : "SQL ISVALID",
+                        "TestFrequencySeconds" : 300,
+                        "SecondsToTrustAnIdlePoolConnection" : 0,
+                        "MaxCapacity" : 200
+                    },
+                    "JDBCDataSourceParams" : {
+                        "GlobalTransactionsProtocol" : "None",
+                        "JNDIName" : "jdbc/LocalSvcTblDataSource"
+                    },
+                    "JDBCDriverParams" : {
+                        "URL" : "jdbc:oracle:thin:@//localhost:###LISTENER_PORT###/###ORACLE_PDB###",
+                        "PasswordEncrypted" : "@@PROP:JDBC.LocalSvcTblDataSource.PasswordEncrypted@@",
+                        "DriverName" : "oracle.jdbc.OracleDriver",
+                        "Properties" : {
+                            "user" : {
+                                "Value" : "@@PROP:JDBC.LocalSvcTblDataSource.user.Value@@"
+                            },
+                            "oracle.net.CONNECT_TIMEOUT" : {
+                                "Value" : "10000"
+                            },
+                            "SendStreamAsBlob" : {
+                                "Value" : "true"
+                            },
+                            "weblogic.jdbc.crossPartitionEnabled" : {
+                                "Value" : "true"
+                            }
+                        }
+                    }
+                }
+            },
+            "opss-data-source" : {
+                "Target" : "AdminServer",
+                "JdbcResource" : {
+                    "JDBCConnectionPoolParams" : {
+                        "TestTableName" : "SQL ISVALID"
+                    },
+                    "JDBCDataSourceParams" : {
+                        "GlobalTransactionsProtocol" : "None",
+                        "JNDIName" : "jdbc/OpssDataSource"
+                    },
+                    "JDBCDriverParams" : {
+                        "URL" : "jdbc:oracle:thin:@//localhost:###LISTENER_PORT###/###ORACLE_PDB###",
+                        "PasswordEncrypted" : "@@PROP:JDBC.opss-data-source.PasswordEncrypted@@",
+                        "DriverName" : "oracle.jdbc.OracleDriver",
+                        "Properties" : {
+                            "user" : {
+                                "Value" : "@@PROP:JDBC.opss-data-source.user.Value@@"
+                            }
+                        }
+                    }
+                }
+            },
+            "opss-audit-viewDS" : {
+                "Target" : "AdminServer",
+                "JdbcResource" : {
+                    "JDBCConnectionPoolParams" : {
+                        "TestTableName" : "SQL ISVALID"
+                    },
+                    "JDBCDataSourceParams" : {
+                        "GlobalTransactionsProtocol" : "None",
+                        "JNDIName" : "jdbc/AuditViewDataSource"
+                    },
+                    "JDBCDriverParams" : {
+                        "URL" : "jdbc:oracle:thin:@//localhost:###LISTENER_PORT###/###ORACLE_PDB###",
+                        "PasswordEncrypted" : "@@PROP:JDBC.opss-audit-viewDS.PasswordEncrypted@@",
+                        "DriverName" : "oracle.jdbc.OracleDriver",
+                        "Properties" : {
+                            "user" : {
+                                "Value" : "@@PROP:JDBC.opss-audit-viewDS.user.Value@@"
+                            }
+                        }
+                    }
+                }
+            },
+            "opss-audit-DBDS" : {
+                "Target" : "AdminServer",
+                "JdbcResource" : {
+                    "JDBCConnectionPoolParams" : {
+                        "TestTableName" : "SQL ISVALID"
+                    },
+                    "JDBCDataSourceParams" : {
+                        "GlobalTransactionsProtocol" : "None",
+                        "JNDIName" : "jdbc/AuditAppendDataSource"
+                    },
+                    "JDBCDriverParams" : {
+                        "URL" : "jdbc:oracle:thin:@//localhost:###LISTENER_PORT###/###ORACLE_PDB###",
+                        "PasswordEncrypted" : "@@PROP:JDBC.opss-audit-DBDS.PasswordEncrypted@@",
+                        "DriverName" : "oracle.jdbc.OracleDriver",
+                        "Properties" : {
+                            "user" : {
+                                "Value" : "@@PROP:JDBC.opss-audit-DBDS.user.Value@@"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "WLDFSystemResource" : {
+            "Module-FMWDFW" : {
+                "Description" : "Creates FMWDFW incidents based on unchecked Exceptions and critical errors",
+                "Target" : "AdminServer",
+                "WLDFResource" : {
+                    "WatchNotification" : {
+                        "JMXNotification" : {
+                            "FMWDFW-notification" : {
+                                "NotificationType" : "oracle.dfw.wldfnotification"
+                            }
+                        },
+                        "Watch" : {
+                            "UncheckedException" : {
+                                "RuleType" : "Log",
+                                "AlarmResetPeriod" : 30000,
+                                "RuleExpression" : "(log.severityString == 'Error') and ((log.messageId == 'WL-101020') or (log.messageId == 'WL-101017') or (log.messageId == 'WL-000802') or (log.messageId == 'BEA-101020') or (log.messageId == 'BEA-101017') or (log.messageId == 'BEA-000802'))",
+                                "Notification" : "FMWDFW-notification",
+                                "AlarmType" : "AutomaticReset",
+                                "ExpressionLanguage" : "EL"
+                            },
+                            "Deadlock" : {
+                                "RuleType" : "Log",
+                                "AlarmResetPeriod" : 30000,
+                                "RuleExpression" : "((log.severityString == 'Critical') or (log.severityString == 'Info')) and ((log.messageId == 'WL-000394') or (log.messageId == 'BEA-000394'))",
+                                "Notification" : "FMWDFW-notification",
+                                "AlarmType" : "AutomaticReset",
+                                "ExpressionLanguage" : "EL"
+                            },
+                            "StuckThread" : {
+                                "RuleType" : "Log",
+                                "AlarmResetPeriod" : 600000,
+                                "RuleExpression" : "(log.severityString == 'Error') and ((log.messageId == 'WL-000337') or (log.messageId == 'BEA-000337'))",
+                                "Notification" : "FMWDFW-notification",
+                                "AlarmType" : "AutomaticReset",
+                                "ExpressionLanguage" : "EL"
+                            },
+                            "HeapSpace" : {
+                                "RuleType" : "Log",
+                                "AlarmResetPeriod" : 1800000,
+                                "RuleExpression" : "((log.severityString == 'Critical') or (log.severityString == 'Warning')) and ((log.messageId == 'WL-310003') or (log.messageId == 'BEA-310003'))",
+                                "Notification" : "FMWDFW-notification",
+                                "AlarmType" : "AutomaticReset",
+                                "ExpressionLanguage" : "EL"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "CoherenceClusterSystemResource" : {
+            "defaultCoherenceCluster" : {
+                "CoherenceResource" : {
+                    "CoherenceClusterParams" : {
+                        "ClusterListenPort" : 7574
+                    }
+                }
+            }
+        }
+    },
+    "appDeployments" : {
+        "Library" : {
+            "oracle.wsm.idmrest.sharedlib#1.0@12.2.1.3" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/oracle.wsm.common/wsm-idmrest-sharedlib.war",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "oracle.wsm.seedpolicies#2.0@12.2.1.3" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/oracle.wsm.common/wsm-seed-policies.jar",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "oracle.sdp.client#2.0@12.2.1.3.0" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/oracle.sdp.client/sdpclient.jar",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "oracle.sdp.messaging#2.0@12.2.1.3.0" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/communications/modules/oracle.sdp.messaging/sdpmessaging.jar",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "oracle.pwdgen#2.0@12.2.1" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/oracle.pwdgen/pwdgen.jar",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "owasp.esapi#2.0@12.2.1" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/oracle.owasp/owasp-esapi.jar",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "oracle.adf.dconfigbeans#1.0@12.2.1.3.0" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/oracle.adf.dconfigbeans.jar",
+                "ModuleType" : "jar",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "adf.oracle.domain#1.0@12.2.1.3.0" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/oracle.adf.model/adf.oracle.domain.ear",
+                "ModuleType" : "ear",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "adf.oracle.businesseditor#1.0@12.2.1.3.0" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/oracle.adf.businesseditor/adf.businesseditor.war",
+                "ModuleType" : "war",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "oracle.adf.management#1.0@12.2.1.3.0" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/oracle.adf.management/adf-management.war",
+                "ModuleType" : "war",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "adf.oracle.domain.webapp#1.0@12.2.1.3.0" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/oracle.adf.view/adf.oracle.domain.webapp.war",
+                "ModuleType" : "war",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "jsf#2.0@1.0.0.0_2-2-8" : {
+                "SourcePath" : "@@WL_HOME@@/common/deployable-libraries/jsf-2.0.war",
+                "ModuleType" : "war",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "jstl#1.2@1.2.0.1" : {
+                "SourcePath" : "@@WL_HOME@@/common/deployable-libraries/jstl-1.2.war",
+                "ModuleType" : "war",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "UIX#11@12.2.1.3.0" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/oracle.uix/uix11.war",
+                "ModuleType" : "war",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "ohw-rcf#5@12.2.1.3.0" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/oracle.help/ohw-rcf.war",
+                "ModuleType" : "war",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "ohw-uix#5@12.2.1.3.0" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/oracle.help/ohw-uix.war",
+                "ModuleType" : "war",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "oracle.adf.desktopintegration.model#1.0@12.2.1.3.0" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/oracle.adf.desktopintegration.model/oracle.adf.desktopintegration.model.ear",
+                "ModuleType" : "ear",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "oracle.adf.desktopintegration#1.0@12.2.1.3.0" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/oracle.adf.desktopintegration/oracle.adf.desktopintegration.war",
+                "ModuleType" : "war",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "oracle.bi.jbips#11.1.1@0.1" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/oracle.bi.presentation/bi-jbips-slib-stub.ear",
+                "ModuleType" : "ear",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "oracle.bi.composer#11.1.1@0.1" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/oracle.bi.presentation/bi-composer-slib-stub.war",
+                "ModuleType" : "war",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "oracle.bi.adf.model.slib#1.0@12.2.1.3.0" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/oracle.bi.presentation/bi-adf-model-slib.ear",
+                "ModuleType" : "ear",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "oracle.bi.adf.view.slib#1.0@12.2.1.3.0" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/oracle.bi.presentation/bi-adf-view-slib.war",
+                "ModuleType" : "war",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "oracle.bi.adf.webcenter.slib#1.0@12.2.1.3.0" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/oracle.bi.presentation/bi-adf-webcenter-slib.war",
+                "ModuleType" : "war",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "adf.oracle.domain.groovy#1.0@12.2.1.3.0" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/thirdparty/features/groovy-all.jar",
+                "ModuleType" : "jar",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "adf.oracle.domain.webapp.antlr-runtime#1.0@12.2.1.3.0" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/thirdparty/features/antlr-runtime.jar",
+                "ModuleType" : "jar",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "adf.oracle.domain.webapp.guava#1.0@12.2.1.3.0" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/thirdparty/features/guava.jar",
+                "ModuleType" : "jar",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "adf.oracle.domain.webapp.xml-apis-ext#1.0@12.2.1.3.0" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/thirdparty/features/xml-apis-ext.jar",
+                "ModuleType" : "jar",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "adf.oracle.domain.webapp.apache.velocity#1.0@12.2.1.3.0" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/thirdparty/features/velocity.v_dev_1.4.0.0.0.jar",
+                "ModuleType" : "jar",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "adf.oracle.domain.webapp.apache.httpclient#1.0@12.2.1.3.0" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/thirdparty/features/org.apache.httpcomponents.httpclient_4.5.6.0.0.jar",
+                "ModuleType" : "jar",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "adf.oracle.domain.webapp.apache.httpclient-cache#1.0@12.2.1.3.0" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/thirdparty/features/httpclient-cache.jar",
+                "ModuleType" : "jar",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "adf.oracle.domain.webapp.apache.httpcore#1.0@12.2.1.3.0" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/thirdparty/features/httpcore.jar",
+                "ModuleType" : "jar",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "adf.oracle.domain.webapp.apache.httpmime#1.0@12.2.1.3.0" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/thirdparty/features/httpmime_4.5.1.0.0.jar",
+                "ModuleType" : "jar",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "adf.oracle.domain.webapp.batik-bundle#1.0@12.2.1.3.0" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/thirdparty/features/batik-all.jar",
+                "ModuleType" : "jar",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "odl.clickhistory#1.0@12.2.1" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/oracle.odl/clickhistory.jar",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "odl.clickhistory.webapp#1.0@12.2.1" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/oracle.odl/clickhistory.war",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "oracle.jrf.system.filter" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/oracle.jrf/system-filters.war",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "oracle.jsp.next#12.2.1@12.2.1" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/com.oracle.ojsp.ojsp.jar",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "oracle.dconfig-infra#2.0@12.2.1" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/oracle.dconfig-infra.jar",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "orai18n-adf#11@11.1.1.1.0" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/oracle.nlsgdk/orai18n-adf.jar",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            }
+        },
+        "Application" : {
+            "opss-rest" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/oracle.wsm.common/opss-rest.war",
+                "ModuleType" : "war",
+                "DeploymentOrder" : 150,
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "state-management-provider-memory-rar" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/com.oracle.state-management.state-management-provider-memory-rar-impl.rar",
+                "ModuleType" : "rar",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "DMS Application#12.2.1.1.0" : {
+                "SourcePath" : "@@ORACLE_HOME@@/oracle_common/modules/oracle.dms/dms.war",
+                "ModuleType" : "war",
+                "DeploymentOrder" : 5,
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            },
+            "coherence-transaction-rar" : {
+                "SourcePath" : "@@ORACLE_HOME@@/coherence/lib/coherence-transaction.rar",
+                "ModuleType" : "rar",
+                "StagingMode" : "nostage",
+                "Target" : "AdminServer"
+            }
+        }
+    }
+}
