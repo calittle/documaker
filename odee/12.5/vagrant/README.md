@@ -3,6 +3,8 @@
 This Vagrant project provisions:
 - Oracle Linux 7
 - Oracle Database 19c
+- IBM WebSphere 7.0.0.45
+- Oracle SOA Suite 11.1.1.7.0 or ADF 11.1.1.7.0
 - Oracle Documaker Enterprise Edition 12.5.0 [Documentation](https://docs.oracle.com/cd/F51808_01/)
 
 Instructions assume a POSIX-based terminal is used for installation, however, these instructions can be easily adapted to Windows-based systems.
@@ -16,7 +18,7 @@ Instructions assume a POSIX-based terminal is used for installation, however, th
 
 1. Clone this repository `git clone https://github.com/calittle/documaker.git` into a folder of your choice, e.g. `vagrant-projects`
 2. Change into the `vagrant-projects/documaker/odee/12.7.0/vagrant` directory. This is the *project root* directory.
-3. Download the installation zip files into the `project-root/installs` directory. See [README]('installs/README.md') for additional details.
+3. Download the installation zip files into the `project-root/installs` directory. See [INSTALLS README]('INSTALLS-README.md') for additional details.
   
 4. Run `vagrant up`
    1. The first time you run this it will provision everything and may take a while. Ensure you have a good internet connection as the scripts will update the VM to the latest via `yum`.
@@ -51,8 +53,6 @@ Ports are automatically forwarded from your host machine, so you can access the 
 Before accessing servers, ensure the appropriate services are started by running the following commands:
 ```
 vagrant ssh
-sudo systemctl start wls_nm
-sudo systemctl start wls_admin
 ```
 Then use the WebLogic console to start the managed servers
 
