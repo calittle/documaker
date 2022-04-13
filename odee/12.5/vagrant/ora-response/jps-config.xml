@@ -48,6 +48,68 @@
         </serviceProvider>
     </serviceProviders>
     <serviceInstances>
+
+
+   <serviceInstance name="idstore.ldap" provider="idstore.ldap.provider">
+        <property name="idstore.type" value="ACTIVE_DIRECTORY"/>
+        <!-- <property name="security.principal.key" value="msad.ldap.credentials"/>
+        <property name="security.principal.alias" value="JPS"/> -->
+        <property name="ldap.url" value="ldap://localhost:10389"/>
+        <property name="subscriber.name" value="dc=us,dc=example,dc=com"/>
+        <extendedProperty>
+            <name>user.search.bases</name>
+            <values>
+               <value>cn=users,dc=example,dc=com</value>
+            </values>
+        </extendedProperty>
+        <extendedProperty>
+            <name>group.search.bases</name>
+            <values>
+              <value>cn=groups,dc=us,dc=example,dc=com</value>
+            </values>
+        </extendedProperty>
+        <property name="username.attr" value="uid" />
+        <property name="groupname.attr" value="cn" />
+        <property name="idstore.type" value="OID"/>
+        <property name="max.search.filter.length" value="500"/>
+        <extendedProperty>
+            <name>user.search.bases</name>
+            <values>
+                <value>cn=users,dc=us,dc=oracle,dc=com</value>
+            </values>
+        </extendedProperty>
+        <extendedProperty>
+            <name>group.search.bases</name>
+            <values>
+                <value>cn=groups,dc=us,dc=oracle,dc=com</value>
+            </values>
+        </extendedProperty>
+    </serviceInstance>
+
+<!--
+
+    echo "admin.id=uid=admin,ou=system" >> /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/ldapconfig.txt
+    echo "admin.pass=secret" >> /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/ldapconfig.txt
+    echo "primary.admin.id=uid=admin,ou=system" >> /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/ldapconfig.txt
+
+    
+    echo "user.id.map=:uid" >> /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/ldapconfig.txt
+    echo "group.id.map=:cn" >> /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/ldapconfig.txt
+
+    echo "group.member.id.map=groupofnames:member" >> /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/ldapconfig.txt
+
+    echo "ssl=false" >> /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/ldapconfig.txt
+
+    
+    echo "user.filter=(&(uid=%v)(objectclass=person))" 
+
+    echo "group.filter=(&(cn=%v)(objectclass=groupofnames))"
+
+-->
+
+
+
+
         <serviceInstance name="credstore" provider="credstoressp" location="./">
             <description>File Based Credential Store Service Instance</description>
         </serviceInstance>
@@ -152,8 +214,9 @@
             <property name="jaas.login.controlFlag" value="REQUIRED"/>
         </serviceInstance>
     </serviceInstances>
-    <jpsContexts default="default">
+    <jpsContexts default="default">        
         <jpsContext name="default">
+            <serviceInstanceRef ref="idstore.ldap"/>
             <serviceInstanceRef ref="credstore"/>
             <serviceInstanceRef ref="keystore"/>
             <serviceInstanceRef ref="policystore.xml"/>
@@ -161,6 +224,9 @@
             <serviceInstanceRef ref="trust"/>
             <serviceInstanceRef ref="pdp.service"/>
             <serviceInstanceRef ref="attribute"/>
+        </jpsContext>
+        <jpsContext name="ldap_idstore">
+            <serviceInstanceRef ref="idstore.ldap"/>
         </jpsContext>
         <jpsContext name="bootstrap_credstore_context">
             <serviceInstanceRef ref="bootstrap.credstore"/>

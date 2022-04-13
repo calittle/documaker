@@ -83,7 +83,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
 ############################################################################
 
+  VM_ADFSOA = default_s('VM_ADFSOA','SOA')
   VM_MW_HOME = default_s('VM_MW_HOME','/opt/oracle/middleware')
+  VM_UPDI_HOME = default_s('VM_UPDI_HOME','/opt/ibm/updateinstaller')
+  VM_WAS_HOME = default_s('VM_WAS_HOME','/opt/ibm/was')
+  VM_WAS_ADMIN = default_s('VM_WAS_ADMIN','wasadmin')
   VM_MW_PORT_ADMIN = default_i('VM_WLS_PORT_ADMIN',7001)
   VM_MW_PORT_DMKR = default_i('VM_MW_PORT_DMKR',10001)
   VM_MW_PORT_JMS = default_i('VM_MW_PORT_JMS',11001)
@@ -205,6 +209,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Provision everything on the first run
   config.vm.provision "shell", path: "scripts/install.sh", env:
     {
+       "ADF_OR_SOA"             => VM_ADFSOA,
        "ZIP_ORACLEDB"           => VM_ZIP_ORACLEDB,
        "ZIP_ORACLEFMW"          => VM_ZIP_FMW,
        "JAR_ORACLEFMW"          => VM_JAR_FMW,
@@ -236,7 +241,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
        "ODEE_HOME"              => VM_ODEE_HOME,
        "ODEE_DOMAIN"            => VM_ODEE_DOMAIN,
        "ODEE_PWD"               => VM_ODEE_PWD,
-       "ODEE_SCHEMA_PWD"        => VM_ODEE_SCHEMA_PWD
+       "ODEE_SCHEMA_PWD"        => VM_ODEE_SCHEMA_PWD,
+       "WAS_ADMIN"              => VM_WAS_ADMIN,
+       "WAS_HOME"               => VM_WAS_HOME,
+       "WAS_PWD"                => VM_WLS_PWD,
+       "UPDI_HOME"              => VM_UPDI_HOME
     }
 
 end
