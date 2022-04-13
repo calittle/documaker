@@ -3,6 +3,7 @@ devOps
 local*
 localsrc
 localbuild
+*.log
 *.zip
 *.rpm
 *.pak
