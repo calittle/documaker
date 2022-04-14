@@ -93,6 +93,8 @@ else
 fi
 
 if grep -q DISPLAY /home/vagrant/.bashrc; then
+	echo "INSTALLER: X11 variables already set."
+else
 	echo "export DISPLAY=127.0.0.1:10.0" >> /home/vagrant/.bashrc
 	echo "export DISPLAY=127.0.0.1:10.0" >> /home/oracle/.bashrc
 	echo "export DISPLAY=127.0.0.1:10.0" >> /root/.bashrc
@@ -156,6 +158,8 @@ else
 		# create sqlnet.ora, listener.ora and tnsnames.ora
 		su -l oracle -c "mkdir -p $ORACLE_HOME/network/admin"
 		su -l oracle -c "echo 'NAME.DIRECTORY_PATH= (TNSNAMES, EZCONNECT, HOSTNAME)' > $ORACLE_HOME/network/admin/sqlnet.ora"
+		# # WORKAROUND as mentioned here: https://support.oracle.com/epmos/faces/DocumentDisplay?id=2430487.1
+		# su -l oracle -c "echo 'SQLNET.ALLOWED_LOGON_VERSION=11' > $ORACLE_HOME/network/admin/sqlnet.ora"
 
 		# Listener.ora
 		su -l oracle -c "echo 'LISTENER = (DESCRIPTION = (ADDRESS = (PROTOCOL = IPC)(KEY = EXTPROC1))(ADDRESS=(PROTOCOL=TCP)(HOST= 0.0.0.0)(PORT = $LISTENER_PORT)))' > $ORACLE_HOME/network/admin/listener.ora"
@@ -198,11 +202,15 @@ else
 		su -l oracle -c "dbca -silent -createDatabase -responseFile /vagrant/ora-response/dbca.rsp"
 
 		# Post DB setup tasks
+		# Note : added below for workaround for RCU install on 19c as documented here https://support.oracle.com/epmos/faces/DocumentDisplay?id=2747899.1
+		#		ALTER SYSTEM SET "_allow_insert_with_update_check"=TRUE scope=both; 
+		# 
 		su -l oracle -c "sqlplus / as sysdba <<EOF
 ALTER PLUGGABLE DATABASE $ORACLE_PDB SAVE STATE;
 EXEC DBMS_XDB_CONFIG.SETGLOBALPORTENABLED (TRUE);
 ALTER SYSTEM SET LOCAL_LISTENER = '(ADDRESS = (PROTOCOL = TCP)(HOST = 0.0.0.0)(PORT = $LISTENER_PORT))' SCOPE=BOTH;
 ALTER SYSTEM REGISTER;
+ALTER SYSTEM SET "_allow_insert_with_update_check"=TRUE scope=both;
 exit;
 EOF"
 		rm /vagrant/ora-response/dbca.rsp
@@ -258,9 +266,8 @@ else
 	# check if unpacked
 	if [ -f "/vagrant/installs/websphere_7/WAS/install" ]; then
 		echo 'INSTALLER: WebSphere installer found.'
-	else
-		mkdir websphere_7
-		tar -xf /vagrant/installs/was7.tar.gz -C /vagrant/installs/websphere_7
+	else		
+		tar -xf /vagrant/installs/was7.tar.gz -C /vagrant/installs
 	fi
 	echo "INSTALLER: Running WAS installation."
 
@@ -328,9 +335,40 @@ else
 	echo 'INSTALLER: WAS Update applied.'
 fi
 	
+#
+# run RCU
+#
+if [ -f /opt/oracle/provision/rcu.txt ]; then
+	echo 'INSTALLER: RCU already installed.'
+else
+	echo 'INSTALLER: Installing RCU.'
+	TEMPFILE="/vagrant/installs/p16471709_111170_Linux-x86-64.zip"
+ 	if [ -f "${TEMPFILE}" ]; then
+		echo "INSTALLER: Found ${TEMPFILE}"
+	else
+		echo "INSTALLER: ${TEMPFILE} NOT FOUND. Review README.md for instructions."
+		exit 1
+	fi	
+	mkdir -p /vagrant/installs/rcu
+	unzip -qn ${TEMPFILE} -d /vagrant/installs/rcu
+	
+	# WORKAROUND as mentioned here: https://support.oracle.com/epmos/faces/DocumentDisplay?id=2430487.1
+	# and https://docs.oracle.com/cd/E52734_01/core/IDMRN/admin.htm#IDMRN636 (search for ORA-28040)
+		
+	chmod u+w /vagrant/installs/rcu/rcuHome/jdbc/lib/*.jar
+	cp /vagrant/installs/rcu/rcuHome/jdbc/lib/ojdbc6.jar /vagrant/installs/rcu-ojdbc6.jar
+	cp /opt/oracle/middleware/oracle_common/inventory/Scripts/ext/jlib/ojdbc6.jar /vagrant/installs/rcu/rcuHome/jdbc/lib
+
+	echo "INSTALLER: Running RCU."
+	/vagrant/installs/rcu/rcuHome/bin/rcu -silent -createRepository -connectString localhost:$LISTENER_PORT:$ORACLE_PDB -dbUser sys -dbRole SYSDBA -useSamePasswordForAllSchemaUsers true -schemaPrefix DEV -component OPSS -component IAU -component MDS -component SOAINFRA -component ORASDPM<<EOF
+$ORACLE_PWD
+$ORACLE_PWD
+EOF
+	su -l oracle -c "echo 'delete this file to rerun RCU'>>/opt/oracle/provision/rcu.txt"	
+fi	
 
 #
-# Install option: use RCU/ADF, or SOA Suite installer. Former is not guaranteed to work.
+# Install option: use ADF, or SOA Suite installer. Former is not guaranteed to work.
 # Choice driven by variable FMW_OPTION = ADF|SOA. Default is SOA as this is listed as a 
 # requirement for Documaker 12.5.0.
 #
@@ -362,49 +400,26 @@ if [ ${ADF_OR_SOA} = 'SOA' ]; then
 		cp /vagrant/ora-response/fmw.rsp.tmpl /vagrant/ora-response/fmw.rsp
 		echo "INSTALLER: Running SOA Suite installer."
 		su -l oracle -c "/vagrant/installs/fmw/Disk1/runInstaller -silent -waitforcompletion -jreLoc /opt/ibm/was/java/jre -responseFile /vagrant/ora-response/fmw.rsp"
+		echo "INSTALLER: SOA Suite installer completed."
+		rm /vagrant/ora-response/fmw.rsp
 		
 		echo "127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4 odee-1250-vagrant" > /etc/hosts
 		echo "::1         localhost localhost.localdomain localhost6 localhost6.localdomain6 odee-1250-vagrant" >>/etc/hosts
 		echo "127.0.1.1 odee-1250-vagrant odee-1250-vagrant" >> /etc/hosts
 
-		# modify rcu script to point JRE to IBM dir, add Oracle driver.
-		JLIB=/opt/oracle/middleware/fmw/inventory/Scripts/ext/jlib
-		sed -i -e "s|JRE_DIR=\$ORACLE_HOME/jdk/jre|JRE_DIR=/opt/ibm/was/java/jre|g" /opt/oracle/middleware/oracle_common/bin/rcu	
-		sed -i -e "s|JDBC_CLASSPATH=\$OH/jdbc/lib/\$JDBC_FILE1:\$OH/jdbc/lib/\$JDBC_FILE2:\$Oh/jdbc/lib/\$JDBC_FILE3|JDBC_CLASSPATH=$JLIB/\$JDBC_FILE1:$JLIB/\$JDBC_FILE2:$JLIB/\$JDBC_FILE3|g" /opt/oracle/middleware/oracle_common/bin/rcu
-		sed -i -e "s|JRE_DIR=\$ORACLE_HOME/jdk/jre|JRE_DIR=/opt/ibm/was/java/jre|g" /opt/oracle/middleware/oracle_common/bin/rcu
-		sed -i -e "s|XMLPARSER_CLASSPATH=\$ORACLE_HOME/lib/\$XMLPARSER_FILE|XMLPARSER_CLASSPATH=$JLIB/\$XMLPARSER_FILE|g" /opt/oracle/middleware/oracle_common/bin/rcu
+		# # modify rcu script to point JRE to IBM dir, add Oracle driver.
+		# JLIB=/opt/oracle/middleware/fmw/inventory/Scripts/ext/jlib
+		# sed -i -e "s|JRE_DIR=\$ORACLE_HOME/jdk/jre|JRE_DIR=/opt/ibm/was/java/jre|g" /opt/oracle/middleware/oracle_common/bin/rcu	
+		# sed -i -e "s|JDBC_CLASSPATH=\$OH/jdbc/lib/\$JDBC_FILE1:\$OH/jdbc/lib/\$JDBC_FILE2:\$Oh/jdbc/lib/\$JDBC_FILE3|JDBC_CLASSPATH=$JLIB/\$JDBC_FILE1:$JLIB/\$JDBC_FILE2:$JLIB/\$JDBC_FILE3|g" /opt/oracle/middleware/oracle_common/bin/rcu
+		# sed -i -e "s|JRE_DIR=\$ORACLE_HOME/jdk/jre|JRE_DIR=/opt/ibm/was/java/jre|g" /opt/oracle/middleware/oracle_common/bin/rcu
+		# sed -i -e "s|XMLPARSER_CLASSPATH=\$ORACLE_HOME/lib/\$XMLPARSER_FILE|XMLPARSER_CLASSPATH=$JLIB/\$XMLPARSER_FILE|g" /opt/oracle/middleware/oracle_common/bin/rcu
 
 		su -l oracle -c "/opt/oracle/middleware/fmw/common/bin/was_config.sh"
-		rm /vagrant/ora-response/fmw.rsp
+
 		su -l oracle -c "echo 'delete this file to reinstall SOASuite'>>/opt/oracle/provision/fmw.txt"
-		echo 'INSTALLER: FMW SOA Suite installed.'
+		echo 'INSTALLER: FMW SOA Suite completed.'
 	fi
 else
-	#
-	# run RCU
-	#
-	if [ -f /opt/oracle/provision/rcu.txt ]; then
-		echo 'INSTALLER: RCU already installed.'
-	else
-		echo 'INSTALLER: Installing RCU.'
-		TEMPFILE="/vagrant/installs/p16471709_111170_Linux-x86-64.zip"
-	 	if [ -f "${TEMPFILE}" ]; then
-			echo "INSTALLER: Found ${TEMPFILE}"
-		else
-			echo "INSTALLER: ${TEMPFILE} NOT FOUND. Review README.md for instructions."
-			exit 1
-		fi	
-		mkdir -p /vagrant/installs/rcu
-		unzip -qn ${TEMPFILE} -d /vagrant/installs/rcu
-		
-		echo "INSTALLER: Running RCU. This part cannot be scripted at this time."
-		echo "	- Install the MDS (Metadata Services) and OPSS (Oracle Platform Security Services) to your database."
-		
-		rcu/rcuHome/bin/rcu
-		
-		read -p "Press any key to resume after RCU confiugration."
-		su -l oracle -c "echo 'delete this file to rerun RCU'>>/opt/oracle/provision/rcu.txt"	
-	fi	
 
 	#
 	# install ADF
