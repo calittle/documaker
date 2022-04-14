@@ -6,6 +6,7 @@ localbuild
 *.log
 *.zip
 *.rpm
+*.rsp
 *.pak
 *.gz
 installs
