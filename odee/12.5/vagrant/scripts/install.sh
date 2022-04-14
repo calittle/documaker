@@ -330,7 +330,7 @@ else
 	chown oracle:oinstall -R /opt/ibm
 
 	rm /opt/ibm/updateinstaller/maintenance/*.pak
-
+	rm /vagrant/ora-response/wasupdate.rsp
 	su -l oracle -c "echo 'delete this file to reinstall WAS'>>/opt/oracle/provision/was7-3.txt"
 	echo 'INSTALLER: WAS Update applied.'
 fi
@@ -407,17 +407,30 @@ if [ ${ADF_OR_SOA} = 'SOA' ]; then
 		echo "::1         localhost localhost.localdomain localhost6 localhost6.localdomain6 odee-1250-vagrant" >>/etc/hosts
 		echo "127.0.1.1 odee-1250-vagrant odee-1250-vagrant" >> /etc/hosts
 
-		# # modify rcu script to point JRE to IBM dir, add Oracle driver.
-		# JLIB=/opt/oracle/middleware/fmw/inventory/Scripts/ext/jlib
-		# sed -i -e "s|JRE_DIR=\$ORACLE_HOME/jdk/jre|JRE_DIR=/opt/ibm/was/java/jre|g" /opt/oracle/middleware/oracle_common/bin/rcu	
-		# sed -i -e "s|JDBC_CLASSPATH=\$OH/jdbc/lib/\$JDBC_FILE1:\$OH/jdbc/lib/\$JDBC_FILE2:\$Oh/jdbc/lib/\$JDBC_FILE3|JDBC_CLASSPATH=$JLIB/\$JDBC_FILE1:$JLIB/\$JDBC_FILE2:$JLIB/\$JDBC_FILE3|g" /opt/oracle/middleware/oracle_common/bin/rcu
-		# sed -i -e "s|JRE_DIR=\$ORACLE_HOME/jdk/jre|JRE_DIR=/opt/ibm/was/java/jre|g" /opt/oracle/middleware/oracle_common/bin/rcu
-		# sed -i -e "s|XMLPARSER_CLASSPATH=\$ORACLE_HOME/lib/\$XMLPARSER_FILE|XMLPARSER_CLASSPATH=$JLIB/\$XMLPARSER_FILE|g" /opt/oracle/middleware/oracle_common/bin/rcu
-
-		su -l oracle -c "/opt/oracle/middleware/fmw/common/bin/was_config.sh"
-
-		su -l oracle -c "echo 'delete this file to reinstall SOASuite'>>/opt/oracle/provision/fmw.txt"
-		echo 'INSTALLER: FMW SOA Suite completed.'
+		echo 'INSTALLER: WARNING -- YOU MUST MANUALLY RUN THE FOLLOWING SCRIPT AS ORACLE USER within the Vagrant machine:'
+		echo "           oracle@${VM_NAME} $ /opt/oracle/middleware/fmw/common/bin/was_config.sh"
+		echo 'INSTALLER: This component cannot be scripted. Use the following settings:'
+		echo "	1. Host: ${VM_NAME}"
+		echo "	2. WAS Admin User: ${WAS_ADMIN}"
+		echo "  3. WAS Admin Pass: ${WAS_PWD}"
+		echo "  4. Accept defaults for cell names."
+		echo "  5. Add the following products to the cell: "
+		echo "     - Oracle SOA Suite for WebSphere ND"
+		echo "     - other components will auto select."
+		echo "  6. Select all Component Schemas and enter the following:"
+		echo "     - Driver: Oracle's Driver (Thin) for Service connections"
+		echo "     - Schema Pass: ${ORACLE_PWD}"
+		echo "     - DBMS/Service: ${ORACLE_PDB}"
+		echo "     - Host Name: localhost"
+		echo "     - Port: ${LISTENER_PORT}"
+		echo "  7. Accept remaining defaults and proceed with cell configuration."
+		echo "INSTALLER: After the above operation concludes, run the following as ORACLE user"
+		echo "           oracle@${VM_NAME} $ echo 'delete this file to reinstall SOASuite'>>/opt/oracle/provision/fmw.txt"		
+		echo 'INSTALLER: Finally, exit all vagrant SSH sessions, and re-run the vagrant provision step which will automatically resume with the following command:'
+		echo ' 		vagrant up --provision'
+		echo ''
+		echo 'INSTALLER: FMW SOA Suite partially completed. Review log and complete manual steps then resume.'
+		exit 0
 	fi
 else
 
@@ -480,6 +493,7 @@ else
 	sed -i -e "s|###ORACLE_BASE###|$ORACLE_BASE|g" /home/oracle/odee.rsp	
 	sed -i -e "s|###MW_PORT_JMS###|$MW_PORT_JMS|g" /home/oracle/odee.rsp	
 
+	cp /home/oracle/odee.rsp /vagrant/ora-response/odee.rsp
 	chown oracle:oinstall -R /home/oracle
 	chown oracle:oinstall -R $ORACLE_BASE/oraInventory
 	
@@ -492,6 +506,7 @@ else
 	else
 		echo .
 		rm /home/oracle/odee.rsp
+		rm /vagrant/ora-response/odee.rsp
 		echo 'INSTALLER: ODEE installed.'
 		su -l oracle -c "echo 'delete this file to reinstall ODEE. Note you may need to manually remove everything that was created to redo this step'>>/opt/oracle/provision/odee.txt"
 	fi

@@ -209,6 +209,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Provision everything on the first run
   config.vm.provision "shell", path: "scripts/install.sh", env:
     {
+       "VM_NAME"                => VM_NAME,
        "ADF_OR_SOA"             => VM_ADFSOA,
        "ZIP_ORACLEDB"           => VM_ZIP_ORACLEDB,
        "ZIP_ORACLEFMW"          => VM_ZIP_FMW,
