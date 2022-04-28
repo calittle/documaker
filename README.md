@@ -1,6 +1,7 @@
 # Oracle Documaker.
 1. The Documaker [Community](http://community.oracle.com/community/oracle-applications/documaker) on Oracle's community sites.
 2. My Documaker Tech [Blog](http://blogs.oracle.com/documakertech/).
+3. Documaker vidoes on [OTube](https://otube.oracle.com/channel/Using%2BDocumaker/254002533).
 
 **NOTE** I have reorganized by GitHub repo, so things have moved around a bit!
 
