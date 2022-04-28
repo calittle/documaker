@@ -89,20 +89,29 @@ if grep -q gosu /home/vagrant/.bashrc; then
 else	
 	echo "alias gosu='sudo su -'" >> /home/vagrant/.bashrc
 	echo "alias gooracle='sudo su -l oracle'" >> /home/vagrant/.bashrc
-	echo "INSTALLER: aliases set."
+	echo "INSTALLER: GO aliases set."
 fi
 
 if grep -q DISPLAY /home/vagrant/.bashrc; then
 	echo "INSTALLER: X11 variables already set."
 else
+	#call cookie baking for X forwarding
+	su -l vagrant -c "source ~/.bashrc"
 	echo "export DISPLAY=127.0.0.1:10.0" >> /home/vagrant/.bashrc
+	echo "XCOOKIE=\`xauth list \${DISPLAY#localhost}\`" >> /home/vagrant/.bashrc
+	echo 'sudo /home/vagrant/.setx.sh "${XCOOKIE}"'>> /home/vagrant/.bashrc
+	# create baking script for vagrant
+	echo "#!/bin/bash" > /home/vagrant/.setx.sh
+	echo "echo xauth add \$@ > /home/oracle/.setx.sh" >> /home/vagrant/.setx.sh
+	echo "chmod u+x /home/oracle/.setx.sh" >> /home/vagrant/.setx.sh
+	echo "chown oracle:oinstall /home/oracle/.setx.sh" >>/home/vagrant/.setx.sh
+	# bake for others... 
 	echo "export DISPLAY=127.0.0.1:10.0" >> /home/oracle/.bashrc
-	echo "export DISPLAY=127.0.0.1:10.0" >> /root/.bashrc
-	su -l vagrant -c "xauth list" >> out
-	xauthset=`cat out`
-	rm out
-	echo "xauth add $xauthset" >> /home/oracle/.bashrc
-	echo "xauth add $xauthset" >> /root/.bashrc
+	echo "~/.setx.sh" >> /home/oracle/.bashrc
+	chmod u+x /home/vagrant/.setx.sh
+	chown vagrant:vagrant /home/vagrant/.setx.sh
+	su -l vagrant -c "touch ~/.Xauthority"
+	su -l oracle -c "touch ~/.Xauthority"
 	echo "INSTALLER: display variables set."
 fi
 
@@ -210,7 +219,7 @@ ALTER PLUGGABLE DATABASE $ORACLE_PDB SAVE STATE;
 EXEC DBMS_XDB_CONFIG.SETGLOBALPORTENABLED (TRUE);
 ALTER SYSTEM SET LOCAL_LISTENER = '(ADDRESS = (PROTOCOL = TCP)(HOST = 0.0.0.0)(PORT = $LISTENER_PORT))' SCOPE=BOTH;
 ALTER SYSTEM REGISTER;
-ALTER SYSTEM SET "_allow_insert_with_update_check"=TRUE scope=both;
+ALTER SYSTEM SET "_allow_insert_with_update_check"=TRUE scope=spfile;
 exit;
 EOF"
 		rm /vagrant/ora-response/dbca.rsp
@@ -356,11 +365,19 @@ else
 	# and https://docs.oracle.com/cd/E52734_01/core/IDMRN/admin.htm#IDMRN636 (search for ORA-28040)
 		
 	chmod u+w /vagrant/installs/rcu/rcuHome/jdbc/lib/*.jar
-	cp /vagrant/installs/rcu/rcuHome/jdbc/lib/ojdbc6.jar /vagrant/installs/rcu-ojdbc6.jar
-	cp /opt/oracle/middleware/oracle_common/inventory/Scripts/ext/jlib/ojdbc6.jar /vagrant/installs/rcu/rcuHome/jdbc/lib
+	
+	if [ -f /vagrant/installs/ojdbc6.jar ]; then
+		cp /vagrant/installs/ojdbc6.jar /vagrant/installs/rcu/rcuHome/jdbc/lib
+		echo 'INSTALLER: Copying in vagrant/installs/ojdbc6.jar'
+	else
+		echo 'INSTALLER: WARNING >> ojdbc6.jar not found in vagrant/installs directory. Download ojdbc6.jar from https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc6/11.2.0.4 and '
+		echo 'INSTALLER: place the file in the vagrant/installs directory, then re-run:     vagrant up --provision'
+		exit 1
+	fi
 
-	echo "INSTALLER: Running RCU."
-	/vagrant/installs/rcu/rcuHome/bin/rcu -silent -createRepository -connectString localhost:$LISTENER_PORT:$ORACLE_PDB -dbUser sys -dbRole SYSDBA -useSamePasswordForAllSchemaUsers true -schemaPrefix DEV -component OPSS -component IAU -component MDS -component SOAINFRA -component ORASDPM<<EOF
+	echo "INSTALLER: Running RCU. "
+	
+	/vagrant/installs/rcu/rcuHome/bin/rcu -silent -createRepository -connectString localhost:$LISTENER_PORT/$ORACLE_PDB -dbUser sys -dbRole SYSDBA -useSamePasswordForAllSchemaUsers true -schemaPrefix DEV -component OPSS -component IAU -component MDS -component SOAINFRA -component ORASDPM<<EOF
 $ORACLE_PWD
 $ORACLE_PWD
 EOF
@@ -406,34 +423,8 @@ if [ ${ADF_OR_SOA} = 'SOA' ]; then
 		echo "127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4 odee-1250-vagrant" > /etc/hosts
 		echo "::1         localhost localhost.localdomain localhost6 localhost6.localdomain6 odee-1250-vagrant" >>/etc/hosts
 		echo "127.0.1.1 odee-1250-vagrant odee-1250-vagrant" >> /etc/hosts
-
-		echo 'INSTALLER: WARNING -- YOU MUST MANUALLY RUN THE FOLLOWING SCRIPT AS ORACLE USER within the Vagrant machine:'
-		echo "           oracle@${VM_NAME} $ /opt/oracle/middleware/fmw/common/bin/was_config.sh"
-		echo 'INSTALLER: This component cannot be scripted. Use the following settings:'
-		echo "	1. Host: ${VM_NAME}"
-		echo "	2. WAS Admin User: ${WAS_ADMIN}"
-		echo "  3. WAS Admin Pass: ${WAS_PWD}"
-		echo "  4. Accept defaults for cell names."
-		echo "  5. Add the following products to the cell: "
-		echo "     - Oracle SOA Suite for WebSphere ND"
-		echo "     - other components will auto select."
-		echo "  6. Select all Component Schemas and enter the following:"
-		echo "     - Driver: Oracle's Driver (Thin) for Service connections"
-		echo "     - Schema Pass: ${ORACLE_PWD}"
-		echo "     - DBMS/Service: ${ORACLE_PDB}"
-		echo "     - Host Name: localhost"
-		echo "     - Port: ${LISTENER_PORT}"
-		echo "  7. Accept remaining defaults and proceed with cell configuration."
-		echo "INSTALLER: After the above operation concludes, run the following as ORACLE user"
-		echo "           oracle@${VM_NAME} $ echo 'delete this file to reinstall SOASuite'>>/opt/oracle/provision/fmw.txt"		
-		echo 'INSTALLER: Finally, exit all vagrant SSH sessions, and re-run the vagrant provision step which will automatically resume with the following command:'
-		echo ' 		vagrant up --provision'
-		echo ''
-		echo 'INSTALLER: FMW SOA Suite partially completed. Review log and complete manual steps then resume.'
-		exit 0
 	fi
 else
-
 	#
 	# install ADF
 	#
@@ -464,6 +455,33 @@ else
 		rm /vagrant/ora-response/adf.rsp
 		su -l oracle -c "echo 'delete this file to reinstall ADF'>>/opt/oracle/provision/adf.txt"
 	fi
+fi
+
+if grep -q startas /home/oracle/.bashrc; then
+	echo 'INSTALLER: WAS aliases already set.'
+else	
+	echo "alias startas='/opt/ibm/was/profiles/Custom01/bin/startServer.sh -profileName OracleAdminServer -profileName Custom01'" >> /home/oracle/.bashrc
+	echo "alias startdm='/opt/ibm/was/profiles/Dmgr01/bin/startManager.sh -profileName Dmgr01'" >> /home/oracle/.bashrc
+	echo "alias startnode='/opt/ibm/was/profiles/Custom01/bin/startNode.sh -profileName Custom01'" >> /home/oracle/.bashrc
+
+	echo "alias stopas='/opt/ibm/was/profiles/Custom01/bin/stopServer.sh -profileName OracleAdminServer -profileName Custom01'" >> /home/oracle/.bashrc
+	echo "alias stopdm='/opt/ibm/was/profiles/Dmgr01/bin/stopManager.sh -profileName Dmgr01'" >> /home/oracle/.bashrc
+	echo "alias stopnode='/opt/ibm/was/profiles/Custom01/bin/stopNode.sh -profileName Custom01'" >> /home/oracle/.bashrc
+
+	echo "echo 'Commands'" >> /home/oracle/.bashrc
+	echo "echo '-------'">> /home/oracle/.bashrc
+	echo "echo '[start|stop]dm    - control Deployment Manager'">> /home/oracle/.bashrc
+	echo "echo '[start|stop]node  - control Node'">> /home/oracle/.bashrc
+	echo "echo '[start|stop]as    - control OracleAdminServer'">> /home/oracle/.bashrc
+	echo "echo ''">> /home/oracle/.bashrc
+    echo ''
+	echo 'INSTALLER: WebSphere services installed. To start, login as vagrant user, then su -l oracle, then run:'
+	echo '       [start|stop]dm   - start/stop the deployment manager'
+	echo '       [start|stop]node - start/stop the node manager'
+	echo '       [start|stop]as   - start/stop the Oracle AdminServer'
+	echo '	     IBM console      -https://localhost:9043/ibm/console'
+    echo ''
+	echo 'INSTALLER: WAS aliases set.'			
 fi
 
 #
@@ -541,14 +559,14 @@ else
 	echo "INSTALLER: Creating ODEE WebSphere artifacts."
 
 	#MW_HOME == ADF Middleware
-	sed -i -e "s|/scratch/home/fap/IBM/middleware|/opt/oracle/fmw|g" /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/set_middleware_env.sh
-	sed -i -e "s|/scratch/home/fap/IBM/WebSphere/AppServer|/opt/ibm/was|g" /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/set_middleware_env.sh
-	sed -i -e "s|'<SECURE VALUE>'|$WLS_PWD|g" /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/set_middleware_env.sh
+	sed -i -e "s|/scratch/home/fap/IBM/middleware|$MW_HOME|g" /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/set_websphere_env.sh
+	sed -i -e "s|/scratch/home/fap/IBM/WebSphere/AppServer|$WAS_HOME|g" /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/set_websphere_env.sh
+	sed -i -e "s|'<SECURE VALUE>'|$WLS_PWD|g" /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/set_websphere_env.sh
 	
 	sed -i -e "s|C:/ibm/websphere/appserver|/opt/ibm/was|g" /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/websphere_installation.properties
 	sed -i -e "s|C:/oracle_home/documaker/docfactory/lib|/opt/oracle/odee/documaker/docfactory/lib|g" /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/websphere_installation.properties
 	sed -i -e "s|jdbcAdminPassword='<SECURE VALUE>'|jdbcAdminPassword=$ODEE_SCHEMA_PWD|g" /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/websphere_installation.properties
-	sed -i -e "s|jdbcAslinePassword='<SECURE VALUE>'|jdbcAdminPassword=$ODEE_SCHEMA_PWD|g" /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/websphere_installation.properties
+	sed -i -e "s|jdbcAslinePassword='<SECURE VALUE>'|jdbcAslinePassword=$ODEE_SCHEMA_PWD|g" /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/websphere_installation.properties
 	
 	mv /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/ldapconfig.txt /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/ldapconfig.original
 	echo "ldap.host=localhost" > /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/ldapconfig.txt
@@ -568,42 +586,40 @@ else
 	echo "username.attr=uid" >> /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/ldapconfig.txt
 	echo "groupname.attr=cn" >> /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/ldapconfig.txt
 
-
-	echo "INSTALLER: Running WAS Profile update. This part cannot be scripted at this time."
-	echo "	- Select and Configure Existing Cell then Next and accept all defaults and then exit."
-	echo "	- No changes will be made since this step has already been performed."
-	echo "  - After the profile updater exits, the WAS system will be started. "
-	echo "  - then Documaker artifacts will be provisioned to the cell. "
-
-	su -l oracle -c "/opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/was_create_profile.sh"
-
-	read -p "Press any key to resume after WebSphere installation."
-
-	echo "alias startas='/opt/ibm/was/profiles/Custom01/bin/startServer.sh -profileName OracleAdminServer -profileName Custom01'" >> /home/oracle/.bashrc
-	echo "alias startdm='/opt/ibm/was/profiles/Dmgr01/bin/startManager.sh -profileName Dmgr01'" >> /home/oracle/.bashrc
-	echo "alias startnode='/opt/ibm/was/profiles/Custom01/bin/startNode.sh -profileName Custom01'" >> /home/oracle/.bashrc
-
-	echo "alias stopas='/opt/ibm/was/profiles/Custom01/bin/stopServer.sh -profileName OracleAdminServer -profileName Custom01'" >> /home/oracle/.bashrc
-	echo "alias stopdm='/opt/ibm/was/profiles/Dmgr01/bin/stopManager.sh -profileName Dmgr01'" >> /home/oracle/.bashrc
-	echo "alias stopnode='/opt/ibm/was/profiles/Custom01/bin/stopNode.sh -profileName Custom01'" >> /home/oracle/.bashrc
-
-	echo "echo 'Commands'" >> /home/oracle/.bashrc
-	echo "echo '-------'">> /home/oracle/.bashrc
-	echo "echo '[start|stop]dm    - control Deployment Manager'">> /home/oracle/.bashrc
-	echo "echo '[start|stop]node  - control Node'">> /home/oracle/.bashrc
-	echo "echo '[start|stop]as    - control OracleAdminServer'">> /home/oracle/.bashrc
-	echo "echo ''">> /home/oracle/.bashrc
-
-	echo 'INSTALLER: WebSphere services installed. To start, login as vagrant user, then su -l oracle, then run:'
-	echo '	[start|stop]dm 		- start/stop the deployment manager'
-	echo ' 	[start|stop]node 	- start/stop the node manager'
-	echo ' 	[start|stop]as 		- start/stop the Oracle AdminServer'
-	echo '	Then you can access the IBM console at https://localhost:9043/ibm/console'
-
-	echo 'INSTALLER: ODEE Websphere artifacts provisioned.'			
-
-	su -l oracle -c "echo 'delete this file to provision ODEE Websphere artifacts. You will need to manually drop existing profile to redo this step'>>/opt/oracle/provision/odee-2.txt"
+	echo 'INSTALLER: WARNING -- YOU MUST MANUALLY RUN THE FOLLOWING SCRIPT AS ORACLE USER within the Vagrant machine.'
+	echo "     vagrant ssh "
+	echo "     vagrant@${VM_NAME} $ gooracle "
+	echo "     oracle@${VM_NAME} $ cd /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts; ./was_create_profile.sh; ./was_add_correspondence.sh"
+	echo ""
+	echo 'INSTALLER: This component cannot be scripted. Use the following settings:'
+	echo "  Select configuration option > Create and Configure Cell > Next"
+	echo "  Specify Cell, Profile and Node Name Information > Accept defaults > Next"
+	echo "  Specify Deployment Manager Information:"
+	echo "	 - Host: ${VM_NAME}"
+	echo "	 - WAS Admin User: ${WAS_ADMIN}"
+	echo "   - WAS Admin Pass: ${WAS_PWD}"
+	echo "   - Next"
+	echo "  Creating Cell > Next"
+	echo "  Add products to Cell > select Oracle JRF for WebSphere > Next"
+	echo "  Configuration Summary > Create > Done."
+	echo ""
+	echo "  GUI will close, and scripted deployment will commence. Review console output for errors."	
+	echo "" 
+	echo "  6. Select all Component Schemas and enter the following:"
+	echo "     - Driver: Oracle's Driver (Thin) for Service connections"
+	echo "     - Schema Pass: ${ORACLE_PWD}"
+	echo "     - DBMS/Service: ${ORACLE_PDB}"
+	echo "     - Host Name: localhost"
+	echo "     - Port: ${LISTENER_PORT}"
+	echo "  7. Accept remaining defaults and proceed with cell configuration."
+	echo ""
+	
+	echo 'INSTALLER: The GUI dialog will close and the WAS system will be started and artifacts deployed. This can take some time -- review the output to ensure no errors occurred.'
+	echo "INSTALLER: After the above operation concludes, run the following as ORACLE user"
+	echo "           oracle@${VM_NAME} $ echo 'delete this file to provision ODEE Websphere artifacts. You will need to manually drop existing profile to redo this step'>>/opt/oracle/provision/odee-2.txt"
+	echo 'INSTALLER: ODEE WAS Provisioning partially completed. Review log and complete manual steps to finalize.'
 fi
+
 
 # run user-defined post-setup scripts
 echo 'INSTALLER: Running user-defined post-setup scripts'
