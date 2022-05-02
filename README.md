@@ -1,8 +1,7 @@
 # Oracle Documaker.
 1. The Documaker [Community](http://community.oracle.com/community/oracle-applications/documaker) on Oracle's community sites.
 2. My Documaker Tech [Blog](http://blogs.oracle.com/documakertech/).
-
-**NOTE** I have reorganized by GitHub repo, so things have moved around a bit!
+3. Documaker vidoes on [OTube](https://otube.oracle.com/channel/Using%2BDocumaker/254002533).
 
 ## [docker-images](https://github.com/calittle/documaker/tree/master/docker-images)
 Docker images to deploy.
