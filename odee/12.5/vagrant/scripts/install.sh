@@ -100,18 +100,26 @@ else
 	echo "export DISPLAY=127.0.0.1:10.0" >> /home/vagrant/.bashrc
 	echo "XCOOKIE=\`xauth list \${DISPLAY#localhost}\`" >> /home/vagrant/.bashrc
 	echo 'sudo /home/vagrant/.setx.sh "${XCOOKIE}"'>> /home/vagrant/.bashrc
+	
 	# create baking script for vagrant
 	echo "#!/bin/bash" > /home/vagrant/.setx.sh
-	echo "echo xauth add \$@ > /home/oracle/.setx.sh" >> /home/vagrant/.setx.sh
+	echo "echo \"xauth add \$@ >/dev/null 2>&1\" > /home/oracle/.setx.sh" >> /home/vagrant/.setx.sh
+	echo "echo \"xauth add \$@ >/dev/null 2>&1\" > /root/.setx.sh" >> /home/vagrant/.setx.sh
 	echo "chmod u+x /home/oracle/.setx.sh" >> /home/vagrant/.setx.sh
+	echo "chmod u+x /root/.setx.sh" >> /home/vagrant/.setx.sh
 	echo "chown oracle:oinstall /home/oracle/.setx.sh" >>/home/vagrant/.setx.sh
+	echo "chown root:root /root/.setx.sh" >>/home/vagrant/.setx.sh
+	
 	# bake for others... 
 	echo "export DISPLAY=127.0.0.1:10.0" >> /home/oracle/.bashrc
+	echo "export DISPLAY=127.0.0.1:10.0" >> /root/.bashrc
+	echo "~/.setx.sh" >> /root/.bashrc
 	echo "~/.setx.sh" >> /home/oracle/.bashrc
 	chmod u+x /home/vagrant/.setx.sh
 	chown vagrant:vagrant /home/vagrant/.setx.sh
 	su -l vagrant -c "touch ~/.Xauthority"
 	su -l oracle -c "touch ~/.Xauthority"
+	touch ~/.Xauthority
 	echo "INSTALLER: display variables set."
 fi
 
@@ -219,7 +227,7 @@ ALTER PLUGGABLE DATABASE $ORACLE_PDB SAVE STATE;
 EXEC DBMS_XDB_CONFIG.SETGLOBALPORTENABLED (TRUE);
 ALTER SYSTEM SET LOCAL_LISTENER = '(ADDRESS = (PROTOCOL = TCP)(HOST = 0.0.0.0)(PORT = $LISTENER_PORT))' SCOPE=BOTH;
 ALTER SYSTEM REGISTER;
-ALTER SYSTEM SET "_allow_insert_with_update_check"=TRUE scope=spfile;
+ALTER SYSTEM SET '_allow_insert_with_update_check'=TRUE scope=spfile;
 exit;
 EOF"
 		rm /vagrant/ora-response/dbca.rsp
@@ -286,7 +294,7 @@ else
 	sed -i -e "s|###WAS_PWD###|$WAS_PWD|g" /vagrant/installs/websphere_7/WAS/was.rsp
 	sed -i -e "s|###WAS_HOME###|$WAS_HOME|g" /vagrant/installs/websphere_7/WAS/was.rsp
 
-	/vagrant/installs/websphere_7/WAS/install -options '/vagrant/installs/websphere_7/WAS/was.rsp' -silent	
+	/vagrant/installs/websphere_7/WAS/install -options '/vagrant/installs/websphere_7/WAS/was.rsp' -silent
 	su -l oracle -c "echo 'delete this file to reinstall WAS. you may need to manually remove previous install. '>>/opt/oracle/provision/was7-1.txt"
 	echo 'INSTALLER: WAS7 installed.'
 fi
@@ -436,6 +444,8 @@ else
 		##
 		# download https://www.oracle.com/tools/downloads/application-development-framework-downloads.html#
 		# 11.1.1.7 ADF --> V37382.zip
+		##
+		# https://docs.oracle.com/cd/E23943_01/web.1111/e17764/screens.htm#WASCW153
 		##
 		TEMPFILE="/vagrant/installs/V37382-01.zipr"
 	 	if [ -f "${TEMPFILE}" ]; then
