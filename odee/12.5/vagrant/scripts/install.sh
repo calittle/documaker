@@ -227,7 +227,7 @@ ALTER PLUGGABLE DATABASE $ORACLE_PDB SAVE STATE;
 EXEC DBMS_XDB_CONFIG.SETGLOBALPORTENABLED (TRUE);
 ALTER SYSTEM SET LOCAL_LISTENER = '(ADDRESS = (PROTOCOL = TCP)(HOST = 0.0.0.0)(PORT = $LISTENER_PORT))' SCOPE=BOTH;
 ALTER SYSTEM REGISTER;
-ALTER SYSTEM SET '_allow_insert_with_update_check'=TRUE scope=spfile;
+ALTER SYSTEM SET \"_allow_insert_with_update_check\"=TRUE SCOPE=BOTH;
 exit;
 EOF"
 		rm /vagrant/ora-response/dbca.rsp
@@ -274,12 +274,60 @@ else
 	echo 'INSTALLER: JDK installed'
 fi
 
+	
+#
+# run RCU
+#
+if [ -f /opt/oracle/provision/rcu.txt ]; then
+	echo 'INSTALLER: RCU already installed.'
+else
+	echo 'INSTALLER: Installing RCU.'
+	TEMPFILE="/vagrant/installs/p16471709_111170_Linux-x86-64.zip"
+ 	if [ -f "${TEMPFILE}" ]; then
+		echo "INSTALLER: Found ${TEMPFILE}"
+	else
+		echo "INSTALLER: ${TEMPFILE} NOT FOUND. Review README.md for instructions."
+		exit 1
+	fi	
+	mkdir -p /vagrant/installs/rcu
+	unzip -qn ${TEMPFILE} -d /vagrant/installs/rcu
+	
+	# WORKAROUND as mentioned here: https://support.oracle.com/epmos/faces/DocumentDisplay?id=2430487.1
+	# and https://docs.oracle.com/cd/E52734_01/core/IDMRN/admin.htm#IDMRN636 (search for ORA-28040)
+		
+	chmod u+w /vagrant/installs/rcu/rcuHome/jdbc/lib/*.jar
+	
+	if [ -f /vagrant/installs/ojdbc6.jar ]; then
+		cp /vagrant/installs/ojdbc6.jar /vagrant/installs/rcu/rcuHome/jdbc/lib
+		echo 'INSTALLER: Copying in vagrant/installs/ojdbc6.jar'
+	else
+		echo 'INSTALLER: WARNING >> ojdbc6.jar not found in vagrant/installs directory. Download ojdbc6.jar from https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc6/11.2.0.4 and '
+		echo 'INSTALLER: place the file in the vagrant/installs directory, then re-run:     vagrant up --provision'
+		exit 1
+	fi
 
-# Install WebSphere 7
-  
+	echo "INSTALLER: Running RCU. "
+	
+	/vagrant/installs/rcu/rcuHome/bin/rcu -silent -createRepository -connectString localhost:$LISTENER_PORT/$ORACLE_PDB -dbUser sys -dbRole SYSDBA -useSamePasswordForAllSchemaUsers true -schemaPrefix DEV -component OPSS -component IAU -component MDS -component SOAINFRA -component ORASDPM<<EOF
+$ORACLE_PWD
+$ORACLE_PWD
+EOF
+	su -l oracle -c "echo 'delete this file to rerun RCU'>>/opt/oracle/provision/rcu.txt"	
+fi	
+
+
+#########################
+#                       #
+# Install WebSphere 7   #
+#                       #
+#########################  
 if [ -f "/opt/oracle/provision/was7-1.txt" ]; then
 	echo 'INSTALLER: WebSphere already installed.'
 else
+	# delete any previous provisioning. 
+	echo 'INSTALLER: Removing previous install at /opt/ibm/was'
+	sudo rm -rf /opt/ibm/was
+	
 	# check if unpacked
 	if [ -f "/vagrant/installs/websphere_7/WAS/install" ]; then
 		echo 'INSTALLER: WebSphere installer found.'
@@ -327,7 +375,7 @@ if [ -f "/opt/oracle/provision/was7-3.txt" ]; then
 	echo 'INSTALLER: WebSphere Update pack already installed.'
 else
 	# copy the update PAK file.
-	TEMPFILE="7.0.0-WS-WAS-LinuxX64-FP0000045.pak"
+	TEMPFILE="7.0.0-WS-WAS-LinuxX64-FP0000027.pak"
 	FULLTEMPFILE="/vagrant/installs/${TEMPFILE}"
  	if [ -f "${FULLTEMPFILE}" ]; then
 		echo "INSTALLER: Found ${FULLTEMPFILE}"
@@ -351,46 +399,6 @@ else
 	su -l oracle -c "echo 'delete this file to reinstall WAS'>>/opt/oracle/provision/was7-3.txt"
 	echo 'INSTALLER: WAS Update applied.'
 fi
-	
-#
-# run RCU
-#
-if [ -f /opt/oracle/provision/rcu.txt ]; then
-	echo 'INSTALLER: RCU already installed.'
-else
-	echo 'INSTALLER: Installing RCU.'
-	TEMPFILE="/vagrant/installs/p16471709_111170_Linux-x86-64.zip"
- 	if [ -f "${TEMPFILE}" ]; then
-		echo "INSTALLER: Found ${TEMPFILE}"
-	else
-		echo "INSTALLER: ${TEMPFILE} NOT FOUND. Review README.md for instructions."
-		exit 1
-	fi	
-	mkdir -p /vagrant/installs/rcu
-	unzip -qn ${TEMPFILE} -d /vagrant/installs/rcu
-	
-	# WORKAROUND as mentioned here: https://support.oracle.com/epmos/faces/DocumentDisplay?id=2430487.1
-	# and https://docs.oracle.com/cd/E52734_01/core/IDMRN/admin.htm#IDMRN636 (search for ORA-28040)
-		
-	chmod u+w /vagrant/installs/rcu/rcuHome/jdbc/lib/*.jar
-	
-	if [ -f /vagrant/installs/ojdbc6.jar ]; then
-		cp /vagrant/installs/ojdbc6.jar /vagrant/installs/rcu/rcuHome/jdbc/lib
-		echo 'INSTALLER: Copying in vagrant/installs/ojdbc6.jar'
-	else
-		echo 'INSTALLER: WARNING >> ojdbc6.jar not found in vagrant/installs directory. Download ojdbc6.jar from https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc6/11.2.0.4 and '
-		echo 'INSTALLER: place the file in the vagrant/installs directory, then re-run:     vagrant up --provision'
-		exit 1
-	fi
-
-	echo "INSTALLER: Running RCU. "
-	
-	/vagrant/installs/rcu/rcuHome/bin/rcu -silent -createRepository -connectString localhost:$LISTENER_PORT/$ORACLE_PDB -dbUser sys -dbRole SYSDBA -useSamePasswordForAllSchemaUsers true -schemaPrefix DEV -component OPSS -component IAU -component MDS -component SOAINFRA -component ORASDPM<<EOF
-$ORACLE_PWD
-$ORACLE_PWD
-EOF
-	su -l oracle -c "echo 'delete this file to rerun RCU'>>/opt/oracle/provision/rcu.txt"	
-fi	
 
 #
 # Install option: use ADF, or SOA Suite installer. Former is not guaranteed to work.
@@ -447,7 +455,7 @@ else
 		##
 		# https://docs.oracle.com/cd/E23943_01/web.1111/e17764/screens.htm#WASCW153
 		##
-		TEMPFILE="/vagrant/installs/V37382-01.zipr"
+		TEMPFILE="/vagrant/installs/V37382-01.zip"
 	 	if [ -f "${TEMPFILE}" ]; then
 			echo "INSTALLER: Found ${TEMPFILE}"
 		else
@@ -456,6 +464,9 @@ else
 		fi	
 		unzip -qn ${TEMPFILE} -d /vagrant/installs/adf
 		cp /vagrant/ora-response/adf.rsp.tmpl /vagrant/ora-response/adf.rsp
+		sed -i -e "s|###MW_HOME###|$MW_HOME|g" /vagrant/ora-response/adf.rsp
+		sed -i -e "s|###WAS_HOME###|$WAS_HOME|g" /vagrant/ora-response/adf.rsp
+	
 		su -l oracle -c "/vagrant/installs/adf/Disk1/runInstaller -silent -waitforcompletion -jreLoc /opt/ibm/was/java/jre -responseFile /vagrant/ora-response/adf.rsp"
 		
 		echo "127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4 odee-1250-vagrant" > /etc/hosts
@@ -470,11 +481,11 @@ fi
 if grep -q startas /home/oracle/.bashrc; then
 	echo 'INSTALLER: WAS aliases already set.'
 else	
-	echo "alias startas='/opt/ibm/was/profiles/Custom01/bin/startServer.sh -profileName OracleAdminServer -profileName Custom01'" >> /home/oracle/.bashrc
+	echo "alias startas='/opt/ibm/was/profiles/Custom01/bin/startServer.sh OracleAdminServer -profileName Custom01'" >> /home/oracle/.bashrc
 	echo "alias startdm='/opt/ibm/was/profiles/Dmgr01/bin/startManager.sh -profileName Dmgr01'" >> /home/oracle/.bashrc
 	echo "alias startnode='/opt/ibm/was/profiles/Custom01/bin/startNode.sh -profileName Custom01'" >> /home/oracle/.bashrc
 
-	echo "alias stopas='/opt/ibm/was/profiles/Custom01/bin/stopServer.sh -profileName OracleAdminServer -profileName Custom01'" >> /home/oracle/.bashrc
+	echo "alias stopas='/opt/ibm/was/profiles/Custom01/bin/stopServer.sh OracleAdminServer -profileName Custom01'" >> /home/oracle/.bashrc
 	echo "alias stopdm='/opt/ibm/was/profiles/Dmgr01/bin/stopManager.sh -profileName Dmgr01'" >> /home/oracle/.bashrc
 	echo "alias stopnode='/opt/ibm/was/profiles/Custom01/bin/stopNode.sh -profileName Custom01'" >> /home/oracle/.bashrc
 
@@ -526,7 +537,7 @@ else
 	chown oracle:oinstall -R $ORACLE_BASE/oraInventory
 	
 	echo "INSTALLER: running /home/oracle/Disk1/runInstaller -silent -force -waitforcompletion -ignoreSysPrereqs -responseFile /home/oracle/odee.rsp -jreLoc ${JAVA_PATH}/jre -invPtrLoc ${ORACLE_BASE}/oraInventory/oraInst.loc"	
-	su -l oracle -c "/home/oracle/Disk1/runInstaller -waitforcompletion -silent -force -ignoreSysPrereqs -responseFile /home/oracle/odee.rsp -jreLoc ${JAVA_PATH}/jre -invPtrLoc ${ORACLE_BASE}/oraInventory/oraInst.loc"
+	su -l oracle -c "/home/oracle/Disk1/runInstaller -waitforcompletion -silent -force -ignoreSysPrereqs -responseFile /home/oracle/odee.rsp -jreLoc ${JAVA_PATH}/jre -invPtrLoc ${ORACLE_BASE}/oraInventory/oraInst.loc" > /dev/null 2>&1
 
 	if [ -f /opt/oracle/odee/documaker ]; then
 		echo 'INSTALLER: ODEE installation failed.'
@@ -536,7 +547,7 @@ else
 		rm /home/oracle/odee.rsp
 		rm /vagrant/ora-response/odee.rsp
 		echo 'INSTALLER: ODEE installed.'
-		su -l oracle -c "echo 'delete this file to reinstall ODEE. Note you may need to manually remove everything that was created to redo this step'>>/opt/oracle/provision/odee.txt"
+		su -l oracle -c "echo 'delete this file to reinstall ODEE. Note you may need to manually remove everything that was created to redo this step'>>/opt/oracle/provision/odee.txt" > /dev/null 2>&1
 	fi
 fi
 
@@ -553,12 +564,13 @@ spool /home/oracle/odee_install_sql.log
 @dmkr_asline.sql
 @dmkr_admin_user_examples.sql
 spool off
-EOF"
-	su -l oracle -c "cd $ODEE_HOME/documaker/mstrres/dmres && ./deploysamplemrl.sh"
+EOF" > /dev/null 2>&1
+	su -l oracle -c "cd $ODEE_HOME/documaker/mstrres/dmres && ./deploysamplemrl.sh" > /home/oracle/odee-deploymrl.log 2>&1
 	
 	echo 'INSTALLER: ODEE database artifacts provisioned.'			
-	su -l oracle -c "echo 'delete this file to provision ODEE database artifacts. You will need to manually drop existing users/schemas/datafiles to redo this step'>>/opt/oracle/provision/odee-1.txt"
+	su -l oracle -c "echo 'delete this file to provision ODEE database artifacts. You will need to manually drop existing users/schemas/datafiles to redo this step'>>/opt/oracle/provision/odee-1.txt" > /dev/null 2>&1
 fi
+
 
 #
 # ODEE WAS Provisioning
@@ -586,8 +598,8 @@ else
 	echo "idstore.type=ACTIVE_DIRECTORY" >> /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/ldapconfig.txt
 	echo "user.search.bases=cn=users,dc=example,dc=com" >> /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/ldapconfig.txt
 	echo "group.search.bases=cn=groups,dc=example,dc=com" >> /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/ldapconfig.txt
-	echo "user.id.map=:uid" >> /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/ldapconfig.txt
-	echo "group.id.map=:cn" >> /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/ldapconfig.txt
+	echo "user.id.map=*:uid" >> /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/ldapconfig.txt
+	echo "group.id.map=*:cn" >> /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/ldapconfig.txt
 	echo "group.member.id.map=groupofnames:member" >> /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/ldapconfig.txt
 	echo "ssl=false" >> /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/ldapconfig.txt
 	echo "primary.admin.id=uid=admin,ou=system" >> /opt/oracle/odee/documaker/j2ee/websphere/oracle11g/scripts/ldapconfig.txt
@@ -629,7 +641,6 @@ else
 	echo "           oracle@${VM_NAME} $ echo 'delete this file to provision ODEE Websphere artifacts. You will need to manually drop existing profile to redo this step'>>/opt/oracle/provision/odee-2.txt"
 	echo 'INSTALLER: ODEE WAS Provisioning partially completed. Review log and complete manual steps to finalize.'
 fi
-
 
 # run user-defined post-setup scripts
 echo 'INSTALLER: Running user-defined post-setup scripts'
