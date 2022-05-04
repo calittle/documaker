@@ -83,8 +83,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
 ############################################################################
 
-  VM_ADFSOA = default_s('VM_ADFSOA','SOA')
-  VM_MW_HOME = default_s('VM_MW_HOME','/opt/oracle/middleware')
+  VM_ADFSOA = default_s('VM_ADFSOA','ADF')
+  VM_MW_HOME = default_s('VM_MW_HOME','/opt/oracle/fmw')
   VM_UPDI_HOME = default_s('VM_UPDI_HOME','/opt/ibm/updateinstaller')
   VM_WAS_HOME = default_s('VM_WAS_HOME','/opt/ibm/was')
   VM_WAS_ADMIN = default_s('VM_WAS_ADMIN','wasadmin')
