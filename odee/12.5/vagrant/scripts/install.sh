@@ -278,42 +278,42 @@ fi
 #
 # run RCU
 #
-if [ -f /opt/oracle/provision/rcu.txt ]; then
-	echo 'INSTALLER: RCU already installed.'
-else
-	echo 'INSTALLER: Installing RCU.'
-	TEMPFILE="/vagrant/installs/p16471709_111170_Linux-x86-64.zip"
- 	if [ -f "${TEMPFILE}" ]; then
-		echo "INSTALLER: Found ${TEMPFILE}"
-	else
-		echo "INSTALLER: ${TEMPFILE} NOT FOUND. Review README.md for instructions."
-		exit 1
-	fi	
-	mkdir -p /vagrant/installs/rcu
-	unzip -qn ${TEMPFILE} -d /vagrant/installs/rcu
+# if [ -f /opt/oracle/provision/rcu.txt ]; then
+# 	echo 'INSTALLER: RCU already installed.'
+# else
+# 	echo 'INSTALLER: Installing RCU.'
+# 	TEMPFILE="/vagrant/installs/p16471709_111170_Linux-x86-64.zip"
+#  	if [ -f "${TEMPFILE}" ]; then
+# 		echo "INSTALLER: Found ${TEMPFILE}"
+# 	else
+# 		echo "INSTALLER: ${TEMPFILE} NOT FOUND. Review README.md for instructions."
+# 		exit 1
+# 	fi	
+# 	mkdir -p /vagrant/installs/rcu
+# 	unzip -qn ${TEMPFILE} -d /vagrant/installs/rcu
 	
-	# WORKAROUND as mentioned here: https://support.oracle.com/epmos/faces/DocumentDisplay?id=2430487.1
-	# and https://docs.oracle.com/cd/E52734_01/core/IDMRN/admin.htm#IDMRN636 (search for ORA-28040)
+# 	# WORKAROUND as mentioned here: https://support.oracle.com/epmos/faces/DocumentDisplay?id=2430487.1
+# 	# and https://docs.oracle.com/cd/E52734_01/core/IDMRN/admin.htm#IDMRN636 (search for ORA-28040)
 		
-	chmod u+w /vagrant/installs/rcu/rcuHome/jdbc/lib/*.jar
+# 	chmod u+w /vagrant/installs/rcu/rcuHome/jdbc/lib/*.jar
 	
-	if [ -f /vagrant/installs/ojdbc6.jar ]; then
-		cp /vagrant/installs/ojdbc6.jar /vagrant/installs/rcu/rcuHome/jdbc/lib
-		echo 'INSTALLER: Copying in vagrant/installs/ojdbc6.jar'
-	else
-		echo 'INSTALLER: WARNING >> ojdbc6.jar not found in vagrant/installs directory. Download ojdbc6.jar from https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc6/11.2.0.4 and '
-		echo 'INSTALLER: place the file in the vagrant/installs directory, then re-run:     vagrant up --provision'
-		exit 1
-	fi
+# 	if [ -f /vagrant/installs/ojdbc6.jar ]; then
+# 		cp /vagrant/installs/ojdbc6.jar /vagrant/installs/rcu/rcuHome/jdbc/lib
+# 		echo 'INSTALLER: Copying in vagrant/installs/ojdbc6.jar'
+# 	else
+# 		echo 'INSTALLER: WARNING >> ojdbc6.jar not found in vagrant/installs directory. Download ojdbc6.jar from https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc6/11.2.0.4 and '
+# 		echo 'INSTALLER: place the file in the vagrant/installs directory, then re-run:     vagrant up --provision'
+# 		exit 1
+# 	fi
 
-	echo "INSTALLER: Running RCU. "
+# 	echo "INSTALLER: Running RCU. "
 	
-	/vagrant/installs/rcu/rcuHome/bin/rcu -silent -createRepository -connectString localhost:$LISTENER_PORT/$ORACLE_PDB -dbUser sys -dbRole SYSDBA -useSamePasswordForAllSchemaUsers true -schemaPrefix DEV -component OPSS -component IAU -component MDS -component SOAINFRA -component ORASDPM<<EOF
-$ORACLE_PWD
-$ORACLE_PWD
-EOF
-	su -l oracle -c "echo 'delete this file to rerun RCU'>>/opt/oracle/provision/rcu.txt"	
-fi	
+# 	/vagrant/installs/rcu/rcuHome/bin/rcu -silent -createRepository -connectString localhost:$LISTENER_PORT/$ORACLE_PDB -dbUser sys -dbRole SYSDBA -useSamePasswordForAllSchemaUsers true -schemaPrefix DEV -component OPSS -component IAU -component MDS -component SOAINFRA -component ORASDPM<<EOF
+# $ORACLE_PWD
+# $ORACLE_PWD
+# EOF
+# 	su -l oracle -c "echo 'delete this file to rerun RCU'>>/opt/oracle/provision/rcu.txt"	
+# fi	
 
 
 #########################
@@ -405,42 +405,42 @@ fi
 # Choice driven by variable FMW_OPTION = ADF|SOA. Default is SOA as this is listed as a 
 # requirement for Documaker 12.5.0.
 #
-if [ ${ADF_OR_SOA} = 'SOA' ]; then
-	#
-	# Install SOA
-	#
+# if [ ${ADF_OR_SOA} = 'SOA' ]; then
+# 	#
+# 	# Install SOA
+# 	#
 
-	if [ -f /opt/oracle/provision/fmw.txt ]; then
-		echo 'INSTALLER: FMW already installed.'
-	else
-		echo 'INSTALLER: Installing FMW via SOA Suite.'
+# 	if [ -f /opt/oracle/provision/fmw.txt ]; then
+# 		echo 'INSTALLER: FMW already installed.'
+# 	else
+# 		echo 'INSTALLER: Installing FMW via SOA Suite.'
 
-		TEMPFILE="/vagrant/installs/soasuite_11.1.1.7.0.tar.gz"
-	 	if [ -f "${TEMPFILE}" ]; then
-			echo "INSTALLER: Found ${TEMPFILE}"
-		else
-			echo "INSTALLER: ${TEMPFILE} NOT FOUND. Review README.md for instructions."
-			exit 1
-		fi	
+# 		TEMPFILE="/vagrant/installs/soasuite_11.1.1.7.0.tar.gz"
+# 	 	if [ -f "${TEMPFILE}" ]; then
+# 			echo "INSTALLER: Found ${TEMPFILE}"
+# 		else
+# 			echo "INSTALLER: ${TEMPFILE} NOT FOUND. Review README.md for instructions."
+# 			exit 1
+# 		fi	
 	 	
-	 	mkdir -p /vagrant/installs/fmw
-	 	if [ -f /vagrant/installs/fmw/Disk6/stage/disk.label ]; then
-	 		echo 'INSTALLER: skipping unpack.'
-	 	else
-	 		echo 'INSTALLER: unpacking...'
-	 		tar xf ${TEMPFILE} -C /vagrant/installs/fmw
-	 	fi
-		cp /vagrant/ora-response/fmw.rsp.tmpl /vagrant/ora-response/fmw.rsp
-		echo "INSTALLER: Running SOA Suite installer."
-		su -l oracle -c "/vagrant/installs/fmw/Disk1/runInstaller -silent -waitforcompletion -jreLoc /opt/ibm/was/java/jre -responseFile /vagrant/ora-response/fmw.rsp"
-		echo "INSTALLER: SOA Suite installer completed."
-		rm /vagrant/ora-response/fmw.rsp
+# 	 	mkdir -p /vagrant/installs/fmw
+# 	 	if [ -f /vagrant/installs/fmw/Disk6/stage/disk.label ]; then
+# 	 		echo 'INSTALLER: skipping unpack.'
+# 	 	else
+# 	 		echo 'INSTALLER: unpacking...'
+# 	 		tar xf ${TEMPFILE} -C /vagrant/installs/fmw
+# 	 	fi
+# 		cp /vagrant/ora-response/fmw.rsp.tmpl /vagrant/ora-response/fmw.rsp
+# 		echo "INSTALLER: Running SOA Suite installer."
+# 		su -l oracle -c "/vagrant/installs/fmw/Disk1/runInstaller -silent -waitforcompletion -jreLoc /opt/ibm/was/java/jre -responseFile /vagrant/ora-response/fmw.rsp"
+# 		echo "INSTALLER: SOA Suite installer completed."
+# 		rm /vagrant/ora-response/fmw.rsp
 		
-		echo "127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4 odee-1250-vagrant" > /etc/hosts
-		echo "::1         localhost localhost.localdomain localhost6 localhost6.localdomain6 odee-1250-vagrant" >>/etc/hosts
-		echo "127.0.1.1 odee-1250-vagrant odee-1250-vagrant" >> /etc/hosts
-	fi
-else
+# 		echo "127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4 odee-1250-vagrant" > /etc/hosts
+# 		echo "::1         localhost localhost.localdomain localhost6 localhost6.localdomain6 odee-1250-vagrant" >>/etc/hosts
+# 		echo "127.0.1.1 odee-1250-vagrant odee-1250-vagrant" >> /etc/hosts
+# 	fi
+# else
 	#
 	# install ADF
 	#
@@ -476,7 +476,7 @@ else
 		rm /vagrant/ora-response/adf.rsp
 		su -l oracle -c "echo 'delete this file to reinstall ADF'>>/opt/oracle/provision/adf.txt"
 	fi
-fi
+#fi
 
 if grep -q startas /home/oracle/.bashrc; then
 	echo 'INSTALLER: WAS aliases already set.'
@@ -626,15 +626,6 @@ else
 	echo "  Configuration Summary > Create > Done."
 	echo ""
 	echo "  GUI will close, and scripted deployment will commence. Review console output for errors."	
-	echo "" 
-	echo "  6. Select all Component Schemas and enter the following:"
-	echo "     - Driver: Oracle's Driver (Thin) for Service connections"
-	echo "     - Schema Pass: ${ORACLE_PWD}"
-	echo "     - DBMS/Service: ${ORACLE_PDB}"
-	echo "     - Host Name: localhost"
-	echo "     - Port: ${LISTENER_PORT}"
-	echo "  7. Accept remaining defaults and proceed with cell configuration."
-	echo ""
 	
 	echo 'INSTALLER: The GUI dialog will close and the WAS system will be started and artifacts deployed. This can take some time -- review the output to ensure no errors occurred.'
 	echo "INSTALLER: After the above operation concludes, run the following as ORACLE user"
