@@ -43,9 +43,7 @@ using the following:
 
 ## Use
 Simply issue the command with the short name of the JAR you want to undeploy/deploy:
-`$ deploy assembler`, which will move `assembler.jar` from the `stash` directory (`/path/to/docfactory/deploy/tmp`) into the `deploy` directory.
-or
-`$ undeploy historian`, which will move `historian.jar` from the `deploy` directory into the `stash` directory. 
-
+* `$ deploy assembler`, which will move `assembler.jar` from the `stash` directory (`/path/to/docfactory/deploy/tmp`) into the `deploy` directory.
+* `$ undeploy historian`, which will move `historian.jar` from the `deploy` directory into the `stash` directory. 
 You do not need to append `.jar` to the filename, but be aware that it is case-sensitive, so `historian` will work, but `HiStoriAn` will not.
 
