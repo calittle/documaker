@@ -1,7 +1,7 @@
 # Deploy/Undeploy
 Simple shell scripts will assist in quickly deploying and undeploying specific workers on a DocFactory node.
 
-## deploy.sh
+## deploy
 Copy/paste this into a file, e.g. `ODEE_HOME/docfactory/bin/scripts/deploy`. Verify that the DEPLOY path is correct.
 ```
 #!/bin/bash
