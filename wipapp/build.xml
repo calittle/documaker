@@ -62,8 +62,8 @@
 			</catch>
 			<finally>
 				<echo>Copying file to server...</echo>
-				<scp file="${deploy}/wipapp-${DSTAMP}.war" todir="oracle:Documaker12@rbc:/home/oracle/wipapp-${DSTAMP}.war"/>
-				<wldeploy action="deploy" adminurl="t3://${wls.hostname}:${wls.port}" debug="true" name="${deploy.name}" nostage="true" password="${wls.password}" remote="true" source="/home/oracle/wipapp-${DSTAMP}.war" targets="${deploy.target}" user="${wls.username}" verbose="true"/>
+				<scp file="${deploy}/wipapp-${DSTAMP}.war" todir="<user:password>@<targetserver>:<path-to-deployables>/wipapp-${DSTAMP}.war"/>
+				<wldeploy action="deploy" adminurl="t3://${wls.hostname}:${wls.port}" debug="true" name="${deploy.name}" nostage="true" password="${wls.password}" remote="true" source="<path-to-deployables>/wipapp-${DSTAMP}.war" targets="${deploy.target}" user="${wls.username}" verbose="true"/>
 			</finally>
 		</trycatch>
 	</target>
