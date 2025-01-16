@@ -24,8 +24,8 @@ public class TelesignTest extends TestCase{
     public void testApp()
     {
         Properties props = new Properties();
-        props.setProperty("Telesign.customerid","ADEF119C-883B-4206-BF79-0D75E282F8F2");
-        props.setProperty("Telesign.apikey","p/Rp9mnUcwy6icCX0kIpTV54Vd0/R9VqWNVQLJfmHjiscjkxk1PEX3hK5JnvD00YaJL159lsAFbc9BFd61cirg==");
+        props.setProperty("Telesign.customerid","Your-Customer-ID");
+        props.setProperty("Telesign.apikey","Your-APIKey");
         props.setProperty("Telesign.message","This is a test.");
         props.setProperty("Bitly.enabled","false");
         //TO-DO
