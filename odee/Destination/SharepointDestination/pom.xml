@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.oracle.documaker.custom.destinations</groupId>
+    <artifactId>Archiver-SharepointDestination</artifactId>
+    <version>1.0</version>
+    <packaging>jar</packaging>
+    <name>SharepointDestination</name>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <packageName>com.oracle.documaker.custom.destinations.Sharepoint</packageName>
+                        </manifest>
+                        <manifestEntries>
+                            <Created-By>andy.little@oracle.com</Created-By>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                        <exclude>module-info.*</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <artifactSet>
+                                <excludes>
+                                    <exclude>module-info.*</exclude>
+                                </excludes>
+                            </artifactSet>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <properties>
+            <!--
+            Replace ${documaker.1271.lib} with the absolute path to docfactory/lib directory for ODEE 12.7.1
+            -->
+            <documaker1271>${documaker.1271.lib}</documaker1271>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+    <dependencies>
+    <dependency>
+        <groupId>com.oracle.documaker</groupId>
+        <artifactId>connectorapi</artifactId>
+        <version>12.7.1</version>
+        <scope>system</scope>
+        <systemPath>${documaker1271}/oracle-dmkr-connectorapi.jar</systemPath>
+    </dependency>
+    <dependency>
+        <groupId>com.oracle.documaker</groupId>
+        <artifactId>reload4j</artifactId>
+        <version>12.7.1</version>
+        <scope>system</scope>
+        <systemPath>${documaker1271}/reload4j.jar</systemPath>
+    </dependency>
+        <dependency>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.6.0</version>
+    </dependency>
+    </dependencies>
+</project>
