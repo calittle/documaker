@@ -1,8 +1,17 @@
 .DS_Store
+Admin-Dashboard Replacements/**
+odee/12.7.0*
+odee/12.7.1*
 devOps
 local*
 localsrc
 localbuild
+docupresentment/src/*
+**/DataTables/*
+**/vendor/*
+**/venv/*
+**/bootstrap*
+**/bootstrap*dist/*
 *.log
 *.zip
 *.rpm
@@ -119,3 +128,5 @@ modules.xml
 .idea/sonarlint
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij+all
+/Admin-Dashboard Replacements
+/Admin-Dashboard Replacements
