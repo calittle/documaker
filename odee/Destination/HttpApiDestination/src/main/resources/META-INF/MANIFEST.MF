@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Created-By: andy.little@oracle.com (Oracle FSGBU Consulting)
+Implementation-Title: Custom Archiver Plugin for FileNet Integration
+Implementation-Vendor: Oracle FSGBU Consulting
+Implementation-Version: 1.0
+Implementation-URL: Archiver-FileNetDestination-1.0.0.jar
